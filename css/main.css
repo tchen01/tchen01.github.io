@@ -326,6 +326,30 @@ span:hover ul {
 	display: block;
 }
 
+.grid{
+  background: none;
+}
+#home{
+	height: 100%;	
+ 
+	background: url('../image/bg1.jpg');
+	background-size: cover;
+	background-position:center; 
+}
+
+#about{
+	background: url('../image/bg2.jpg') fixed;
+	background-size: cover;
+	background-position: center; 
+	
+}
+
+#hobbies{
+	background:url('../image/bg3.jpg') fixed;
+	background-size: cover;
+	background-position: center; 
+}
+
 }
 
 
