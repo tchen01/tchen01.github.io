@@ -37,6 +37,14 @@ html, body, h1, p, ul{
 a:link, a:hover, a:active {text-decoration: none; }
 .menu:hover{color: rgb(165, 110, 90);}
 
+.inline_link{
+	color: inherit;
+}
+
+.inline_link:hover{
+  color: rgb(165, 110, 90);
+}
+
 #plink{
 	font-size: 150%;
 	color: inherit;
