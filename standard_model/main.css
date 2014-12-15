@@ -33,12 +33,14 @@ html, body {
   display: table;
 }
 
-.tile:hover{
+.tile:hover {
   background-color: #999999;  
-  background-image: none;
-
 }
 
+.image{
+  width: 100%;
+  height: 100%;
+}
 
 #quarks{  
   position: absolute;
@@ -68,6 +70,7 @@ html, body {
 }
 
 .name{
+  display: none;
   font-weight: 600;
   font-size: 150%;
   padding: 0 10% 10% 10%;
@@ -75,5 +78,7 @@ html, body {
 }
 
 .info{
+  display: none;
+
   padding: 8  %;
 }

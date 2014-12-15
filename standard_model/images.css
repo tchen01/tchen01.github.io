@@ -1,34 +1,34 @@
-#u{
+#u > .image {
   background-image: url(images/u.svg);
   background-repeat: no-repeat;
 	background-position: center; 
 }
 
-#c{
+#c > .image  {
   background-image: url(images/c.svg);
   background-repeat: no-repeat;
 	background-position: center; 
 }
 
-#t{
+#t > .image  {
   background-image: url(images/t.svg);
   background-repeat: no-repeat;
 	background-position: center; 
 }
 
-#d{
+#d > .image {
   background-image: url(images/d.svg);
   background-repeat: no-repeat;
 	background-position: center; 
 }
 
-#s{
+#s > .image {
   background-image: url(images/s.svg);
   background-repeat: no-repeat;
 	background-position: center; 
 }
 
-#b{
+#b > .image {
   background-image: url(images/b.svg);
   background-repeat: no-repeat;
 	background-position: center; 
@@ -36,37 +36,37 @@
 
 
 
-#e{
+#e > .image {
   background-image: url(images/e.svg);
   background-repeat: no-repeat;
 	background-position: center; 
 }
 
-#mu{
+#mu > .image {
   background-image: url(images/mu.svg);
   background-repeat: no-repeat;
 	background-position: center; 
 }
 
-#tau{
+#tau > .image {
   background-image: url(images/tau.svg);
   background-repeat: no-repeat;
 	background-position: center; 
 }
 
-#ve{
+#ve > .image {
   background-image: url(images/ve.svg);
   background-repeat: no-repeat;
 	background-position: center; 
 }
 
-#vmu{
+#vmu > .image {
   background-image: url(images/vmu.svg);
   background-repeat: no-repeat;
 	background-position: center; 
 }
 
-#vtau{
+#vtau > .image {
   background-image: url(images/vt.svg);
   background-repeat: no-repeat;
 	background-position: center; 
@@ -74,25 +74,25 @@
 
 
 
-#g{
+#g > .image {
   background-image: url(images/g.svg);
   background-repeat: no-repeat;
 	background-position: center; 
 }
 
-#y{
+#y > .image {
   background-image: url(images/y.svg);
   background-repeat: no-repeat;
 	background-position: center; 
 }
 
-#z{
+#z > .image {
   background-image: url(images/z.svg);
   background-repeat: no-repeat;
 	background-position: center; 
 }
 
-#w{
+#w > .image {
   background-image: url(images/w.svg);
   background-repeat: no-repeat;
 	background-position: center; 
