@@ -58,7 +58,7 @@ a:link, a:hover, a:active {text-decoration: none; }
 	
 }
 
-#projects > div{
+#sprojects > div{
 	display: none;
 }
 
@@ -251,7 +251,7 @@ ul a {
 	background-size: auto;
 	background-position:center; 
 }
-#home{
+#shome{
 	height: 100%;	
  
 	background: url('../image/2gridl.png'), url('../image/bg1.jpg');
@@ -259,26 +259,20 @@ ul a {
 	background-position:center; 
 }
 
-#about{
+#sabout{
 	background: url('../image/bg2.jpg') fixed;
 	background-size: cover;
 	background-position: center; 
 	
 }
 
-#hobbies{
+#shobbies{
 	background:url('../image/bg3.jpg') fixed;
 	background-size: cover;
 	background-position: center; 
 }
-/*
-#projects{
-	background: url('../image/2gridl.png') fixed, url('../image/bg2.jpg') fixed;
-	background-size: auto, cover;
-	background-position: left, center; 
-}
-*/
-#contact  h1{
+
+#scontact  h1{
 	z-index: 101;
 }
 
@@ -342,7 +336,7 @@ span:hover ul {
 .grid{
   background: none;
 }
-#home{
+#shome{
 	height: 100%;	
  
 	background: url('../image/bg1.jpg');
@@ -350,14 +344,14 @@ span:hover ul {
 	background-position:center; 
 }
 
-#about{
+#sabout{
 	background: url('../image/bg2.jpg') fixed;
 	background-size: cover;
 	background-position: center; 
 	
 }
 
-#hobbies{
+#shobbies{
 	background:url('../image/bg3.jpg') fixed;
 	background-size: cover;
 	background-position: center; 
