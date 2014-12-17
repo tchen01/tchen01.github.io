@@ -6,6 +6,9 @@ smoothScroll.init({
 
 
 window.onload = function listen(){
+  //maybe set css to hidden??
+  document.getElementById('logo').style.display = 'none';
+
   var sections = document.getElementsByTagName( 'section' );
   console.log( sections.length );
   for( l=0; l<sections.length; l++){
@@ -24,10 +27,9 @@ document.addEventListener( 'scroll', hidename );
 
 function hidename(){
   var logoDisp = document.getElementById('logo').style.display;
-  if(document.getElementById('home').offsetHeight - 50 <= document.body.scrollTop){
+  if(document.getElementById('shome').offsetHeight - 50 <= document.body.scrollTop){
     document.getElementById('logo').style.display = 'block'
   } else {
     document.getElementById('logo').style.display = 'none';
-    
   }
 }
