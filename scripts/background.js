@@ -1,24 +1,22 @@
-//smooth scroll
-$(function() {
-  $('a[href*=#]:not([href=#])').click(function() {
-    if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
-      var target = $(this.hash);
-      target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
-      if (target.length) {
-        $('html,body').animate({
-          scrollTop: target.offset().top
-        }, 1000);
-        return false;
-      }
-    }
-  });
+smoothScroll.init({
+    speed: 700, // Integer. How fast to complete the scroll in milliseconds
+    easing: 'easeInOutCubic', // Easing pattern to use
 });
 
 
-//reveal any elements with ".extra" class
-$(function(){
-    $("section").click(function(event) {
-        $(this).find('.extra').toggle();
-		$(this).find('.hide').toggle();		//is slideToggle() slow?
-    });
-});
+
+window.onload = function listen(){
+  var sections = document.getElementsByTagName( 'section' );
+  console.log( sections.length );
+  for( l=0; l<sections.length; l++){
+    sections[l].addEventListener("mouseup", switcher );
+  }
+}
+
+function switcher(){
+  var em = this.getElementsByClassName( 'toggle' );
+  for(i=0;i<em.length;i++){
+    em[i].style.display == 'none' ? em[i].style.display = 'block' : em[i].style.display = 'none';
+  }
+}
+
