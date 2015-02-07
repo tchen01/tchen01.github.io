@@ -13,7 +13,7 @@ document.addEventListener("mousewheel", scroll, false);
 document.addEventListener("DOMMouseScroll", scroll, false);
 
 hide();
-container.style.overflowY = "hidden";
+//document.body.style.overflowY = "hidden";
 
 var del = 0;
 function scroll(e){

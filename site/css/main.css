@@ -9,7 +9,7 @@
 html, body{
 	height: 100%;
     width: 100%;
-    background-color: #edecec;
+    background-color: pink;
     margin: 0;
 	padding: 0%;
     font-family: Roboto Slab;
@@ -18,33 +18,30 @@ html, body{
 body{
     padding: 5%;   
     box-sizing: border-box;
-    overflow-y: hidden;
-
+    overflow-y: scroll;
 }
+
 h3{
  margin: 0;   
 }
 
 #menuContainer{
-    position: fixed;
-    top: 10%;
     width: 0%;
     height: 100%;
     float: left;
+    overflow: hidden;
 }
+
 
 #contentContainer{
-    margin-top: 5%;
-    margin-left: 250px;
-    width: calc(100% - 250px);
-/*    height: 80%;   */
+    margin: 0 5% 0 0;
+    width: 100%;
     box-sizing: border-box;
-    overflow-y: hidden;
     overflow-x: hidden;
-}
 
+}
 .menuItem{
-    margin: .4em;
+    margin: 0 .4em .4em .4em;
     padding: .1em .2em .1em .5em;
     font-weight: bold;
     font-size: 200%;
@@ -85,7 +82,7 @@ h3{
     -webkit-transition: .5s;
 }
 .hidden{
-    display: none;
+    display: auto;
 }
 
 
@@ -162,23 +159,28 @@ body{
 
 }
 
-/* mobile */
-@media (max-aspect-ratio: 3/4) {
+/* non-mobile */
+@media (min-aspect-ratio: 1/1) {
     
-body{ background: pink;}
+body{
+    background: #edecec;
+    overflow-y: hidden
+}
 #menuContainer{
-    position: fixed;
-    top: 10%;
     width: 0%;
     height: 100%;
     float: left;
-    overflow: hidden
+    overflow: visible;
 }
 
 #contentContainer{
-    margin: 0 5% 0 0;
-    width: 100%;
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    height: 100%;
     box-sizing: border-box;
-
+    overflow-y: scroll;
+}
+.hidden{
+    display: none;   
 }
 }
