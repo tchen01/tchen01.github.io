@@ -1,4 +1,8 @@
-
+smoothScroll.init({
+    speed: 700, // Integer. How fast to complete the scroll in milliseconds
+    easing: 'easeInOutCubic', // Easing pattern to use
+    offset: 87,
+});
 
 var colors = ["rgb(39,170,225)", "red", "rgb(0, 167,157)", "rgb(247, 138, 30)", "rgb(28,117,188)", "rgb(238, 42,123)", "pink"];    
 var menuItems = document.getElementsByClassName( 'menuItem' );
@@ -8,6 +12,18 @@ var whiteSpace = document.getElementById('whitespace');
 var page = 0;
 var animating = false;
 
+for(var i=0; i<menuItems.length; i++){
+    menuItems[i].style.borderLeft = "5px solid " + colors[i];
+    //menuItems[i].addEventListener('click', menuSelect);
+    
+    titles = section[i].getElementsByClassName( 'title' );
+    for(var j=0; j<titles.length;j++){
+        titles[j].style.backgroundColor = colors[i];
+    }
+}
+
+
+/*
 document.addEventListener("mousewheel", scroll, false);
 // Firefox
 document.addEventListener("DOMMouseScroll", scroll, false);
@@ -15,14 +31,16 @@ document.addEventListener("DOMMouseScroll", scroll, false);
 hide();
 //document.body.style.overflowY = "hidden";
 
-window.addEventListener('resize', function(event){
+window.addEventListener('resize', resizer);
+window.addEventListener('orientationchange', resizer);
+function resizer(){
     var mQ = window.matchMedia('(min-aspect-ratio: 1/1)');
     if(mQ.matches){
         cycle( mod(6, -page));
         page = 0;
         select();
-    }      
-});
+    }   
+}
 
 var del = 0;
 function scroll(e){
@@ -46,15 +64,6 @@ function scroll(e){
 }
 //container.addEventListener("scroll", scroller, false);
 
-for(var i=0; i<menuItems.length; i++){
-    menuItems[i].style.borderLeft = "5px solid " + colors[i];
-    menuItems[i].addEventListener('click', menuSelect);
-    
-    titles = section[i].getElementsByClassName( 'title' );
-    for(var j=0; j<titles.length;j++){
-        titles[j].style.backgroundColor = colors[i];
-    }
-}
 
 function mod(n, m) {
         return ((m % n) + n) % n;
@@ -135,3 +144,4 @@ function scroller(){
         }
     }
 }
+*/
