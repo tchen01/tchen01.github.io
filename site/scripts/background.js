@@ -1,7 +1,7 @@
 smoothScroll.init({
     speed: 700, // Integer. How fast to complete the scroll in milliseconds
     easing: 'easeInOutCubic', // Easing pattern to use
-    offset: 87,
+    offset: 80,
 });
 
 var colors = ["rgb(39,170,225)", "red", "rgb(0, 167,157)", "rgb(247, 138, 30)", "rgb(28,117,188)", "rgb(238, 42,123)", "pink"];    
