@@ -15,6 +15,15 @@ document.addEventListener("DOMMouseScroll", scroll, false);
 hide();
 //document.body.style.overflowY = "hidden";
 
+window.addEventListener('resize', function(event){
+    var mQ = window.matchMedia('(min-aspect-ratio: 1/1)');
+    if(mQ.matches){
+        cycle( mod(6, -page));
+        page = 0;
+        select();
+    }      
+});
+
 var del = 0;
 function scroll(e){
     if( !animating ){

@@ -151,7 +151,7 @@ a{
 }
 
 /* wide devices */
-@media (min-width: 1000px) {  
+@media (min-width: 1700px) {  
     	
 body{
     padding: 2% 28% 5% 28%;
