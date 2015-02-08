@@ -86,7 +86,7 @@ h3{
     -webkit-transition: .5s;
 }
 .hidden{
-    display: auto;
+    display: none;
 }
 
 
@@ -127,13 +127,12 @@ a{
 }
 
 .description{
-    padding: .05em 0em .6em 11em;
+    padding: 0em 0em .6em 11em;
     vertical-align: top;
-    line-height: 145%;
+    line-height: 155%;
     display: block;
     box-sizing: border-box;
-    white-space: nowrap;
-    width: 1000%;
+    width: 100%;
 
 }
 
@@ -155,10 +154,10 @@ a{
 }
 
 /* wide devices */
-@media (min-width: 1700px) {  
+@media (min-width: 1400px) {  
     	
 body{
-    padding:  0% 10% 0% 10%;
+    padding:  0% 18% 0% 18%;
 }
 }
 
