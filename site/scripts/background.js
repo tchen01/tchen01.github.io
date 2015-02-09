@@ -43,13 +43,14 @@ function sectionClick(e){
 
 function tipCreate(){
     var tipSec = document.createElement('div');
-    tipSec.innerHTML = "<section class='section' id='tip'><h3 class='about'>Click on a card to read more</h3><div class='titles'><div class='title toggle hidden' style='background-color: black;' onclick='tipRemove()'>remove</div></div><div class='description toggle hidden' onclick='tipRemove()'>click here to remove this card</div></section> ";
+    tipSec.innerHTML = "<section class='section' id='tip'><h3 class='about'>Click on a card to read more</h3><div class='titles'><div class='line toggle hidden' style='background-color: black;' onclick='tipRemove()'>remove</div></div><div class='description toggle hidden' onclick='tipRemove()'><div class='line'>click here to remove this card</div></div></section> ";
     tipSec.id = "tip";
     container.insertBefore(tipSec, sections[1])
     var tipSec = document.getElementById('tip');
     tipSec.addEventListener('mousedown', startTime, false);
     tipSec.addEventListener('mouseup', sectionClick, false);
 }
+
 function tipRemove(){
     document.cookie = "tip = false";
     container.removeChild(document.getElementById('tip'));
@@ -61,7 +62,7 @@ function getCookie(cname) {
     for(var i=0; i<ca.length; i++) {
         var c = ca[i];
         while (c.charAt(0)==' ') c = c.substring(1);
-        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+        if (c.indexOf(name) == 0) return    c.substring(name.length,c.length);
     }
     return "";
 }

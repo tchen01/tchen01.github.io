@@ -1,0 +1,98 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto+Slab:700,400,300,100); 
+
+/* mobile first */
+html, body{
+    width: 100%;
+    height: 100%;
+    background: #edecec;
+    margin: 0;
+	padding: 0%;
+    font-family: Roboto Slab;
+    font-size: 85%;
+}
+body{
+    box-sizing: border-box;
+}
+
+
+h3{
+ margin: 0;   
+}
+
+
+#contentContainer{
+    margin: 0 5% 0 0;
+    width: 100%;
+    padding: 3em; 
+    box-sizing: border-box;
+    overflow-x: hidden;
+
+}
+
+section{
+    font-size: 100%;
+    padding: 1% 2% 1% 2%;
+    margin-bottom: .4em;
+    overflow: hidden;
+    background-color: white;
+    border-radius: 2px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+a{
+    text-decoration: none;
+    color: inherit;
+}
+
+.item{    
+    width: 100%;
+    overflow: hidden;
+    margin-top: .5em;
+}
+
+.titles{
+    width: 10em;
+    padding: .6em 0 0 1em;
+    vertical-align: top;
+    line-height: 155%;  
+    box-sizing: border-box;
+    float: left;
+    text-align: right;
+
+}
+
+.description{
+    padding: .6em 0 0 11em;
+    vertical-align: top;
+    line-height: 155%;
+    box-sizing: border-box;
+    width: 100%;
+
+}
+
+
+.titles > .line{
+    display: inline-block;
+    color: white;
+    padding: .05em .5em .1em .5em;
+    line-height: 1.1em;
+    vertical-align: top;
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+.description > .line{
+    display: inline-block;
+    padding: .05em .5em .1em .5em;
+    line-height: 1.1em;
+    vertical-align: top;
+    font-weight: 400;
+    white-space: nowrap;  
+}
+
+
+
+#menuContainer, #tip, #resume, #whitespace{
+    display: none;
+}
