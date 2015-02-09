@@ -1,0 +1,50 @@
+@charset "utf-8";
+/* CSS Document 5/20 8:48*/
+
+@import url(http://fonts.googleapis.com/css?family=Roboto+Slab:700,300,100); /* 400 available*/
+
+/* mobile first */
+
+/* HTML TAGS */
+body, h1, p, ul{
+	margin: 0;
+	padding: 0;
+	font-family: Roboto Slab; 
+}
+
+#logo, #menu-icon, #nav, #text1, #projects, #resume, #contact{display: none;}
+
+a:link {text-decoration:none;color: inherit;}
+a:visited {text-decoration:none;}
+
+section{
+}
+
+h1{
+	font-size: 1.4em;
+	margin-top: .3em;
+}
+
+p{
+	margin-bottom: .5em;
+}
+
+p.hide{
+	display: block;
+	font-style: italic;
+}
+
+#home{
+	font-size: 50pt;
+}
+
+#tyler{
+	display: inline;
+
+}
+
+#chen{
+	display: inline;
+	font-weight:700;
+
+}

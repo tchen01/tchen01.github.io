@@ -1,386 +1,207 @@
 @charset "utf-8";
 /* CSS Document 5/20 8:48*/
 
-@import url(http://fonts.googleapis.com/css?family=Roboto+Slab:700,300,100); /* 400 available*/
+@import url(http://fonts.googleapis.com/css?family=Roboto+Slab:700,400,300,100); 
 
 /* mobile first */
-
-/* HTML TAGS */
 html, body{
-	height: 100%;
-	
-	cursor: default;
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-}
-
-html, body, h1, p, ul{
-	margin: 0;
-	padding: 0;
-	font-family: Roboto Slab;
-
-}
-
-.menu{
-	font-weight: 700;
-	font-size: 80%;
-	color: rgb(250, 240, 220);
-  
-	padding: 0 15px 0 0; 	padding: 0 1.5vw 0 0;
-	
-
-}
-a:link, a:hover, a:active {text-decoration: none; }
-.menu:hover{color: rgb(165, 110, 90);}
-
-.inline_link{
-	color: inherit;
-}
-
-.inline_link:hover{
-  color: rgb(165, 110, 90);
-}
-
-#plink{
-	font-size: 150%;
-	color: inherit;
-	padding: .1em;
-	border: solid .05em rgb(45, 40, 35);
-}
-
-#plink:hover{
-	color: rgb(250, 240, 220);
-	background: rgb(45, 40, 35);
-	
-}
-
-#sprojects > div{
-	display: none;
-}
-
-#menu-icon {
-	display: none;
-}
-
-#sprojects h1{
-	display: none;
-}
-
-ul {
-	list-style: none;
-}
-
-ul a {
-	display: inline-block;
-	float: left;
-	height: 10px
-}
-	
-	
-	
-
-
-
-/* CSS CLASSES */
-
-.short{
-	height: 250px; /* fallback for browsers that don't support viewport stuff*/
-	line-height: 250px;
-	
- 	height: 25vh; 
- 	line-height:25vh; 
-
-}
-
-.medium{
-	height: 400px; /* fallback for browsers that don't support viewport stuff*/
-	line-height: 400px;
-	
- 	height: 40vh; 
- 	line-height: 40vh; 
-}
-
-.long{
-	height: 800px; /* fallback for browsers that don't support viewport stuff*/
-	line-height: 800px;
-	
- 	height: 80vh; 
-	line-height: 80vh; 
-
-}
-
-.bg{
-  text-align: justify;
-}
-
-.light{
-	background-color: rgb(45, 40, 35);
-	color: rgb(250, 240, 220);
-}
-
-.dark{
-	background-color: rgb(250, 240, 220);
-	color: rgb(45, 40, 35);
-}
-
-
-.light .bg{
-	background-color: rgba(45, 40, 35, .5); /*can I just make the bg opaque somehow?*/
-	padding: 1%;
-}
-
-.dark .bg{
-	background-color: rgba(250, 240, 220, .5); /*can I just make the bg opaque somehow?*/
-	padding: 1%;
-}
-
-
-.small{
-	font-size:16pt;
-}
-
-
-.anchor{
-	display: block; 
-	height: 50px; 
-	margin-top: -50px; 
-	visibility: hidden;
-}
-
-
-.imgtext, .text	 { /* how can I add padding/margin????*/
-	width: 90%;
-	margin-left: 5%; /* 50 - 60/2 */
-	
-	font-family: Roboto Slab;	
-	
-	display: inline-block;
-	vertical-align: middle;
-	line-height: normal; 
-	
-	text-align: center;
-}
-
-.text > h1, .imgtext > h1{
-	font-size: 48pt; 
-	font-weight: 700; 
-}
-
-.text > p, .imgtext > p{
-	font-size: 18pt; /*smaller?*/
-	font-weight: 300; 
-	padding: 0 0 .3em 0;
-}
-
-
-
-/* HTML IDs */
-
-#menu{
-    background-color: rgb(45, 40, 35);	
-    height: 52px; /* 1 larger than anchor margin so that I can use vh without the line showing*/
-	line-height: 50px;
-    position: fixed;
     width: 100%;
-    top:0;
-	z-index:100;
+    height: 100%;
+    background: #edecec;
+    margin: 0;
+	padding: 0%;
+    font-family: Roboto Slab;
+    font-size: 85%;
 }
-
-#top{
-	height: 100%;
-	width: 50px;
-}
-
-
-#logo{
-  color: rgb(45, 40, 35);	
-	font-weight: 100;
-	font-size: 160%;
-  margin: 0 0 0 10px;
-}
-
-#logo:hover{
-  font-size: 165%; 
-  margin: 2px 0 0 8 px	;
-}
-
-#nav{
-	float: right;
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
+body{
+    box-sizing: border-box;
 }
 
 
-#name{
-	position: absolute;
-	bottom: 0;
-	color: rgb(250, 240, 220);	
-	font-weight: 100;
-	font-size: 150px; 	font-size: 15vw;
-	
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-}
-
-.tyler{
-	float: left;
-}
-
-.chen{
-	float: left;
-	font-weight:700;
+h3{
+ margin: 0;   
 }
 
 
-/*BACKGROUND IAMGES ETC*/
-.grid{
-  z-index: 100;
-	background: url('../image/2gridl.png');
-	background-size: auto;
-	background-position:center; 
-}
-#shome{
-	height: 100%;	
- 
-	background: url('../image/2gridl.png'), url('../image/bg1.jpg');
-	background-size: auto, cover;
-	background-position:center; 
-}
-
-#sabout{
-	background: url('../image/bg2.jpg') fixed;
-	background-size: cover;
-	background-position: center; 
-	
-}
-
-#shobbies{
-	background:url('../image/bg3.jpg') fixed;
-	background-size: cover;
-	background-position: center; 
-}
-
-#scontact  h1{
-	z-index: 101;
+#menuContainer{
+    width: 0%;
+    height: 100%;
+    float: left;
+    overflow: hidden;
+    position: fixed;
 }
 
 
-/*media queries*/
+#contentContainer{
+    margin: 0 5% 0 0;
+    width: 100%;
+    padding: 3em; 
+    box-sizing: border-box;
+    overflow-x: hidden;
 
-/*very small screen*/
-@media (max-width: 600px) {  
-.text > h1, .imgtext > h1{font-size: 36pt;}
-.text > p, .imgtext > p{font-size: 12pt;}
-.small{font-size:10pt;}
+}
+.menuItem{
+    margin: 0 .4em .4em .4em;
+    padding: .1em .2em .1em .5em;
+    font-weight: bold;
+    font-size: 200%;
+    width: 170px;
+    color: #a8a8a8;
+    background-color: white;
+    box-shadow: 2px 2px 0px lightgrey;
+    border-radius: 2px;
+    display: inline-block;
+    
+    -webkit-transition: .2s;
+    tranistion: .1s;
+}
+
+.menuItem:hover{
+    margin-left: 1em;   
+}
+
+section{
+    font-size: 120%;
+    padding: 3% 5% 3% 5%;
+    margin-bottom: 1em;
+    overflow: hidden;
+    background-color: white;
+    border-radius: 2px;
+    box-shadow: 2px 2px 0px lightgrey;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 
-/*menu to small screen*/
-@media (max-width: 700px) {  
-
-.menu{font-size: 100%;}
-
-#menu-icon {	display:inline-block;}
-
-#menu-icon{
-	height: 40px;
-	width: 40px;
-	margin: 6px 6px 0 0;
+a{
+    text-decoration: none;
+    color: inherit;
 }
-#menu-icon:hover{
-	height:46px;
-	width: 46px;
-	margin: 3px 3px 3px 0	;
-	padding: 0 0 3px 50vw;
+.item{    
+    width: 100%;
+    overflow: hidden;
+    margin-top: .5em;
 }
 
-#menu-icon:focus{
-	height:46px;
-	width: 46px;
-	margin: 3px 3px 3px 0	;
-	padding: 0 0 3px 50vw;
-}
-
-span ul, span:active ul { 
-	display: none;
-	position: fixed;
-	background: rgb(45, 40, 35);
-	top: 50px;
-	right: 0px;
-	width: 100%;
-	padding: 0 0 1em 0;
-}
-
-ul a {
-	text-align: center;
-	width: 100%;
-	height: 2em;
-}
-
-span:hover ul {
-	display: block;
-}
-
-.grid{
-  background: none;
-}
-#shome{
-	height: 100%;	
- 
-	background: url('../image/bg1.jpg');
-	background-size: cover;
-	background-position:center; 
-}
-
-#sabout{
-	background: url('../image/bg2.jpg') fixed;
-	background-size: cover;
-	background-position: center; 
-	
-}
-
-#shobbies{
-	background:url('../image/bg3.jpg') fixed;
-	background-size: cover;
-	background-position: center; 
-}
+.titles{
+    width: 10em;
+    padding: .6em 0 0 1em;
+    vertical-align: top;
+    line-height: 155%;  
+    display: block;
+    box-sizing: border-box;
+    float: left;
+    text-align: right;
 
 }
 
+.description{
+    padding: .6em 0 0 11em;
+    vertical-align: top;
+    line-height: 155%;
+    box-sizing: border-box;
+    width: 100%;
 
-
-
-
-/*large screen*/
-@media (min-width: 900px) {  
-
-.menu{font-size: 100%;}
-
-.imgtext, .text	 { /* how can I add padding/margin????*/
-	width: 66%;
-	margin-left: 17%; /* 50 - 60/2 */
 }
 
-.text > h1, .imgtext > h1{font-size: 10vmin;}
-.text > p, .imgtext > p{font-size: 3.5vmin;}
-
-.short .text > p{
- font-size: 2.3vw;
+.line{
+    display: inline-block;
+    padding: .05em .5em .1em .5em;
+    line-height: 100%;
+    vertical-align: top;
+    font-weight: 400;
 }
 
-.extra.small{
-	font-size:3.8vmin;
+.titles > .line{
+    color: white;
 }
+
+.extended{
+    margin-top: -.15em;
+    margin-bottom: .5em;
+    line-height: 130%;
+}
+
+#resumeImg{
+    width: 96%;
+    height: 6em;
+    margin: 2%;
+    background-color: rgb(0,51,102);
+    background-size: 20%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+#whitespace{
+    height:50px;text-align: center;color: #a8a8a8;
+}
+
+.hidden{
+    display: none;
+}
+
+code{
+    background: #f2f2f2;
+    padding: 3px;
+    border-radius: 2px;
+}
+
+.fun{
+    color: #036;
+    font-weight: 700;
+}
+
+.str{
+    color: #747474;
+}
+
+/* wide devices */
+@media (min-width: 1400px) {  
+    	
+body{
+    padding:  0% 18% 0% 18%;
+}
+}
+
+/* non-mobile */
+@media (min-aspect-ratio: 4/5) and (min-width: 700px) {
+    
+body{
+    font-size: 100%;
+}
+#borderTop{
+    width: 100%;
+    padding-bottom: 5%;
+    padding-bottom: 5vh;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    background: #edecec;    
+}
+#borderBot{
+    width: 100%;
+    padding-top: 5%;
+    padding-top: 5vh;
+    box-sizing: border-box;
+    position: fixed;
+    bottom: 0;
+    background: #edecec;    
+}
+    
+#menuContainer{
+    width: 0%;
+    height: 100%;
+    padding: 5%;
+    padding-top: 5vh;
+    float: left;
+    overflow: visible;
+}
+
+#contentContainer{
+    padding: 8%; 
+    padding-top: 5vh;
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    box-sizing: border-box;
+}
+
 }

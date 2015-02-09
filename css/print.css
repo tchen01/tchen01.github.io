@@ -1,50 +1,98 @@
-@charset "utf-8";
-/* CSS Document 5/20 8:48*/
-
-@import url(http://fonts.googleapis.com/css?family=Roboto+Slab:700,300,100); /* 400 available*/
+@import url(http://fonts.googleapis.com/css?family=Roboto+Slab:700,400,300,100); 
 
 /* mobile first */
-
-/* HTML TAGS */
-body, h1, p, ul{
-	margin: 0;
-	padding: 0;
-	font-family: Roboto Slab; 
+html, body{
+    width: 100%;
+    height: 100%;
+    background: #edecec;
+    margin: 0;
+	padding: 0%;
+    font-family: Roboto Slab;
+    font-size: 85%;
+}
+body{
+    box-sizing: border-box;
 }
 
-#logo, #menu-icon, #nav, #text1, #projects, #resume, #contact{display: none;}
 
-a:link {text-decoration:none;color: inherit;}
-a:visited {text-decoration:none;}
+h3{
+ margin: 0;   
+}
+
+
+#contentContainer{
+    margin: 0 5% 0 0;
+    width: 100%;
+    padding: 3em; 
+    box-sizing: border-box;
+    overflow-x: hidden;
+
+}
 
 section{
+    font-size: 100%;
+    padding: 1% 2% 1% 2%;
+    margin-bottom: .4em;
+    overflow: hidden;
+    background-color: white;
+    border-radius: 2px;
+    box-sizing: border-box;
+    width: 100%;
 }
 
-h1{
-	font-size: 1.4em;
-	margin-top: .3em;
+a{
+    text-decoration: none;
+    color: inherit;
 }
 
-p{
-	margin-bottom: .5em;
+.item{    
+    width: 100%;
+    overflow: hidden;
+    margin-top: .5em;
 }
 
-p.hide{
-	display: block;
-	font-style: italic;
-}
-
-#home{
-	font-size: 50pt;
-}
-
-#tyler{
-	display: inline;
+.titles{
+    width: 10em;
+    padding: .6em 0 0 1em;
+    vertical-align: top;
+    line-height: 155%;  
+    box-sizing: border-box;
+    float: left;
+    text-align: right;
 
 }
 
-#chen{
-	display: inline;
-	font-weight:700;
+.description{
+    padding: .6em 0 0 11em;
+    vertical-align: top;
+    line-height: 155%;
+    box-sizing: border-box;
+    width: 100%;
 
+}
+
+
+.titles > .line{
+    display: inline-block;
+    color: white;
+    padding: .05em .5em .1em .5em;
+    line-height: 1.1em;
+    vertical-align: top;
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+.description > .line{
+    display: inline-block;
+    padding: .05em .5em .1em .5em;
+    line-height: 1.1em;
+    vertical-align: top;
+    font-weight: 400;
+    white-space: nowrap;  
+}
+
+
+
+#menuContainer, #tip, #resume, #whitespace{
+    display: none;
 }
