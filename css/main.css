@@ -140,6 +140,10 @@ a{
     display: none;
 }
 
+.bold{
+    font-weight: bold;
+}
+
 code{
     background: #f2f2f2;
     padding: 3px;
@@ -154,6 +158,8 @@ code{
 .str{
     color: #747474;
 }
+
+
 
 /* wide devices */
 @media (min-width: 1400px) {  
