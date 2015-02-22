@@ -1,19 +1,19 @@
-smoothScroll.init({
-    speed: 700, // Integer. How fast to complete the scroll in milliseconds
-    easing: 'easeInOutCubic', // Easing pattern to use
-    offset: window.innerHeight/20,
-});
+//smoothScroll.init({
+//    speed: 700, // Integer. How fast to complete the scroll in milliseconds
+//    easing: 'easeInOutCubic', // Easing pattern to use
+//    offset: window.innerHeight/20,
+//});
 
-var colors = ["rgb(39,170,225)", "red", "rgb(0, 167,157)", "rgb(247, 138, 30)", "rgb(28,117,188)", "rgb(238, 42,123)", "pink"];    
-var menuItems = document.getElementsByClassName( 'menuItem' );
+var colors = ["rgb(39,170,225)", "red", "rgb(0, 167,157)", "rgb(247, 138, 30)", "rgb(28,117,188)", "rgb(238, 42,123)", "pink"];
+//var menuItems = document.getElementsByClassName( 'menuItem' );
 var sections = document.getElementsByTagName( 'section' );
 var container = document.getElementById('contentContainer');
 var whiteSpace = document.getElementById('whitespace');
 var page = 0;
 var animating = false;
 
-for(var i=0; i<menuItems.length; i++){
-    menuItems[i].style.borderLeft = "5px solid " + colors[i];
+for(var i=0; i<sections.length; i++){
+   // menuItems[i].style.borderLeft = "5px solid " + colors[i];
     //menuItems[i].addEventListener('click', menuSelect);
     sections[i].addEventListener('mousedown', startTime, false);
     sections[i].addEventListener('mouseup', sectionClick, false);
