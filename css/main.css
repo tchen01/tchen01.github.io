@@ -23,17 +23,6 @@ h3{
 }
 
 
-/*
-#menuContainer{
-    width: 0%;
-    height: 100%;
-    float: left;
-    overflow: hidden;
-    position: fixed;
-}
-*/
-
-
 #contentContainer{
     margin: 0 5% 0 0;
     width: 100%;
@@ -42,27 +31,6 @@ h3{
     overflow-x: hidden;
 
 }
-/*
-.menuItem{
-    margin: 0 .4em .4em .4em;
-    padding: .1em .2em .1em .5em;
-    font-weight: bold;
-    font-size: 200%;
-    width: 170px;
-    color: #a8a8a8;
-    background-color: white;
-    box-shadow: 2px 2px 0px lightgrey;
-    border-radius: 2px;
-    display: inline-block;
-    
-    -webkit-transition: .2s;
-    tranistion: .1s;
-}
-
-.menuItem:hover{
-    margin-left: 1em;   
-}
-*/
 
 section{
     font-size: 120%;
@@ -97,6 +65,10 @@ a{
     float: left;
     text-align: right;
 
+}
+
+.title{
+    background: #7A8298;
 }
 
 .description{
