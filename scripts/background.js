@@ -1,17 +1,25 @@
-var colors = ["rgb(39,170,225)", "red", "rgb(0, 167,157)", "rgb(247, 138, 30)", "rgb(28,117,188)", "rgb(238, 42,123)", "pink"];
+var colors = ["rgb(39,170,225)","rgb(238, 42,123)", "rgb(0, 167,157)","red",  "rgb(28,117,188)", "rgb(247, 138, 30)", "rgb(181, 129, 188)"];
+
+var blues = ["rgb(88, 147, 172)","rgb(97, 112, 152)", "rgb(86, 129, 167)","#7085cc",  "rgb(44, 115, 170)", "rgb(70, 85, 170)", "rgb(112, 126, 201)"];
+
+var reds = ["rgb(172, 88, 117)","rgb(152, 97, 97)", "rgb(167, 86, 111)","#cc7b70",  "rgb(170, 44, 44)", "rgb(170, 70, 85)", "rgb(201, 112, 112)"];
+
+
 var sections = document.getElementsByTagName( 'section' );
 var container = document.getElementById('contentContainer');
 var whiteSpace = document.getElementById('whitespace');
 var page = 0;
 var animating = false;
 
+
+var offset = Math.floor(Math.random() * colors.length)
 for(var i=0; i<sections.length; i++){
     sections[i].addEventListener('mousedown', startTime, false);
     sections[i].addEventListener('mouseup', sectionClick, false);
     
     titles = sections[i].getElementsByClassName( 'title' );
     for(var j=0; j<titles.length;j++){
-        titles[j].style.backgroundColor = colors[i];
+        titles[j].style.backgroundColor = colors[ (i + offset) % colors.length];
     }
 }
 
