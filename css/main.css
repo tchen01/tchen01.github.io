@@ -34,9 +34,9 @@ section{
     margin-bottom: 1em;
     overflow: hidden;
     background-color: white;
-    border-radius: 2px;
-    box-shadow: 2px 2px 0px lightgrey;
-/*    box-sizing: border-box;*/
+    /* border-radius: 2px; */
+    /* box-shadow: 2px 2px 0px lightgrey; */
+    /* box-sizing: border-box; */
     width: 90%;
 }
 

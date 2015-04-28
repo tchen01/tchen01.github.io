@@ -18,7 +18,7 @@ for(var i=0; i<sections.length; i++){
     sections[i].addEventListener('mouseup', sectionClick, false);
     
     titles = sections[i].getElementsByClassName( 'title' );
-//    sections[i].style.borderTop = "2px solid " + colors[ (i + offset) % colors.length];;
+    sections[i].style.borderTop = "2px solid " + colors[ (i + offset) % colors.length];;
     for(var j=0; j<titles.length;j++){
         titles[j].style.backgroundColor = colors[ (i + offset) % colors.length];
     }
@@ -47,8 +47,8 @@ function tipCreate(){
     container.insertBefore(tipSec, sections[1])
     var tipSec = document.getElementById( 'tip' );
     
-    tipSec.outerHTML = "<section class='section' id='tip'><h3 class='about'>Click on a card to read more</h3><div class='titles'><div class='line toggle hidden' style='background-color: black;' onclick='tipRemove()'>remove</div></div><div class='description toggle hidden' onclick='tipRemove()'><div class='line'>click here to remove this card</div></div></section> ";
-    // style='border-top: 2px solid black;'
+    tipSec.outerHTML = "<section class='section' id='tip' style='border-top: 2px solid black;'><h3 class='about'>Click on a card to read more</h3><div class='titles'><div class='line toggle hidden' style='background-color: black;' onclick='tipRemove()'>remove</div></div><div class='description toggle hidden' onclick='tipRemove()'><div class='line'>click here to remove this card</div></div></section> ";
+    
 
     var tipSec = document.getElementById('tip');
     tipSec.addEventListener('mousedown', startTime, false);
