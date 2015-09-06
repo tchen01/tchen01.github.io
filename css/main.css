@@ -1,7 +1,7 @@
 @charset "utf-8";
 /* CSS Document 5/20 8:48*/
 
-@import url(http://fonts.googleapis.com/css?family=Roboto+Slab:700,400,300,100); 
+/*@import url(http://fonts.googleapis.com/css?family=Roboto+Slab:700,400,300,100); 
 
 /* mobile first */
 html, body{
@@ -10,12 +10,17 @@ html, body{
     background: #edecec;
     margin: 0;
 	padding: 0%;
-    font-family: Roboto Slab;
+    font-family: brandon_grotesque;
     font-size: 85%;
 }
 
 h3{
- margin: 0;   
+    margin: 0;
+    padding: 1.5% 5% 1.5% 5%;
+    font-weight: 700;
+    font-style: italic;
+    color: white;
+    background-color: black;
 }
 
 
@@ -30,14 +35,15 @@ h3{
 
 section{
     font-size: 120%;
-    padding: 3% 5% 3% 5%;
+    padding: 0 0 .5em 0;
     margin-bottom: 1em;
     overflow: hidden;
     background-color: white;
+    /* border-top: 1px solid black; */
     /* border-radius: 2px; */
     /* box-shadow: 2px 2px 0px lightgrey; */
     /* box-sizing: border-box; */
-    width: 90%;
+    width: 100%;
 }
 
 
@@ -51,41 +57,28 @@ a{
     margin-top: .5em;
 }
 
-.titles{
+.title{
     width: 10em;
-    padding: .6em 0 0 1em;
+    padding: 0 .5em 0 1em;
     vertical-align: top;
     line-height: 155%;  
+    font-weight: 500; /*optimize for higher dpi screen*/
     display: block;
     box-sizing: border-box;
     float: left;
     text-align: right;
-
 }
 
-.title{
-    background: #7A8298;
-}
 
-.description{
-    padding: .6em 0 0 10em;
+.content{
+    margin: 0 0 0 10em;
+    padding: 0 1em 0 .5em;
     vertical-align: top;
     line-height: 155%;
     box-sizing: border-box;
-    width: 100%;
-}
-
-.line{
-    display: inline-block;
-    padding: .15em .5em .2em .5em;
-    border: 1px solid white;
-    line-height: 100%;
-    vertical-align: top;
-    font-weight: 400;
-}
-
-.titles > .line{
-    color: white;
+    width: 80%; /* is the below calc ok???*/
+    width: calc(100% - 10em);
+    border-left: 1px solid black;
 }
 
 .extended{
@@ -94,15 +87,6 @@ a{
     line-height: 130%;
 }
 
-#resumeImg{
-    width: 96%;
-    height: 6em;
-    margin: 2%;
-    background-color: rgb(0,51,102);
-    background-size: 20%;
-    background-repeat: no-repeat;
-    background-position: center;
-}
 #whitespace{
     height:50px;text-align: center;color: #a8a8a8;
 }
@@ -122,7 +106,7 @@ code{
 }
 
 .fun{
-    color: #036;
+    color: #a071a8;
     font-weight: 700;
 }
 

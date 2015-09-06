@@ -1,28 +1,13 @@
-var colors = ["rgb(39,170,225)","rgb(238, 42,123)", "rgb(0, 167,157)","red",  "rgb(28,117,188)", "rgb(247, 138, 30)", "rgb(181, 129, 188)"];
-
-var blues = ["rgb(88, 147, 172)","rgb(97, 112, 152)", "rgb(86, 129, 167)","#7085cc",  "rgb(44, 115, 170)", "rgb(70, 85, 170)", "rgb(112, 126, 201)"];
-
-var reds = ["rgb(172, 88, 117)","rgb(152, 97, 97)", "rgb(167, 86, 111)","#cc7b70",  "rgb(170, 44, 44)", "rgb(170, 70, 85)", "rgb(201, 112, 112)"];
-
 
 var sections = document.getElementsByTagName( 'section' );
 var container = document.getElementById('contentContainer');
 var whiteSpace = document.getElementById('whitespace');
-var page = 0;
-var animating = false;
 
-
-var offset = Math.floor(Math.random() * colors.length)
 for(var i=0; i<sections.length; i++){
     sections[i].addEventListener('mousedown', startTime, false);
     sections[i].addEventListener('mouseup', sectionClick, false);
-    
-    titles = sections[i].getElementsByClassName( 'title' );
-    sections[i].style.borderTop = "2px solid " + colors[ (i + offset) % colors.length];;
-    for(var j=0; j<titles.length;j++){
-        titles[j].style.backgroundColor = colors[ (i + offset) % colors.length];
-    }
 }
+
 
 if( getCookie("tip") !== "false" ){
     tipCreate();
@@ -47,7 +32,7 @@ function tipCreate(){
     container.insertBefore(tipSec, sections[1])
     var tipSec = document.getElementById( 'tip' );
     
-    tipSec.outerHTML = "<section class='section' id='tip' style='border-top: 2px solid black;'><h3 class='about'>Click on a card to read more</h3><div class='titles'><div class='line toggle hidden' style='background-color: black;' onclick='tipRemove()'>remove</div></div><div class='description toggle hidden' onclick='tipRemove()'><div class='line'>click here to remove this card</div></div></section> ";
+    tipSec.outerHTML = "<section class='section' id='tip' ><div class='about'><h3>Click on a card to read more</h3></div><div class='item'><div class='title toggle hidden' onclick='tipRemove()'>remove</div><div class='content toggle hidden' onclick='tipRemove()'>click here to remove this card</div></div><div class='item'><div class='title toggle hidden'>cookies</div><div class='content toggle hidden'>I use one cookie. (apparently it's a trend to announce this)</div></div></section> ";
     
 
     var tipSec = document.getElementById('tip');
