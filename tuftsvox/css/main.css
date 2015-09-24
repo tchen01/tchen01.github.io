@@ -21,7 +21,7 @@ html, body{
     text-align: center;
     padding-top: 2%;
     position: relative;
-    background: #ffd68b;
+    background: #fdc457;
 
 }
 
@@ -53,9 +53,9 @@ a{
 #menu > a{
     text-align: center;
     width: auto;
-    line-height: 2.5em;
+    line-height: 1.5em;
     display: block;
-    padding: 10px 1em 10px 1em;
+    padding: 3px 1em 3px 1em;
     
     font-size: 120%;
     font-style: italic;
@@ -125,7 +125,7 @@ body{
 }
     
 #menu > a{
-    font-size: 140%;
+    font-size: 100%;
     line-height: 1.5em;
     float: left;
 }
@@ -138,7 +138,7 @@ body{
 .fixedmenu{
     position: fixed;
     top: 0;
-    background: #ffd68b !important;
+    background: #fdc457 !important;
 
 }
 
@@ -160,4 +160,14 @@ body{
     top: 0;
 }
     
+}
+
+@media (min-aspect-ratio: 4/5) and (min-width: 900px) {
+
+#menu > a{
+    font-size: 140%;
+    line-height: 1.5em;
+    float: left;
+}
+
 }
