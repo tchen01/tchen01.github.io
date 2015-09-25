@@ -7,9 +7,12 @@
 <meta name="viewport" content="width=device-width user-scalable=no">
 
 <link href="!!!!.ico" rel="shortcut icon" >
+<link href="tuftsvox/css/twitter.css" rel="stylesheet" type="text/css" media="screen" />
 <link href="tuftsvox/css/main.css" rel="stylesheet" type="text/css" media="screen" />
 
 <script src="tuftsvox/scripts/smooth-scroll.js"></script>
+<script type="text/javascript" src="tuftsvox/scripts/twitterfetch.js"></script>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 
 </head>
@@ -21,12 +24,14 @@
 <div id="menuSpacer"></div>
 <div id="menu" class="">
     <a data-scroll href="#about">ABOUT VOX</a>
-    <a data-scroll href="#posts">RECENT POSTS</a>
+    <a data-scroll href="#posts">SOCIAL MEDIA</a>
     <a data-scroll href="#sexualhealth">SEXUAL HEALTH</a>
-    <!--a data-scroll href="#forum">FORUM</a-->
+<!--    <a data-scroll href="#forum">FORUM</a>-->
+    <a data-scroll href="#events">EVENTS</a>
     <a data-scroll href="#askSex">ASK US ABOUT SEX!!!</a>
-    <a data-scroll href="#social">FOLLOW US</a>
-    <!--a data-scroll href="#archive">ARCHIVE</a-->
+<!--    <a data-scroll href="#social">FOLLOW US</a>-->
+<!--    <a data-scroll href="#archive">ARCHIVE</a>-->
+
 
 
 </div>
@@ -44,16 +49,19 @@
 </section>    
 
 <section id="posts">
-    <div class="title">recent posts</div>
+    <div class="title">recent posts<div id="socialIcons"><a id="twi" href="https://twitter.com/tuftsvox"><img src="tuftsvox/img/media/twitter.svg"/><img src="tuftsvox/img/media/twitter_hover.svg"/><a id="fac" href="https://www.facebook.com/Tufts-Vox-Students-for-Reproductive-Justice-165103206873075/timeline/"><img src="tuftsvox/img/media/facebook.svg"/><img src="tuftsvox/img/media/facebook_hover.svg"/></a></a><a id="ins" href="https://instagram.com/tuftsvox"><img src="tuftsvox/img/media/instagram.svg"/><img src="tuftsvox/img/media/instagram_hover.svg"/></a>
+</div></div>
     <div class="text">
-        <a class="twitter-timeline" href="https://twitter.com/TuftsVOX" data-widget-id="647049217702277120">Tweets by @TuftsVOX</a>
+        <div id="tweetContainer"></div>
+        <!--a class="twitter-timeline" href="https://twitter.com/TuftsVOX" data-widget-id="647049217702277120">Tweets by @TuftsVOX</a>
         <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-        <p>something like this i guess why wont they let me adjust this. </p>
+        <p>something like this i guess why wont they let me adjust this. </p-->
     </div>
 </section>
 <section id="events">
-    <div class="title">events</div>
+    <div class="title">events & meetings</div>
     <div class="text">
+        <p>We meet [Day] from [s]-[f]pm in [Building]!</p>
         upcoming events loaded here (maybe from events hosted by VOX on fb??)
     </div>
 </section>
@@ -93,19 +101,20 @@
     <div class="title">follow us</div>
     <div class="text">
     <p>Subscribe to our e-list for updates on VOX: <a href="https://elist.tufts.edu/wws/subscribe/vox"> https://elist.tufts.edu/wws/subscribe/vox </a></p>
-        <p>We meet [Day] from [s]-[f]pm in [Building]   !</p>
+        <p>probaby move this </p>
+<!--
         <br>
         <p>Follow us for updates on all platforms, and like our Facebook page: Tufts Vox: Students for Reproductive Justice !!</p>
         <p> <a href="https://twitter.com/tuftsvox"><b>Twitter: </b>@tuftsvox</a></p>
         <p> <a href="https://instagram.com/tuftsvox"><b>Instagram: </b>@tuftsvox</a></p>
         <p> <a href="https://www.facebook.com/Tufts-Vox-Students-for-Reproductive-Justice-165103206873075/timeline/"><b>Facebook: </b>Tufts Vox: Students for Reproductive Justice</a></p>
+-->
     </div>
 </section>
 <div id="footer"><a href="http://chen.pw">designed by tyler chen</a></div>
 </div>
 
 </body>
-
 <script type="text/javascript" src="tuftsvox/scripts/background.js"></script>
 
 </html>

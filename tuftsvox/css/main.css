@@ -21,7 +21,7 @@ html, body{
     text-align: center;
     padding-top: 2%;
     position: relative;
-    background: #fdc457;
+    background: #FFD37E;
 
 }
 
@@ -37,6 +37,9 @@ html, body{
     
     font-weight: 800;
 
+}
+#menuSpacer{
+    display: none;
 }
 
 #menu{
@@ -67,14 +70,11 @@ a{
 }
 
 
-
-
 #contentContainer{
     margin: 0 0 0 0;
     width: 94%;
     padding: 3%; 
     overflow-x: hidden;
-
 }
 
 section{
@@ -102,6 +102,32 @@ section{
     padding-top: 3%;
 }
 
+#socialIcons{
+    display: inline-block;
+    float: right;
+}
+
+#socialIcons>a img:nth-Child(2){
+    display: none;
+}
+#socialIcons>a:hover img:nth-Child(1){
+    display: none;
+}
+#socialIcons>a:hover img:nth-Child(2){
+    display: inherit;
+}
+
+#socialIcons img{
+    height: 1em;
+    padding-right: .5em;
+}
+
+#tweetContainer{
+    font-size: 80%;
+    max-height: 600px;
+/*    overflow-y: scroll;*/
+}
+
 #footer{
     color: #d5d5d5;
     width: 100%;
@@ -118,6 +144,10 @@ body{
     font-size: 100%;
 }
 
+#menuSpacer{
+    display: block;
+}
+    
 #menu{
     display: flex;
     justify-content: center;
@@ -138,15 +168,15 @@ body{
 .fixedmenu{
     position: fixed;
     top: 0;
-    background: #fdc457 !important;
+    background: #FFD37E !important;
 
 }
 
 
 #contentContainer{
-    padding: 20%; 
+    padding: 10%; 
     padding-top: 5vh;
-    width: 60%;
+    width: 80%;
 }
 
 #contactContainer{
@@ -154,7 +184,7 @@ body{
 }
 .contact{
     display: inline-block;
-    padding: 0 10% 0 10%;
+    padding: 0 5% 0 5%;
     text-align: left;
     vertical-align: top;
     top: 0;
@@ -162,12 +192,28 @@ body{
     
 }
 
-@media (min-aspect-ratio: 4/5) and (min-width: 900px) {
 
+@media (min-aspect-ratio: 4/5) and (min-width: 1200px) {
+
+#contentContainer{
+    padding: 20%; 
+    padding-top: 5vh;
+    width: 60%;
+}
 #menu > a{
     font-size: 140%;
     line-height: 1.5em;
     float: left;
+}
+#tweetContainer{
+    font-size: 100%;   
+}
+.contact{
+    display: inline-block;
+    padding: 0 10% 0 10%;
+    text-align: left;
+    vertical-align: top;
+    top: 0;
 }
 
 }

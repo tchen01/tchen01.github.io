@@ -1,0 +1,146 @@
+@font-face {
+    font-family: 'rosettaicons';
+    src: url('../img/twitter/rosetta-icons-Regular.eot');
+    src: url('../img/twitter/rosetta-icons-Regular.woff') format('woff');
+    src: url('rosetta-icons-Regular.tff') format('truetype');
+    font-style: normal;
+    font-weight: normal;
+}
+
+
+ul{
+  list-style:none;
+  overflow:hidden;
+  margin:5px;
+  padding:5px;
+}
+
+li {
+    padding: 10px 50px 10px 68px;
+    margin: 10px;
+    background: white;   
+}
+
+.tweettitle {
+    width:100%;
+    height: 1.2em;
+    font-size: 90%;
+
+}
+.user{
+    display: inline-block;
+}
+
+.user:hover [data-scribe="element:name"]{
+    text-decoration: underline;
+}
+
+.timePosted:hover{
+    text-decoration: underline;
+}
+
+
+.tweet {
+    width:100%;
+    font-style: italic;
+}
+
+.tweet img{
+    height: 1em;
+}
+.interact{
+    width: 100%; 
+    padding-top: .5em;
+}
+
+.interact a{
+    padding: 0 6% 0 2%;
+}
+
+.interact img{
+    height: .8em;
+}
+
+.tweettitle span{
+    vertical-align: top;
+    display: inline-block;
+}
+
+[data-scribe="element:name"]{
+    font-weight: bold;   
+}
+
+[data-scribe="element:screen_name"]{
+}
+
+.user a span{
+    margin-left: 4px;   
+}
+
+.user img{
+    margin-left: -58px;
+    border-radius: 5px;   
+}
+
+.tweet{
+    margin: 2px;   
+}
+
+.media img {
+  max-width:250px;
+  max-height:250px;
+}
+
+.interact>a img:nth-Child(2){
+    display: none;
+}
+.interact>a:hover img:nth-Child(1){
+    display: none;
+}
+.interact>a:hover img:nth-Child(2){
+    display: inherit;
+}
+
+/*
+.reply{
+    content: url(../img/twitter/reply.svg);
+    height: .8em;
+}
+
+.reply:hover {
+    content: url(../img/twitter/reply_hover.svg);
+    height: .8em;
+}
+
+.retweet{
+    content: url(../img/twitter/retweet.svg);
+    height: .8em;
+}
+
+.retweet:hover {
+    content: url(../img/twitter/retweet_hover.svg);
+    height: .8em;
+}
+
+.favorite{
+    content: url(../img/twitter/favorite.svg);
+    height: .85em;
+}
+
+.favorite:hover {
+    content: url(../img/twitter/favorite_hover.svg);
+    height: .85em;
+}
+*/
+
+#linkage {
+  position:fixed;
+  top:0px;
+  right:0px;
+  background-color:#3d3d3d;
+  color:#ffffff;
+  text-decoration:none;
+  padding:5px;
+  width:10%;
+  font-family:arial;
+}

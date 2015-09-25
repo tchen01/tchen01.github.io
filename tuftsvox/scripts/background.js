@@ -3,8 +3,9 @@
 var title = document.getElementById("title");
 var menu = document.getElementById("menu");
 var spacer = document.getElementById("menuSpacer");
-var space = menu.offsetHeight;
+var space = (screen.width > 700 ? menu.offsetHeight : 0);
 
+//need to reinit when size stuff is changed (mainly when mediaview is changed)
 smoothScroll.init({
     offset: space + 10, 
 });
@@ -35,3 +36,11 @@ $.ajax({
         console.log(data);
     }
 });
+
+var config1 = {
+    "id": '647049217702277120',
+    "domId": 'tweetContainer',
+    "maxTweets": 4,
+    "enableLinks": true
+};
+twitterFetcher.fetch(config1);
