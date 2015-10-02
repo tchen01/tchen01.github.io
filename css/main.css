@@ -114,7 +114,11 @@ code{
     color: #747474;
 }
 
-
+@media (min-width: 480px){
+body{
+    font-size: 100%;
+}
+}
 
 /* wide devices */
 @media (min-width: 1200px) {  
