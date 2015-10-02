@@ -11,7 +11,7 @@ html, body{
     margin: 0;
 	padding: 0%;
     font-family: brandon_grotesque;
-    font-size: 85%;
+    font-size: 100%;
 }
 
 h3{
@@ -58,7 +58,7 @@ a{
 }
 
 .title{
-    width: 10em;
+    width: 8em;
     padding: 0 .5em 0 1em;
     vertical-align: top;
     line-height: 155%;  
@@ -71,7 +71,7 @@ a{
 
 
 .content{
-    margin: 0 0 0 10em;
+    margin: 0 0 0 8em;
     padding: 0 1em 0 .5em;
     vertical-align: top;
     line-height: 155%;
@@ -114,11 +114,6 @@ code{
     color: #747474;
 }
 
-@media (min-width: 480px){
-body{
-    font-size: 100%;
-}
-}
 
 /* wide devices */
 @media (min-width: 1200px) {  
@@ -130,18 +125,24 @@ body{
 }
 
 /* small devices */
-@media (max-width: 480px) {  	
+@media (max-width: 360px) {  	
 body{
-    font-size: 70%;
+    font-size: 85%;
 }
 }
 
 /* non-mobile */
 @media (min-aspect-ratio: 4/5) and (min-width: 700px) {
-    
-body{
-    font-size: 100%;
+
+
+.title{
+    width: 10em;
 }
+
+.content{
+    margin: 0 0 0 10em;
+}
+
 #borderTop{
     width: 100%;
     padding-bottom: 5%;
