@@ -183,17 +183,17 @@ body{
 
 #contentContainer{
     padding-top: 5vh;
-    width: 950px;
+    width: 800px;
 /*    box-sizing: border-box;*/
 }
 
 .title{
-    width: 12em;
+    width: 11em;
 }
 
 .content{
-    margin: 0 0 0 12em;
-    width: calc(100% - 12em);
+    margin: 0 0 0 11em;
+    width: calc(100% - 11em);
 
 }
 
