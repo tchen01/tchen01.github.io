@@ -176,10 +176,6 @@ body{
 /* wide devices */
 @media (min-width: 1200px) {
     	
-body{
-    padding:  0% 25% 0% 25%;
-    width: 50%;
-}
 
 #contentContainer{
     padding-top: 5vh;
