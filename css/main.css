@@ -1,7 +1,4 @@
 @charset "utf-8";
-/* CSS Document 5/20 8:48*/
-
-/*@import url(http://fonts.googleapis.com/css?family=Roboto+Slab:700,400,300,100); 
 
 /* mobile first */
 html, body{
@@ -10,7 +7,7 @@ html, body{
     background: #edecec;
     margin: 0;
 	padding: 0%;
-    font-family: brandon_grotesque;
+    font-family: brandon_grotesque, 'Trebuchet MS';
     font-size: 100%;
 }
 
@@ -50,6 +47,10 @@ section{
 a{
     text-decoration: none;
     color: inherit;
+}
+
+a:hover div{
+    text-decoration: underline!important;
 }
 .item{    
     width: 100%;
