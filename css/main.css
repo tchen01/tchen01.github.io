@@ -56,15 +56,17 @@ a:hover div{
     width: 100%;
     overflow: hidden;
     margin-top: .5em;
+    padding: 0 0 0 5%;
+    box-sizing: border-box;
 }
 
 #contact .item, #home .item{
     width: 45%;
     float: left;
+
 }
 
 .title{
-    padding: 0 5% 0 5%;
     vertical-align: top;
     line-height: 110%;  
     font-weight: 700;
@@ -75,7 +77,6 @@ a:hover div{
 
 
 .content{
-    padding: 0 5% 0 5%;
     vertical-align: top;
     line-height: 155%;
     box-sizing: border-box;
@@ -127,6 +128,10 @@ body{
 @media (min-aspect-ratio: 4/5) and (min-width: 700px) {
 html, body{
     font-size: 100%;
+}
+
+.item{
+   padding: 0;
 }
 
 #contact .item, #home .item{
