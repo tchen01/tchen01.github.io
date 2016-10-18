@@ -44,7 +44,7 @@
         <div class="item">
             <div class="title">academic</div>
             <div class="content toggle">I like learning about how the world works.</div>
-            <div class="content toggle hidden">I am majoring in math and physics, and I intend to minor in studio art. I'm interested in education, in particular how we can effectively convey our ideas and knowledge to others. I hope to continue to study math, and eventually work as a professor.</div>
+            <div class="content toggle hidden">I am majoring in math and physics, and I intend to minor in studio art. I'm interested in education, in particular how we can effectively convey our ideas and knowledge to others.</div>
             </div>
          <div class="item">
             <div class="title">research</div>
@@ -93,6 +93,21 @@
             <div class="content">I like riding bikes and I like to hate running.</div>
         </div>
     </section>
+    
+    <!--<section id="education">
+        <h3 class="about">I'm learning. I promise.</h3>
+        <div class="item">
+            <div class="title">tufts university</div>
+            <div class="content toggle">Mathematics, Physics, Studio Art</div>
+            <div class="content toggle hidden">I'm majoring in math and physics. I sometimes do art.</div>
+            <div class="content toggle hidden">I hope to continue studying math, and eventually I would like to teach in academia.</div>
+
+        </div>
+        <div class="item">
+            <div class="title">millard north hs</div>
+            <div class="content">IB Program, Math Team, Orchestra</div>
+        </div>
+    </section>-->
     
     <section id="resume">
         <h3 class="about">My Resume</h3>

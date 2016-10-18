@@ -19,6 +19,7 @@ h3{
     font-style: italic;
     color: white;
     background-color: black;
+    cursor: pointer;
 }
 
 
@@ -48,6 +49,7 @@ section{
 a{
     text-decoration: none;
     color: inherit;
+    cursor: pointer;
 }
 
 a:hover div{
