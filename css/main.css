@@ -1,4 +1,5 @@
 @charset "utf-8";
+@import url('https://fonts.googleapis.com/css?family=Josefin+Sans:400,600,700i&subset=latin-ext');
 
 /* mobile first */
 html, body{
@@ -7,8 +8,8 @@ html, body{
     background: #edecec;
     margin: 0;
 	padding: 0%;
-    font-family: brandon_grotesque, 'Trebuchet MS';
-    font-weight: 300;
+    font-family: 'Josefin Sans', 'Trebuchet MS';
+    font-weight: 400;
     font-size: 94%;
 }
 
@@ -100,7 +101,7 @@ a:hover div{
 }
 
 .bold{
-    font-weight: 500;
+    font-weight: 600;
 }
 
 code{
@@ -147,7 +148,7 @@ html, body{
     width: 10em;
     float: left;
     line-height: 155%;  
-    font-weight: 500;
+    font-weight: 600;
     font-size: 100%;
     text-align: right;
     text-transform: none;
