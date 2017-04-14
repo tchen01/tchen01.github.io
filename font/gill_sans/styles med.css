@@ -1,0 +1,8 @@
+
+@font-face {
+  font-family: 'GillSansMTPro-Medium';
+  src: url('GillSansMTPro-Medium.eot?#iefix') format('embedded-opentype'),  url('GillSansMTPro-Medium.otf')  format('opentype'),
+	     url('GillSansMTPro-Medium.woff') format('woff'), url('GillSansMTPro-Medium.ttf')  format('truetype'), url('GillSansMTPro-Medium.svg#GillSansMTPro-Medium') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}

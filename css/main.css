@@ -6,7 +6,7 @@ html, body{
     height: 100%;
     margin: 0;
 	padding: 0%;
-    font-family: 'Josefin Sans', 'Trebuchet MS';
+    font-family: 'Gill Sans MT Pro', 'Trebuchet MS';
     font-weight: 400;
     font-size: 94%;
 }
@@ -20,7 +20,8 @@ h3{
     border-top: 1px solid black;
     border-bottom: 1px solid black;
     cursor: pointer;
- 
+    
+    margin-bottom: 0.5em;
 }
 
 
@@ -54,7 +55,7 @@ a:hover .title{
 .item{    
     width: 100%;
     overflow: hidden;
-    margin-top: .5em;
+    /* margin-top: .15em;  */
     padding: 0 5% 0 5%;
     box-sizing: border-box;
 }
@@ -84,6 +85,7 @@ a:hover .title{
     vertical-align: top;
     line-height: 155%;
     box-sizing: border-box;
+    margin-bottom: 0.3em;
 }
 
 .extended{
@@ -137,7 +139,7 @@ html, body{
 
 .title{
     line-height: 155%;  
-    font-weight: 600;
+    font-weight: 700;
     font-size: 100%;
 }
 
