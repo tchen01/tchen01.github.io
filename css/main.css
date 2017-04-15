@@ -8,7 +8,7 @@ html, body{
 	padding: 0%;
     font-family: 'Gill Sans MT Pro', 'Trebuchet MS';
     font-weight: 400;
-    font-size: 94%;
+    font-size: 110%;
 }
 
 h3{
@@ -16,7 +16,8 @@ h3{
     padding: 1.5% 5% 1.5% 5%;
     font-weight: 700;
     font-style: italic;
-
+    font-size: 120%;
+    
     border-top: 1px solid black;
     border-bottom: 1px solid black;
     cursor: pointer;
@@ -34,7 +35,6 @@ h3{
 }
 
 section{
-    font-size: 120%;
     padding: 0 0 .5em 0;
     margin-bottom: 1em;
     overflow: hidden;
@@ -73,9 +73,7 @@ a:hover .title{
 
 .title{
     vertical-align: top;
-    line-height: 110%;  
     font-weight: 700;
-    font-size: 120%;
     display: block;
     box-sizing: border-box;
 }
@@ -83,7 +81,7 @@ a:hover .title{
 
 .content{
     vertical-align: top;
-    line-height: 155%;
+    line-height: 125%;
     box-sizing: border-box;
     margin-bottom: 0.3em;
 }
@@ -132,22 +130,11 @@ body{
 
 /* non-mobile */
 @media (min-aspect-ratio: 4/5) and (min-width: 700px) {
-html, body{
-    font-size: 100%;
-}
-
-
-.title{
-    line-height: 155%;  
-    font-weight: 700;
-    font-size: 100%;
-}
 
 }
 
 /* wide devices */
 @media (min-width: 1200px) {
-    	
 
 #contentContainer{
     padding-top: 5vh;
