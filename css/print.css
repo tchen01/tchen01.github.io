@@ -6,8 +6,8 @@ html, body{
     background: #edecec;
     margin: 0;
 	padding: 0%;
-    font-family: 'Josefin Sans', 'Trebuchet MS';
-    font-size: 85%;
+    font-family: 'Gill Sans MT Pro', 'Trebuchet MS';
+    font-size: 90%;
 }
 body{
     box-sizing: border-box;
@@ -16,18 +16,16 @@ body{
 
 h3{
     margin: 0;
-    padding: .5% 5%;
+    /* padding: .5% 5%; */
     font-weight: 700;
-    font-style: italic;
     color: black;
-    border-top: 1px solid black;
     border-bottom: 1px solid black;
 }
 
 
 
 #contentContainer{
-    margin: 0 5% 0 0;
+    /* margin: 0 5% 0 0; */
     width: 100%;
     padding: 1em 3em; 
     box-sizing: border-box;
@@ -36,15 +34,10 @@ h3{
 }
 
 section{
-    font-size: 120%;
-    padding: 1em 0 .5em 0;
-    margin-bottom: .2em;
+    padding: 0 0 .5em 0;
+    margin-bottom: 1em;
     overflow: hidden;
-    /* background-color: white; */
-    /* border-top: 1px solid black; */
-    /* border-radius: 2px; */
-    /* box-shadow: 2px 2px 0px lightgrey; */
-    /* box-sizing: border-box; */
+    background-color: white;
     width: 100%;
 }
 
@@ -64,28 +57,20 @@ a{
     float: left;
 
 }
+
 .title{
-    width: 10em;
-    padding: 0 .5em 0 1em;
     vertical-align: top;
-    line-height: 110%;  
-    font-weight: 700; /*optimize for higher dpi screen*/
+    font-weight: 500;
     display: block;
     box-sizing: border-box;
-    float: left;
-    text-align: right;
 }
 
 
 .content{
-    margin: 0 0 0 10em;
-    padding: 0 1em 0 .5em;
     vertical-align: top;
-    line-height: 110%;
+    line-height: 125%;
     box-sizing: border-box;
-    width: 80%; /* is the below calc ok???*/
-    width: calc(100% - 10em);
-/*     border-left: 1px solid black; */
+    margin-bottom: 0.3em;
 }
 
 

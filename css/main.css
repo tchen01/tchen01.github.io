@@ -8,7 +8,7 @@ html, body{
 	padding: 0%;
     font-family: 'Gill Sans MT Pro', 'Trebuchet MS';
     font-weight: 400;
-    font-size: 110%;
+    font-size: 100%;
 }
 
 h3{
@@ -135,14 +135,15 @@ body{
 /* wide devices */
 @media (min-width: 1200px) {
 
+html, body{
+    font-size: 110%;
+}
+
 #contentContainer{
     padding-top: 5vh;
     width: 800px;
 }
 
-.title{
-    width: 11em;
-}
 
 
 }
