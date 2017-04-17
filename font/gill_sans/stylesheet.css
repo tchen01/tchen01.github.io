@@ -19,7 +19,7 @@
   font-family: 'Gill Sans MT Pro';
   src: url('GillSansMTPro-Medium.eot?#iefix') format('embedded-opentype'),  url('GillSansMTPro-Medium.otf')  format('opentype'),
 	     url('GillSansMTPro-Medium.woff') format('woff'), url('GillSansMTPro-Medium.ttf')  format('truetype'), url('GillSansMTPro-Medium.svg#GillSansMTPro-Medium') format('svg');
-  font-weight: 700;
+  font-weight: 500;
   font-style: normal;
 }
 
@@ -27,6 +27,15 @@
   font-family: 'Gill Sans MT Pro';
   src: url('GillSansMTPro-MediumItalic.eot?#iefix') format('embedded-opentype'),  url('GillSansMTPro-MediumItalic.otf')  format('opentype'),
 	     url('GillSansMTPro-MediumItalic.woff') format('woff'), url('GillSansMTPro-MediumItalic.ttf')  format('truetype'), url('GillSansMTPro-MediumItalic.svg#GillSansMTPro-MediumItalic') format('svg');
-  font-weight: 700;
+  font-weight: 500;
   font-style: italic;
 }
+
+
+@font-face {
+  font-family: 'Gill Sans MT Pro';
+  src: url('GillSansMT-Bold.eot?#iefix') format('embedded-opentype'),  url('GillSansMT-Bold.woff') format('woff'), url('GillSansMT-Bold.ttf')  format('truetype'), url('GillSansMT-Bold.svg#GillSansMT-Bold') format('svg');
+  font-weight: 700;
+  font-style: normal;
+}
+
