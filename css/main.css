@@ -54,15 +54,9 @@ a:hover .title{
 .item{    
     width: 100%;
     overflow: hidden;
-    /* margin-top: .15em;  */
-    /* padding: 0 5% 0 5%; */
     box-sizing: border-box;
 }
 
-/* #home .about{
-    color: white;
-    background-color: black;
-} */
 
 #contact .item, #home .item, #resume .item{
     width: 50%;
@@ -71,28 +65,24 @@ a:hover .title{
 }
 
 .title{
-    vertical-align: top;
     font-weight: 500;
-    display: block;
-    box-sizing: border-box;
 }
 
 
 .content{
-    vertical-align: top;
     line-height: 125%;
-    box-sizing: border-box;
     margin-bottom: 0.3em;
 }
 
 .extended{
     margin-top: -.15em;
-   /* margin-bottom: .5em;*/
     line-height: 130%;
 }
 
 #whitespace{
-    height:50px;text-align: center;color: #a8a8a8;
+    height:50px;
+    text-align: center;
+    color: #a8a8a8;
 }
 
 .hidden{

@@ -16,16 +16,13 @@ body{
 
 h3{
     margin: 0;
-    /* padding: .5% 5%; */
     font-weight: 700;
-    color: black;
     border-bottom: 1px solid black;
 }
 
 
 
 #contentContainer{
-    /* margin: 0 5% 0 0; */
     width: 100%;
     padding: 1em 3em; 
     box-sizing: border-box;
@@ -59,21 +56,13 @@ a{
 }
 
 .title{
-    vertical-align: top;
     font-weight: 500;
-    display: block;
-    box-sizing: border-box;
 }
-
 
 .content{
-    vertical-align: top;
     line-height: 125%;
-    box-sizing: border-box;
     margin-bottom: 0.3em;
 }
-
-
 
 #tip, #resume, #whitespace{
     display: none;
