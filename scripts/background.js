@@ -26,7 +26,7 @@ function tipCreate(){
     container.insertBefore(tipSec, sections[1])
     var tipSec = document.getElementById( 'tip' );
     
-    tipSec.outerHTML = "<section class='section' id='tip' ><div class='about'><h3>Click on a title to read more...</h3></div><div class='item'><a><div class='title toggle hidden' onclick='tipRemove()'>remove</div><div class='content toggle hidden' onclick='tipRemove()'>click here to remove this section</div></a></div><div class='item'><div class='title toggle hidden'>cookies</div><div class='content toggle hidden'>I use one cookie. (to hide this section in the future)</div></div></section> ";
+    tipSec.outerHTML = "<section class='section' id='tip' ><div class='about clickable'><h3>Click on a title to read more...</h3></div><div class='item'><a><div class='title clickable toggle hidden' onclick='tipRemove()'>remove</div><div class='content toggle hidden' onclick='tipRemove()'>click here to remove this section</div></a></div><div class='item'><div class='title toggle hidden'>cookies</div><div class='content toggle hidden'>I use one cookie. (to hide this section in the future)</div></div></section> ";
     
 
     var tipSec = document.getElementById('tip');

@@ -18,7 +18,6 @@ h3{
     
     /* border-top: 1px solid black; */
     border-bottom: 1px solid black;
-    cursor: pointer;
     
     padding-bottom: 0.1em;
     margin-bottom: 0.5em;
@@ -48,9 +47,7 @@ a{
     cursor: pointer;
 }
 
-a:hover .title{
-    text-decoration: underline!important;
-}
+
 .item{    
     width: 100%;
     overflow: hidden;
@@ -66,6 +63,7 @@ a:hover .title{
 
 .title{
     font-weight: 500;
+	width: fit-content;
 }
 
 
@@ -89,9 +87,19 @@ a:hover .title{
     display: none;
 }
 
-.bold{
-    text-decoration: underline;
+.clickable{
+    cursor: pointer;
 }
+
+a.clickable{
+	background-color: #f2f2f2;
+}
+
+.clickable:hover{
+	color:white;
+ 	background-color: black;
+}
+
 
 code{
     background: #f2f2f2;
