@@ -8,9 +8,10 @@ for(var i=0; i<titles.length; i++){
     titles[i].addEventListener('mouseup', titleClick, false);
 }
 
-
-if( getCookie("tip") !== "false" ){
-    tipCreate();
+function tipCheck(){
+    if( getCookie("tip") !== "false" ){
+        tipCreate();
+    }
 }
 
 function titleClick(e){

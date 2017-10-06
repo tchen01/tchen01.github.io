@@ -50,7 +50,7 @@ a{
     margin-top: .35em;
 }
 
-#contact .item, #home .item{
+.col2 .item{
     width: 45%;
     float: left;
 

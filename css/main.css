@@ -55,7 +55,7 @@ a{
 }
 
 
-#contact .item, #home .item, #resume .item{
+.col2 .item{
     width: 50%;
     float: left;
 
