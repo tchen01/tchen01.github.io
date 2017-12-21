@@ -63,13 +63,16 @@ function landingClear(){
 }
 
 // ON LOAD
+/*
 for(var i=0; i<titles.length; i++){
     titles[i].addEventListener('mouseup', titleClick, false);
 }
 landingToggle()
+*/
 tipCheck()
-
+/*
 landingEvents.forEach(function(t){
     document.addEventListener(t, landingClear, false);
     console.log(t)
 })
+*/
