@@ -23,14 +23,14 @@ h3{
     margin-bottom: 0.5em;
 }
 
-
 #contentContainer{
     margin: 0 auto;
     width: 94%;
+    height: 65em; /* kind of content dependent */
     padding: 3%; 
-    overflow-x: hidden;
-
+    overflow: hidden;
 }
+
 
 section{
     padding: 0 0 .5em 0;
@@ -127,7 +127,19 @@ body{
 
 /* non-mobile */
 @media (min-aspect-ratio: 4/5) and (min-width: 700px) {
+body.landing{
+    overflow: hidden;
+}
 
+#contentContainer{
+    transition: all 1s, height 2s;
+}
+    
+#contentContainer.landing{
+    padding-top: 43vh;
+    height: 1.2em;
+    overflow: hidden;
+}
 }
 
 /* wide devices */
@@ -141,7 +153,5 @@ html, body{
     padding-top: 5vh;
     width: 800px;
 }
-
-
 
 }

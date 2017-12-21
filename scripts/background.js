@@ -1,12 +1,8 @@
-
 var sections = document.getElementsByTagName( 'section' );
 var titles = document.getElementsByClassName( 'about' );
 var container = document.getElementById('contentContainer');
 var whiteSpace = document.getElementById('whitespace');
-
-for(var i=0; i<titles.length; i++){
-    titles[i].addEventListener('mouseup', titleClick, false);
-}
+var borderBot = document.getElementById('borderBot');
 
 function tipCheck(){
     if( getCookie("tip") !== "false" ){
@@ -49,3 +45,31 @@ function getCookie(cname) {
     }
     return "";
 }
+
+function landingToggle(){
+    container.classList.toggle('landing')
+    borderBot.classList.toggle('landing')
+    document.body.classList.toggle('landing')
+}
+
+var landingEvents = ['click','keydown','mousewheel']
+
+function landingClear(){
+    landingEvents.forEach(function(t){
+        document.removeEventListener(t, landingClear, false);
+    })
+//    document.removeEventListener('click', landingClear, false);
+    landingToggle();
+}
+
+// ON LOAD
+for(var i=0; i<titles.length; i++){
+    titles[i].addEventListener('mouseup', titleClick, false);
+}
+landingToggle()
+tipCheck()
+
+landingEvents.forEach(function(t){
+    document.addEventListener(t, landingClear, false);
+    console.log(t)
+})
