@@ -132,7 +132,7 @@ body.landing{
 }
 
 #contentContainer{
-    transition: all 1s, height 2s;
+/*    transition: all 1s, height 2s; */
 }
     
 #contentContainer.landing{
