@@ -6,7 +6,7 @@ html, body{
     height: 100%;
     margin: 0;
 	padding: 0%;
-    font-family: 'Ubuntu', 'Trebuchet MS';
+    font-family: 'Lato', 'Trebuchet MS';
     font-weight: 300;
     font-size: 100%;
 }
@@ -15,10 +15,10 @@ h3{
     margin: 0;
     /* padding: 1.5% 5% 1.5% 5%; */
     font-weight: 700;
-    
+
     /* border-top: 1px solid black; */
     border-bottom: 1px solid black;
-    
+
     padding-top: 0.2em;
     margin-bottom: 0.5em;
 }
@@ -27,7 +27,7 @@ h3{
     margin: 0 auto;
     width: 94%;
     height: 65em; /* kind of content dependent */
-    padding: 3%; 
+    padding: 3%;
     overflow: hidden;
 }
 
@@ -48,7 +48,7 @@ a{
 }
 
 
-.item{    
+.item{
     width: 100%;
     overflow: hidden;
     box-sizing: border-box;
@@ -62,7 +62,7 @@ a{
 }
 
 .title{
-    font-weight: 500;
+    font-weight: 400;
 	width: fit-content;
 }
 
@@ -119,7 +119,7 @@ code{
 
 
 /* small devices */
-@media (max-width: 360px) {  	
+@media (max-width: 360px) {
 body{
     font-size: 85%;
 }
@@ -134,7 +134,7 @@ body.landing{
 #contentContainer{
 /*    transition: all 1s, height 2s; */
 }
-    
+
 #contentContainer.landing{
     padding-top: 43vh;
     height: 1.2em;
