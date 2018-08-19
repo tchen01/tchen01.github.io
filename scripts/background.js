@@ -18,6 +18,7 @@ function titleClick(e){
 }
 
 function tipCreate(){
+/*
     var tipSec = document.createElement('section');
     tipSec.id = "tip";
     container.insertBefore(tipSec, sections[1])
@@ -28,6 +29,7 @@ function tipCreate(){
 
     var tipSec = document.getElementById('tip');
     tipSec.addEventListener('mouseup', titleClick, false);
+*/
 }
 
 function tipRemove(){
