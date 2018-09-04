@@ -13,9 +13,8 @@ html, body{
 
 #contentContainer{
     margin: 0 auto;
-    width: 94%;
-    height: 65em; /* kind of content dependent */
-    padding: 3%;
+    width: 76%;
+    padding: 13%;
     overflow: hidden;
 }
 

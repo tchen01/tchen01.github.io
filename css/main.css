@@ -14,9 +14,7 @@ html, body{
 #contentContainer{
     margin: 0 auto;
     width: 90%;
-    height: 65em; /* kind of content dependent */
     padding: 5%;
-    overflow: hidden;
 }
 
 section{
