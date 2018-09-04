@@ -1,34 +1,22 @@
+@charset "utf-8";
 
 /* mobile first */
 html, body{
     width: 100%;
     height: 100%;
-    background: #edecec;
     margin: 0;
-	padding: 0%;
-    font-family: 'Ubuntu', 'Trebuchet MS';
+    padding: 0%;
+    font-family: 'Lato', 'Trebuchet MS';
     font-weight: 300;
-    font-size: 86%;
+    font-size: 100%;
 }
-body{
-    box-sizing: border-box;
-}
-
-
-h3{
-    margin: 0;
-    font-weight: 600;
-    border-bottom: 1px solid black;
-}
-
-
 
 #contentContainer{
-    width: 100%;
-    padding: 1em 3em; 
-    box-sizing: border-box;
-    overflow-x: hidden;
-
+    margin: 0 auto;
+    width: 94%;
+    height: 65em; /* kind of content dependent */
+    padding: 3%;
+    overflow: hidden;
 }
 
 section{
@@ -39,32 +27,63 @@ section{
     width: 100%;
 }
 
+h3{
+    margin: 0;
+    font-weight: 700;
+    font-size: 150%;
+    border-bottom: 1px solid black;
+    padding-top: 0.2em;
+    margin-bottom: 0.5em;
+}
+
+div{
+    padding: 0 0 .5em 0;
+    line-height: 1.3em; 
+}
 
 a{
     text-decoration: none;
     color: inherit;
+    cursor: pointer;
+    font-weight: 400;
 }
-.item{    
-    width: 100%;
+
+.clickable{
+    cursor: pointer;
+}
+
+a.clickable{
+    text-decoration: underline;
+}
+
+.clickable:hover{
+    color:white;
+    background-color: black;
+}
+
+
+/* small devices */
+@media (max-width: 360px) {
+body{
+    font-size: 110%;
+}
+}
+
+
+#contentContainer.landing{
+    padding-top: 43vh;
+    height: 1.2em;
     overflow: hidden;
-    margin-top: .35em;
+}
 }
 
-.col2 .item{
-    width: 45%;
-    float: left;
+/* wide devices */
+@media (min-width: 1200px) {
 
+
+#contentContainer{
+    padding-top: 5vh;
+    width: 800px;
 }
 
-.title{
-    font-weight: 500;
-}
-
-.content{
-    line-height: 125%;
-    margin-bottom: 0.3em;
-}
-
-#tip, #resume, #whitespace{
-    display: none;
 }
