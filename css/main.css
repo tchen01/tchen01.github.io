@@ -53,20 +53,29 @@ a:hover{
 }
 
 
-/* small devices */
+/* narrow devices */
 @media (max-width: 360px) {
-body{
-    font-size: 110%;
-}
+    body{
+        font-size: 110%;
+    }
 }
 
 
 /* wide devices */
 @media (min-width: 1200px) {
 
-#contentContainer{
-    padding-top: 10vh;
-    width: 700px;
-}
+    #contentContainer{
+        width: 700px;
+    }
+
+    /* tall devices */
+    @media (min-height: 1100px) {
+        #contentContainer{
+            padding-top: 150px;
+        }
+    }
 
 }
+
+
+
