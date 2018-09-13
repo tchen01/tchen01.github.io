@@ -7,7 +7,7 @@ body,html {
     padding: 0;
     font-family: 'Lato','Trebuchet MS';
     font-weight: 300;
-    font-size: 120%
+    font-size: 110%
 }
 
 #contentContainer {
@@ -59,6 +59,10 @@ a:hover {
     #contentContainer {
         width: 700px
     }@    media (min-height:1100px) {
-        #contentContainer{padding-top: 150px
+    body, html{
+        font-size: 120%;
+    }
+    #contentContainer{
+        padding-top: 150px
     }
 }}
