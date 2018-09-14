@@ -55,14 +55,17 @@ a:hover {
     }
 }
 
-@media (min-width:1200px) {
+@media (min-width:1000px) {
     #contentContainer {
         width: 700px
-    }@    media (min-height:1100px) {
+    }
+}
+
+@media (min-height:1100px) {
     body, html{
         font-size: 120%;
     }
     #contentContainer{
         padding-top: 150px
     }
-}}
+}
