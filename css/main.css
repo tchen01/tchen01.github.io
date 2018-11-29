@@ -24,12 +24,21 @@ section {
     width: 100%
 }
 
-h3 {
+h1 {
     margin: 0 0 .5em;
     padding-top: .2em;
     font-weight: 700;
     font-size: 150%;
     border-bottom: 2px solid #000
+}
+
+h3 {
+    font-size: 100%;
+	margin: 1.5em 0 -.5em 0;
+}
+
+h3 > a{
+    font-weight:inherit;
 }
 
 div {
@@ -49,6 +58,15 @@ a:hover {
     background-color: #000
 }
 
+.code {
+	font-family: monospace;
+}
+
+.footer {
+	padding-top: 4em;
+	font-size: 80%;
+}
+
 @media (max-width:360px) {
     body {
         font-size: 110%
@@ -57,7 +75,7 @@ a:hover {
 
 @media (min-width:1000px) {
     #contentContainer {
-        width: 700px
+        width: 800px
     }
 }
 
