@@ -34,7 +34,7 @@ h1 {
 
 h3 {
     font-size: 100%;
-	margin: 1.5em 0 -.5em 0;
+    margin: 1.5em 0 -.5em 0;
 }
 
 h3 > a{
@@ -59,12 +59,25 @@ a:hover {
 }
 
 .code {
-	font-family: monospace;
+    font-family: monospace;
+}
+
+.paper {
+    padding: 1em 0;
+}
+
+.title,.authors,.details {
+    display: inline;
+}
+
+.authors {
+    font-style: italic;
+    font-size: 90%;
 }
 
 .footer {
-	padding-top: 4em;
-	font-size: 80%;
+    padding-top: 4em;
+    font-size: 80%;
 }
 
 @media (max-width:360px) {
