@@ -1,7 +1,16 @@
 % Introduction to Conjugate Gradient
 % Tyler Chen
 
-## Introduction
+This is the first piece from a series on topics relating to the Conjugate Gradient algorithm. I have split up the content into the following pages:
+
+- [Introduction to Linear Systems/Krylov subspaces](./)
+- [Derivation of CG](./cg_derivation.html)
+- [Error bounds for CG in exact arithmetic](./cg_error.html)
+- [Finite precision CG](./finite_precision_cg.html)
+- Remez Algorithm
+- Extend T algorithm
+
+## Linear Systems
 <!--eventually may want to move this to an introduction to linear systems-->
 Solving a linear system of equations $Ax=b$ is one of the most important tasks in modern science. Applications such as weather forecasting, medical imaging, and training neural nets all require repeatedly solving linear systems. 
 
@@ -9,16 +18,17 @@ Loosely speaking, methods for linear systems can be separated into two categorie
 
 At first glance, it may seem that direct methods are better. After all, after a known number of steps you get the exact solution. In many cases this is true, especially when the matrix $A$ is dense and relatively small. The main drawback to direct methods is that they are not able to easily take advantage of sparsity. That means that even if $A$ has some nice structure and a lot of entries are zero, direct methods will take the same amount of time and storage to compute the solution as if $A$ were dense. This is where iterative methods come in. Often times iterative methods require only that the product $x\mapsto Ax$ be able to be computed. If $A$ is sparse the product can be done cheaply, and if $A$ has some known structure, a you might not even need to construct $A$. Such methods are aptly called "matrix free". 
 
-The rest of this piece gives an introduction to Krylov subspace methods, a common type of iterative method. My intention is not to provide a rigorous explanation of the topic, but rather to provide some (hopefully useful) intuition about where these methods come from and why they are useful in practice. I assume some linear algebra background (roughly at the level of a first undergrad course in linear algebra).
+The rest of this piece gives an introduction to Conjugate Gradient, a commonly used iterative method for solving $Ax=b$ when $A$ is symmetric positive definite. My intention is not to provide a rigorous explanation of the topic, but rather to provide some (hopefully useful) intuition about where these methods come from and why they are useful in practice. I assume some linear algebra background (roughly at the level of a first undergrad course in linear algebra).
 
-If you are a bit rusty on your linear algebra I suggest taking a look at [some resource]. If you want a more rigorous introduction to iterative methods I suggest Anne Greenbaum's [book](https://epubs.siam.org/doi/book/10.1137/1.9781611970937?mobileUi=0u). For a research level overview of modern analysis of the Lanczos and Conjugate Gradient methods I suggest Gerard Meurant and Zdenek Strakos's [report](https://www.karlin.mff.cuni.cz/~strakos/download/2006_MeSt.pdf).
+If you are a bit rusty on your linear algebra I suggest taking a look at the [Khan Academy](https://www.khanacademy.org/math/linear-algebra) videos. For a more rigorous and much broader treatment of iterative methods, I suggest Anne Greenbaum's [book](https://epubs.siam.org/doi/book/10.1137/1.9781611970937?mobileUi=0u) on the topic. Finally, for a relatively recent overview of modern analysis of the Lanczos and Conjugate Gradient methods I suggest Gerard Meurant and Zdenek Strakos's [report](https://www.karlin.mff.cuni.cz/~strakos/download/2006_MeSt.pdf).
+
 
 ## Measuring the accuracy of solutions
 Perhaps the first question that should be asked about an iterative method is, "Does the sequence of approximate solutions $x_0,x_1,x_2,\ldots$ converges to the true solution? If this sequence doesn't converge to the true solution (or something close to the true solution), then it won't be very useful in solving $Ax=b$.
 
 Let's quickly introduce the idea of the *error* and the *residual* of an approximate solution $x_k$. These are both useful measures of how close $x_k$ is to $x^* = A^{-1}b$. The *error* is simply the difference between $x$ and $x_k$. Taking the norm of this quantity gives us a scalar value which measures the distance between $x$ and $x_k$. In fact, when we say the sequence $x_0,x_1,x_2,\ldots$ converges to $x_*$, we mean that the scalar sequence,$\|x^*-x_0\|,\|x^*-x_1\|,\|x^*-x_2\|,\ldots$ converges to zero (where $\|\cdot\|$ is the norm associated with some metric space). Thus, solving $Ax=b$ could be written as minimizing $\|x - x^*\| = \|x-A^{-1}b\|$ for some norm $\|\cdot\|$.
 
-Of course, since we are trying to compute $x^*$, we don't want our algorithm to depend on $x^*$. That said, the idea of minimizing some useful quantity was a good one. The *residual* of $x_k$ is defined as $b-Ax_k$. Again $b-Ax^* = 0$ so minimizing $\|b-Ax\|$ will give the true solution. The advantage here is of course that we can easily compute $b-Ax_k$ once we have $x_k$.
+Of course, since we are trying to compute $x^*$, we don't want our algorithm to depend on $x^*$. The *residual* of $x_k$ is defined as $b-Ax_k$. Again $b-Ax^* = 0$ so minimizing $\|b-Ax\|$ will give the true solution. The advantage here is of course that we can easily compute $b-Ax_k$ once we have $x_k$.
 
 ## Krylov subspaces
 
@@ -71,7 +81,7 @@ That means that the solution to $Ax = b$ is a linear combination of $b, Ab, A^2b
 
 Finally, we note that $x = A^{-1}b \in \mathcal{K}_n(A,b)$.
 
-### Arnoldi Algorithm
+## Arnoldi and Lanczos Algorithms
 
 The Arnoldi algorithm for computing an orthonormal basis for Krylov subspaces is at the core of most Krylov subspace methods. Essentially, the Arnoldi algorithm is the Gram-Schmidt procedure applied to the vectors $v,Av,A^2v,A^3v,\ldots$ in a clever way.
 
@@ -101,20 +111,10 @@ AQ = QH
 $$
 where $H$ is "upper Hessenburg" (like upper triangular but the first subdiagonal also has nonzero entries). In fact, while we have not showed it, the entries of $H$ come directly from the Arnoldi algorithm (just like how the entries of $R$ in a QR factorization can be obtained from Gram Schmidt).
 
-## Exact Conjugate Gradient
 
 When $A$ is Hermetian, then $Q^*AQ = H$ is also Hermetian. Since $H$ is upper Hessenburg and Hermitian, it must be tridiagonal! This means that the $q_j$ satisfy a three term recurrence,
 $$
 Aq_j = \beta_{j-1} q_{j-1} + \alpha_j q_j + \beta_j q_{j+1}
 $$
-where $\alpha_1,\ldots,\alpha_n$ are the diagonal entries of $T$ and $\beta_1,\ldots,\beta_{n-1}$ are the off diagonal entries of $T$.
-
-When $A$ is symmetric positive definite (all eigenvalues are positive) then a common method for solving $Ax=b$ is Conjugate Gradient. There are many ways to derive the Conjugate gradient algorithm, 
-
-
-
-## Finite Precision Conjugate Gradient
-
-- Greenbaum analysis 89
-
+where $\alpha_1,\ldots,\alpha_n$ are the diagonal entries of $T$ and $\beta_1,\ldots,\beta_{n-1}$ are the off diagonal entries of $T$. The Lanczos algorithm is an efficient way of computing this decomposition. 
 

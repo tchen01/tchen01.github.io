@@ -32,6 +32,15 @@ h1 {
     border-bottom: 2px solid #000
 }
 
+h2 {
+    font-size: 115%;
+    margin: 1.5em 0 -.5em 0;
+}
+
+h2 > a{
+    font-weight:inherit;
+}
+
 h3 {
     font-size: 100%;
     margin: 1.5em 0 -.5em 0;
@@ -39,6 +48,13 @@ h3 {
 
 h3 > a{
     font-weight:inherit;
+}
+
+
+pre{
+    line-height: .7em;
+    border-left: 2px solid black;
+    padding: 0.5em 1em;
 }
 
 div {

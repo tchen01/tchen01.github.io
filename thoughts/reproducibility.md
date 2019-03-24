@@ -11,7 +11,7 @@ With these assumptions in mind, I will focus on how using open source software i
 
 A lot of papers relating to my research go something like this: "(~ task ~) is important for (~ grant keywords ~) reasons. Recently, because of (~ big data ~), there has been interest in fast algorithms for (~ task ~). Other papers have tried using (~ some method ~) quickly, however there are limitations with (~ some method ~). We propose an alternative to (~ some method ~) to address the limitations of (~ past paper ~)". A mathematical description of the new algorithm is presented, and then generally, some numerical experiments which demonstrate that the new method works and is possibly better than the old methods. Now, based on the descriptions in the paper (and any supplemental material), the readers should be able to reproduce any of the results claimed by the authors.
 
-### So, what's the problem?
+## So, what's the problem?
 
 In practice, many pieces of the implementation used in the original paper will be dependent on the exact setup of the machine the code is run on.  For example, if the original authors used BLACKBOX™ to write their code, the undoubtedly used built in functions for lower level tasks such as matrix multiplication.
 
@@ -21,7 +21,7 @@ The first issue has been discussed many times (see any MATLAB vs. Python argumen
 
 The second issue is less talked about, and extends far beyond reproducibility. While there are many cases where using proprietary software may be unavoidable, there are a huge number of cases where these programs are used only because of familiarity or personal comfort. The fact that many research institutions provide free access to paid software only perpetrates the problem, since researchers can easily forget that not everyone has the same level of access to these programs as they do. This has the effect of excluding less privileged persons from the scientific process and furthering academia's (well deserved) reputation as an "ivory tower" inaccessible to those without sufficient resources.
 	
-### Why should academics in stem care?
+## Why should academics in stem care?
 
 If there are people with the right tools to reproduce the results of a paper, it's reasonable to ask is why should researchers care about making it easier for others to also reproduce your results. That is, does it really matter who replicates the results as long as someone is able to?
 
@@ -31,7 +31,7 @@ Many institutions (including R1 research schools) do not provide licences for pr
 
 Second, it's not uncommon that people outside academia may want to use the code from research papers. For instance the findings of this [paper](https://arxiv.org/pdf/1508.06576.pdf), which outlined how to render an input image in the style of famous painters, have been widely used by hobbyists and non academics. There are now multiple subreddits and youtube channels devoted specifically to computer generated art, all helping bring new advancements in science to the mainstream. Public interests in an area can drive funding, and inspire new students to join the field.
 
-### What can we do?
+## What can we do?
 
 Broadly, I think the main takeaway is that we should be mindful of how our actions impact others, especially those who face barriers to participating in science which we might not have had to personally deal with.
 

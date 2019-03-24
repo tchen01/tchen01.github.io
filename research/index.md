@@ -1,6 +1,6 @@
 %Research
 
-I work in the field of Numerical Linear Algebra, specifically on [Krylov subspace methods](./cg_intro.html). I'm interested in incorporating probabilistic techniques into classical algorithms to develop methods which are fast and reliable, both in theory and in practice. I'm committed to making my research accessible and to facilitating the [reproducibility](../thoughts/reproducibility.html) of my work. Please feel free to contact me with any questions or concerns about my research.
+I work in the field of Numerical Linear Algebra, specifically on [Krylov subspace methods](./krylov). I'm interested in incorporating probabilistic techniques into classical algorithms to develop methods which are fast and reliable, both in theory and in practice. I'm committed to making my research accessible and to facilitating the [reproducibility](../thoughts/reproducibility.html) of my work. Please feel free to contact me with any questions or concerns about my research.
 
 I am advised by [Anne Greenbaum](http://faculty.washington.edu/greenbau/).
     
@@ -15,14 +15,21 @@ This page contains a collection of the things I've been working on recently. In 
     <div class="details">In preparation.</div>
 </div>
 
-## Some topics I think are interesting
+## Introductions to some topics I think are interesting
 
-### [Conjugate Gradient](./cg_intro.html)
+- [Krylov Subspace Methods](./)
+    - [Derivation of CG](./cg_derivation.html)
+    - [Error bounds for CG in exact arithmetic](./cg_error.html)
+    - [Finite precision CG](./finite_precision_cg.html)
+    - Remez Algorithm
+    - Extend T algorithm
+- 
+
   
 ## Collaboration
 
 I'm always interested in finding things to collaborate on.
 
-If you are an undergrad student wanting to get involved in research, or are interested in grad school please feel free to reach out. I'd be happy to try to help you find something to work on! You may also be interested in the [Women in Applied Mathematics Mentorship Program](https://amath.washington.edu/women-applied-mathematics-mentorship-program).
+If you are an undergrad student interested in research or grad school, please feel free to reach out; I'd be happy to try to help you find something to work on! You may also be interested in the [Women in Applied Mathematics Mentorship Program](https://amath.washington.edu/women-applied-mathematics-mentorship-program).
 
 

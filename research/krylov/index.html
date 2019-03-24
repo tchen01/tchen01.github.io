@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Tyler Chen</title>
+<meta name="description" content="I'm Tyler Chen, applied math PhD student at the University of Washington. Find out more about my research, teaching, and educational beliefs, and then get in contact with me.">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width user-scalable=no">
+
+<link href="../../tc.ico" rel="shortcut icon" >
+<link href="../../css/main.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="../../css/print.css" rel="stylesheet" type="text/css" media="print"/>
+<link rel="stylesheet" href="../../font/lato/stylesheet.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-50592837-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-50592837-1');
+</script>
+</head>
+
+<body>
+
+<div id="contentContainer">
+<h1> Introduction to Conjugate Gradient
+</h1>
+<p class="authors"> Tyler Chen
+</p>
+<p>This is the first piece from a series on topics relating to the Conjugate Gradient algorithm. I have split up the content into the following pages:</p>
+
+<ul>
+
+<li><a href="./">Introduction to Linear Systems/Krylov subspaces</a></li>
+
+<li><a href="./cg_derivation.html">Derivation of CG</a></li>
+
+<li><a href="./cg_error.html">Error bounds for CG in exact arithmetic</a></li>
+
+<li><a href="./finite_precision_cg.html">Finite precision CG</a></li>
+
+<li>Remez Algorithm</li>
+
+<li>Extend T algorithm</li>
+
+</ul>
+
+<h2 id="linear-systems">Linear Systems</h2>
+
+<!--eventually may want to move this to an introduction to linear systems-->
+
+<p>Solving a linear system of equations <span class="math inline">\(Ax=b\)</span> is one of the most important tasks in modern science. Applications such as weather forecasting, medical imaging, and training neural nets all require repeatedly solving linear systems.</p>
+
+<p>Loosely speaking, methods for linear systems can be separated into two categories: direct methods and iterative methods. Direct methods such as Gaussian elimination manipulate the entries of the matrix <span class="math inline">\(A\)</span> in order to compute the solution <span class="math inline">\(x=A^{-1}b\)</span>. On the other hand, iterative methods generate a sequence <span class="math inline">\(x_0,x_1,x_2,\ldots\)</span> of approximations to the true solution <span class="math inline">\(x^* = A^{-1}b\)</span>, where hopefully each iterate is a better approximation to the true solution.</p>
+
+<p>At first glance, it may seem that direct methods are better. After all, after a known number of steps you get the exact solution. In many cases this is true, especially when the matrix <span class="math inline">\(A\)</span> is dense and relatively small. The main drawback to direct methods is that they are not able to easily take advantage of sparsity. That means that even if <span class="math inline">\(A\)</span> has some nice structure and a lot of entries are zero, direct methods will take the same amount of time and storage to compute the solution as if <span class="math inline">\(A\)</span> were dense. This is where iterative methods come in. Often times iterative methods require only that the product <span class="math inline">\(x\mapsto Ax\)</span> be able to be computed. If <span class="math inline">\(A\)</span> is sparse the product can be done cheaply, and if <span class="math inline">\(A\)</span> has some known structure, a you might not even need to construct <span class="math inline">\(A\)</span>. Such methods are aptly called &quot;matrix free&quot;.</p>
+
+<p>The rest of this piece gives an introduction to Conjugate Gradient, a commonly used iterative method for solving <span class="math inline">\(Ax=b\)</span> when <span class="math inline">\(A\)</span> is symmetric positive definite. My intention is not to provide a rigorous explanation of the topic, but rather to provide some (hopefully useful) intuition about where these methods come from and why they are useful in practice. I assume some linear algebra background (roughly at the level of a first undergrad course in linear algebra).</p>
+
+<p>If you are a bit rusty on your linear algebra I suggest taking a look at the <a href="https://www.khanacademy.org/math/linear-algebra">Khan Academy</a> videos. For a more rigorous and much broader treatment of iterative methods, I suggest Anne Greenbaum's <a href="https://epubs.siam.org/doi/book/10.1137/1.9781611970937?mobileUi=0u">book</a> on the topic. Finally, for a relatively recent overview of modern analysis of the Lanczos and Conjugate Gradient methods I suggest Gerard Meurant and Zdenek Strakos's <a href="https://www.karlin.mff.cuni.cz/~strakos/download/2006_MeSt.pdf">report</a>.</p>
+
+<h2 id="measuring-the-accuracy-of-solutions">Measuring the accuracy of solutions</h2>
+
+<p>Perhaps the first question that should be asked about an iterative method is, &quot;Does the sequence of approximate solutions <span class="math inline">\(x_0,x_1,x_2,\ldots\)</span> converges to the true solution? If this sequence doesn't converge to the true solution (or something close to the true solution), then it won't be very useful in solving <span class="math inline">\(Ax=b\)</span>.</p>
+
+<p>Let's quickly introduce the idea of the <em>error</em> and the <em>residual</em> of an approximate solution <span class="math inline">\(x_k\)</span>. These are both useful measures of how close <span class="math inline">\(x_k\)</span> is to <span class="math inline">\(x^* = A^{-1}b\)</span>. The <em>error</em> is simply the difference between <span class="math inline">\(x\)</span> and <span class="math inline">\(x_k\)</span>. Taking the norm of this quantity gives us a scalar value which measures the distance between <span class="math inline">\(x\)</span> and <span class="math inline">\(x_k\)</span>. In fact, when we say the sequence <span class="math inline">\(x_0,x_1,x_2,\ldots\)</span> converges to <span class="math inline">\(x_*\)</span>, we mean that the scalar sequence,<span class="math inline">\(\|x^*-x_0\|,\|x^*-x_1\|,\|x^*-x_2\|,\ldots\)</span> converges to zero (where <span class="math inline">\(\|\cdot\|\)</span> is the norm associated with some metric space). Thus, solving <span class="math inline">\(Ax=b\)</span> could be written as minimizing <span class="math inline">\(\|x - x^*\| = \|x-A^{-1}b\|\)</span> for some norm <span class="math inline">\(\|\cdot\|\)</span>.</p>
+
+<p>Of course, since we are trying to compute <span class="math inline">\(x^*\)</span>, we don't want our algorithm to depend on <span class="math inline">\(x^*\)</span>. The <em>residual</em> of <span class="math inline">\(x_k\)</span> is defined as <span class="math inline">\(b-Ax_k\)</span>. Again <span class="math inline">\(b-Ax^* = 0\)</span> so minimizing <span class="math inline">\(\|b-Ax\|\)</span> will give the true solution. The advantage here is of course that we can easily compute <span class="math inline">\(b-Ax_k\)</span> once we have <span class="math inline">\(x_k\)</span>.</p>
+
+<h2 id="krylov-subspaces">Krylov subspaces</h2>
+
+<p>From the previous section, we know that minimizing <span class="math inline">\(\|b-Ax\|\)</span> will give the solution <span class="math inline">\(x^*\)</span>. Unfortunately, this problem is just as hard as solving <span class="math inline">\(Ax=b\)</span>. However, if we restrict <span class="math inline">\(x\)</span> to come from a smaller set of values, then the problem become simpler. For instance, if we say that <span class="math inline">\(x = cy\)</span> for some fixed vector <span class="math inline">\(y\)</span>, then this is a scalar minimization problem. Of course, by restricting what values we choose for <span class="math inline">\(x\)</span> it might not be possible to exactly solve <span class="math inline">\(Ax=b\)</span>.</p>
+
+<p>We would like to somehow balance how easy the problems we have to solve with how accurate the solutions they are. One way to do this is to start with an easy problem and get a coarse problem, and then gradually increase the difficulty of the problem while refining the solution.</p>
+
+<p>Suppose we have a sequence of subspaces <span class="math inline">\(V_0\subset V_1\subset V_2\subset \cdots V_m\)</span>. Then we can construct a sequence of iterates, <span class="math inline">\(x_0\in V_0, x_1\in V_1,\ldots\)</span>. If at each step we make sure that <span class="math inline">\(x_k\)</span> minimizes <span class="math inline">\(\|b-Ax\|\)</span> over <span class="math inline">\(V_k\)</span>, then the norm of the residuals will decrease (because <span class="math inline">\(V_k \subset V_{k+1}\)</span>).</p>
+
+<p>Ideally this sequences of subspaces would:</p>
+
+<ol style="list-style-type: decimal">
+
+<li>be easy to construct</li>
+
+<li>be easy to optimize over (given the previous iterate)</li>
+
+<li>eventually contain the true solution</li>
+
+</ol>
+
+<p>We now formally introduce Krylov subspaces, and show that they satisfy these properties.</p>
+
+<p>The <span class="math inline">\(k\)</span>-th Krylov subspace generated by a square matrix <span class="math inline">\(A\)</span> and a vector <span class="math inline">\(v\)</span> is defined to be, <span class="math display">\[
+
+\mathcal{K}_k(A,v) = \operatorname{span}\{v,Av,\ldots,A^{k-1}v \}
+
+\]</span></p>
+
+<p>First, these subspaces are relatively easy to construct because we can get them by repeatedly applying <span class="math inline">\(A\)</span> to <span class="math inline">\(v\)</span>. In fact, we can fairly easily construct an orthonormal basis for these spaces (discussed below).</p>
+
+<p>Therefore, if we have a quantity which can be optimized over each direction of an orthonomal basis independently, then optimizing over these expanding subspaces will be easy because we only need to optimize in a single new direction at each step.</p>
+
+<p>We now show that <span class="math inline">\(\mathcal{K}_k(A,b)\)</span> will eventually contain our solution by the time <span class="math inline">\(k=n\)</span>. While this result comes about naturally later from our description of some algorithms, I think it is useful to immediately relate polynomials with Krylov subspace methods as the two are intimately related.</p>
+
+<p>Suppose <span class="math inline">\(A\)</span> has characteristic polynomial,<span class="math display">\[
+
+p_A(t) = \det(tI-A) = c_0 + c_1t + \cdots + c_{n-1}t^{n-1} + t^n
+
+\]</span> It turns out that <span class="math inline">\(c_0 = (-1)^n\det(A)\)</span> so that <span class="math inline">\(c_0\)</span> is nonzero if <span class="math inline">\(A\)</span> is invertible.</p>
+
+<p>The <a href="https://en.wikipedia.org/wiki/Cayley%E2%80%93Hamilton_theorem">Cayley-Hamilton Theorem</a> states that a matrix satisfies its own <a href="https://en.wikipedia.org/wiki/Characteristic_polynomial#Characteristic_equation">characteristic polynomial</a>. This means, <span class="math display">\[
+
+0 = p_A(A) = c_0 I + c_1 A + \cdots c_{n+1} A^{n-1} + A^n
+
+\]</span></p>
+
+<p>Moving the identity term to the left and dividing by <span class="math inline">\(-c_0\)</span> we can write, <span class="math display">\[
+
+A^{-1} = -(c_1/c_0) I - (c_2/c_0) A - \cdots - (1/c_0) A^{n-1}
+
+\]</span></p>
+
+<p>This says that <span class="math inline">\(A^{-1}\)</span> can be written as a polynomial in <span class="math inline">\(A\)</span>! In particular,<br />
+
+<span class="math display">\[
+
+x = A^{-1}b = -(c_1/c_0) b - (c_2/c_0) Ab - \cdots - (1/c_0) A^{n-1}b
+
+\]</span></p>
+
+<p>That means that the solution to <span class="math inline">\(Ax = b\)</span> is a linear combination of <span class="math inline">\(b, Ab, A^2b, \ldots, A^{n-1}b\)</span>. This observation is the motivation behind Krylov subspace methods. Thus, Krylov subspace methods can be viewed as building low degree polynomial approximations to <span class="math inline">\(A^{-1}b\)</span> using powers of <span class="math inline">\(A\)</span> times <span class="math inline">\(b\)</span> (in fact Krylov subspace methods can be used to approximate <span class="math inline">\(f(A)b\)</span> where <span class="math inline">\(f\)</span> is any function).</p>
+
+<p>Finally, we note that <span class="math inline">\(x = A^{-1}b \in \mathcal{K}_n(A,b)\)</span>.</p>
+
+<h2 id="arnoldi-and-lanczos-algorithms">Arnoldi and Lanczos Algorithms</h2>
+
+<p>The Arnoldi algorithm for computing an orthonormal basis for Krylov subspaces is at the core of most Krylov subspace methods. Essentially, the Arnoldi algorithm is the Gram-Schmidt procedure applied to the vectors <span class="math inline">\(v,Av,A^2v,A^3v,\ldots\)</span> in a clever way.</p>
+
+<p>Recall that given a set of vectors <span class="math inline">\(v_0,v_1,\ldots, v_k\)</span> the Gram-Schmidt procedure computes an orthonormal basis <span class="math inline">\(q_0,q_1,\ldots,q_k\)</span> so that for all <span class="math inline">\(j\leq k\)</span>, <span class="math display">\[
+
+\operatorname{span}\{v_0,\ldots,v_j\} = \operatorname{span}\{q_0,\ldots,q_j\}
+
+\]</span></p>
+
+<p>The trick behind the Arnoldi algorithm is the fact that you do not need to construct the whole set <span class="math inline">\(v,Av,A^2v,\ldots\)</span> ahead of time. Instead, you can compute <span class="math inline">\(Aq_{j}\)</span> in place of <span class="math inline">\(A^{j+1}v\)</span> once you have found an orthonormal basis <span class="math inline">\(q_0,q_1,\ldots,q_{j}\)</span> spanning <span class="math inline">\(v,Av,\ldots, A^{j}v\)</span>.</p>
+
+<p>If we assume that <span class="math inline">\(\operatorname{span}\{v,Av,\ldots A^jv\}= \operatorname{span}\{q_0,\ldots, q_j\}\)</span> then <span class="math inline">\(q_j\)</span> can be written as a linear combination of <span class="math inline">\(v,Av,\ldots, A^jv\)</span>. Therefore, <span class="math inline">\(Aq_j\)</span> will be a linear combination of <span class="math inline">\(Av,A^2v,\ldots,A^{j+1}v\)</span>. In particular, this means that <span class="math inline">\(\operatorname{span}\{q_0,\ldots,q_j,Aq_j\} = \operatorname{span}\{v,Av,\ldots,A^{j+1}v\}\)</span>. Therefore, we will get exactly the same set of vectors by applying Gram-Schmidt to <span class="math inline">\(\{v,Av,\ldots,A^kv\}\)</span> as if we compute <span class="math inline">\(Aq_j\)</span> once we have computing <span class="math inline">\(q_j\)</span>.</p>
+
+<p>Since we obtain <span class="math inline">\(q_{j+1}\)</span> by orthogonalizing <span class="math inline">\(Aq_j\)</span> against <span class="math inline">\(\{q_0,q_1,\ldots,q_j\}\)</span> then <span class="math inline">\(q_{j+1}\)</span> is in the span of these vectors. That means we can can some <span class="math inline">\(c_i\)</span> so that, <span class="math display">\[
+
+q_{j+1} = c_0 q_0 + c_1 q_1 + \cdots + c_j q_j + c_{j+1}Aq_j
+
+\]</span></p>
+
+<p>If we rewrite using new scalars <span class="math inline">\(d_i\)</span> we have, <span class="math display">\[
+
+Aq_j = d_0q_0 + d_1q_1 + \cdots + d_{j+1} q_{j+1}
+
+\]</span></p>
+
+<p>This can be written in matrix form as, <span class="math display">\[
+
+AQ = QH
+
+\]</span> where <span class="math inline">\(H\)</span> is &quot;upper Hessenburg&quot; (like upper triangular but the first subdiagonal also has nonzero entries). In fact, while we have not showed it, the entries of <span class="math inline">\(H\)</span> come directly from the Arnoldi algorithm (just like how the entries of <span class="math inline">\(R\)</span> in a QR factorization can be obtained from Gram Schmidt).</p>
+
+<p>When <span class="math inline">\(A\)</span> is Hermetian, then <span class="math inline">\(Q^*AQ = H\)</span> is also Hermetian. Since <span class="math inline">\(H\)</span> is upper Hessenburg and Hermitian, it must be tridiagonal! This means that the <span class="math inline">\(q_j\)</span> satisfy a three term recurrence, <span class="math display">\[
+
+Aq_j = \beta_{j-1} q_{j-1} + \alpha_j q_j + \beta_j q_{j+1}
+
+\]</span> where <span class="math inline">\(\alpha_1,\ldots,\alpha_n\)</span> are the diagonal entries of <span class="math inline">\(T\)</span> and <span class="math inline">\(\beta_1,\ldots,\beta_{n-1}\)</span> are the off diagonal entries of <span class="math inline">\(T\)</span>. The Lanczos algorithm is an efficient way of computing this decomposition.</p>
+
+</div>
+</body>
+</html>
