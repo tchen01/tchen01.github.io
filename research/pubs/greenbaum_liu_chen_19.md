@@ -4,7 +4,11 @@
 
 This is a companion piece to the publication:
 
-On the Convergence of Conjugate Gradient Variants in Finite Precision Arithmetic. Anne Greenbaum, Hexuan Liu, Tyler Chen. In progress.
+    @article{greenbaum_liu_chen_19
+        Author = {Anne Greenbaum, Hexuan Liu, and Tyler Chen}
+        Title = {On the Convergence of Conjugate Gradient Variants in Finite Precision Arithmetic.}
+        Howpublished = {In progress.}
+    }
 
 A preprint will be on ArXiV in the near future.
 

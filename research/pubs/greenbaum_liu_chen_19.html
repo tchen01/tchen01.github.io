@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Tyler Chen</title>
+<meta name="description" content="I'm Tyler Chen, applied math PhD student at the University of Washington. Find out more about my research, teaching, and educational beliefs, and then get in contact with me.">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width user-scalable=no">
+
+<link href="../../tc.ico" rel="shortcut icon" >
+<link href="../../css/main.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="../../css/print.css" rel="stylesheet" type="text/css" media="print"/>
+<link rel="stylesheet" href="../../font/lato/stylesheet.css" type="text/css" charset="utf-8" />
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-50592837-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-50592837-1');
+</script>
+</head>
+
+<body>
+
+<div id="contentContainer">
+<h1>On the Convergence of Conjugate Gradient Variants in Finite Precision Arithmetic
+</h1>
+<p class="authors">Tyler Chen
+</p>
+<p>A pdf version of this page can be found <a href="./greenbaum_liu_chen_19.pdf">here</a></p>
+<p>This is a companion piece to the publication:</p>
+
+<pre><code>@article{greenbaum_liu_chen_19
+
+    Author = {Anne Greenbaum, Hexuan Liu, and Tyler Chen}
+
+    Title = {On the Convergence of Conjugate Gradient Variants in Finite Precision Arithmetic.}
+
+    Howpublished = {In progress.}
+
+}</code></pre>
+
+<p>A preprint will be on ArXiV in the near future.</p>
+
+<h2 id="why-should-i-care">Why should I care?</h2>
+
+<p>Need new algorithms to deal with modern HPC architecture. But can't sacrifice accuracy.</p>
+
+<p>Take advantage of lower precision for ML type applications.</p>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>If you are not familiar with the Conjugate Gradient method, it may be worth reading <a href="./cg_intro.html">this page</a> first.</p>
+
+<p>The Conjugate Gradient algorithm is a widely used method for solving <span class="math inline">\(Ax=b\)</span> when <span class="math inline">\(A\)</span> is positive definite (all eigenvalues are positive).</p>
+
+<h2 id="conjugate-gradient-in-finite-precision">Conjugate Gradient In Finite Precision</h2>
+
+<ul>
+
+<li>The CG algorithm can be derived by minimizing the <span class="math inline">\(A\)</span>-norm of the error at each step.</li>
+
+</ul>
+
+<h2 id="numerical-problems">Numerical Problems</h2>
+
+<ul>
+
+<li>introduction to floating points failing to be associative</li>
+
+<li>even worse in low precision</li>
+
+<li>give an example of error analysis for HSCG</li>
+
+<li>full results in paper</li>
+
+</ul>
+
+<h2 id="avoiding-communication">Avoiding Communication</h2>
+
+<ul>
+
+<li>give example with inner product vs sparse matrix product</li>
+
+<li>derive CGCG and GVCG by replacing recurrences</li>
+
+</ul>
+
+<h2 id="concusion">Concusion</h2>
+
+<p class="footer">The rest of my publications can be found <a href="./../">here</a>.</p>
+</div>
+</body>
+</html>

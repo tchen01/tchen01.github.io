@@ -33,6 +33,8 @@
 </h1>
 <p class="authors"> Tyler Chen
 </p>
+<!--start_pdf_comment-->
+
 <p>This is the first piece from a series on topics relating to the Conjugate Gradient algorithm. I have split up the content into the following pages:</p>
 
 <ul>
@@ -41,19 +43,15 @@
 
 <li><a href="./cg_derivation.html">Derivation of CG</a></li>
 
-<li><a href="./cg_error.html">Error bounds for CG in exact arithmetic</a></li>
+<li><a href="./cg_error.html">Error bounds for CG and the Remez Algorithm</a></li>
 
 <li><a href="./finite_precision_cg.html">Finite precision CG</a></li>
 
-<li>Remez Algorithm</li>
-
-<li>Extend T algorithm</li>
-
 </ul>
 
-<h2 id="linear-systems">Linear Systems</h2>
+<p>All of the pages are available as a single <a href="./krylov.pdf">pdf document</a>. <!--end_pdf_comment--></p>
 
-<!--eventually may want to move this to an introduction to linear systems-->
+<h2 id="linear-systems">Linear Systems</h2>
 
 <p>Solving a linear system of equations <span class="math inline">\(Ax=b\)</span> is one of the most important tasks in modern science. Applications such as weather forecasting, medical imaging, and training neural nets all require repeatedly solving linear systems.</p>
 
@@ -61,7 +59,7 @@
 
 <p>At first glance, it may seem that direct methods are better. After all, after a known number of steps you get the exact solution. In many cases this is true, especially when the matrix <span class="math inline">\(A\)</span> is dense and relatively small. The main drawback to direct methods is that they are not able to easily take advantage of sparsity. That means that even if <span class="math inline">\(A\)</span> has some nice structure and a lot of entries are zero, direct methods will take the same amount of time and storage to compute the solution as if <span class="math inline">\(A\)</span> were dense. This is where iterative methods come in. Often times iterative methods require only that the product <span class="math inline">\(x\mapsto Ax\)</span> be able to be computed. If <span class="math inline">\(A\)</span> is sparse the product can be done cheaply, and if <span class="math inline">\(A\)</span> has some known structure, a you might not even need to construct <span class="math inline">\(A\)</span>. Such methods are aptly called &quot;matrix free&quot;.</p>
 
-<p>The rest of this piece gives an introduction to Conjugate Gradient, a commonly used iterative method for solving <span class="math inline">\(Ax=b\)</span> when <span class="math inline">\(A\)</span> is symmetric positive definite. My intention is not to provide a rigorous explanation of the topic, but rather to provide some (hopefully useful) intuition about where these methods come from and why they are useful in practice. I assume some linear algebra background (roughly at the level of a first undergrad course in linear algebra).</p>
+<p>The rest of this series gives an introduction to the analysis of Conjugate Gradient, a commonly used iterative method for solving <span class="math inline">\(Ax=b\)</span> when <span class="math inline">\(A\)</span> is symmetric positive definite. My intention is not to provide a rigorous explanation of the topic, but rather to provide some (hopefully useful) intuition about where this method comes from and how it works in practice. I assume some linear algebra background (roughly at the level of a first undergrad course in linear algebra).</p>
 
 <p>If you are a bit rusty on your linear algebra I suggest taking a look at the <a href="https://www.khanacademy.org/math/linear-algebra">Khan Academy</a> videos. For a more rigorous and much broader treatment of iterative methods, I suggest Anne Greenbaum's <a href="https://epubs.siam.org/doi/book/10.1137/1.9781611970937?mobileUi=0u">book</a> on the topic. Finally, for a relatively recent overview of modern analysis of the Lanczos and Conjugate Gradient methods I suggest Gerard Meurant and Zdenek Strakos's <a href="https://www.karlin.mff.cuni.cz/~strakos/download/2006_MeSt.pdf">report</a>.</p>
 
@@ -174,6 +172,8 @@ AQ = QH
 Aq_j = \beta_{j-1} q_{j-1} + \alpha_j q_j + \beta_j q_{j+1}
 
 \]</span> where <span class="math inline">\(\alpha_1,\ldots,\alpha_n\)</span> are the diagonal entries of <span class="math inline">\(T\)</span> and <span class="math inline">\(\beta_1,\ldots,\beta_{n-1}\)</span> are the off diagonal entries of <span class="math inline">\(T\)</span>. The Lanczos algorithm is an efficient way of computing this decomposition.</p>
+
+<!--More on lanczos-->
 
 </div>
 </body>

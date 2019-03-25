@@ -1,6 +1,6 @@
 % Thoughts
 
-This is a collection of some thoughts from my experience in academia. A lot of what's written here has probably been said before.
+This is a collection of some thoughts from my experience in academia. A lot of what's written here has probably been said before in one way or another.
 
 ## [Reproducibility, Inclusivity, and Open Science](./reproducibility.html)
 

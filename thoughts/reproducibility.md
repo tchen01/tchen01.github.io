@@ -39,4 +39,4 @@ When possible use open source alternatives; i.e. Python (with Numpy and Scipy) o
 
 Read [Lorena Barba's](http://lorenabarba.com/blog/barbagroup-reproducibility-syllabus) website. It has many good resources regarding good technical practices for reproducibility. One key takeaway is to "provide public access to scripts, runs, and results".
 
-Write code which is accessible to others. This not only means having the code physically acecssible, but making sure it is understandable and interpretable. Writing well documented code with a broader audience in mind, makes it easier for your research to reach a wide range of people.
+Write code which is accessible to others. This not only means having the code physically acecssible, but making sure it is easily understandable and interpretable. Writing well documented code with a broader audience in mind, makes it easier for your research to reach a wide range of people.

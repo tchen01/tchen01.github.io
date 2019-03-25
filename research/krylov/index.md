@@ -1,24 +1,25 @@
 % Introduction to Conjugate Gradient
 % Tyler Chen
 
+<!--start_pdf_comment-->
 This is the first piece from a series on topics relating to the Conjugate Gradient algorithm. I have split up the content into the following pages:
 
 - [Introduction to Linear Systems/Krylov subspaces](./)
 - [Derivation of CG](./cg_derivation.html)
-- [Error bounds for CG in exact arithmetic](./cg_error.html)
+- [Error bounds for CG and the Remez Algorithm](./cg_error.html)
 - [Finite precision CG](./finite_precision_cg.html)
-- Remez Algorithm
-- Extend T algorithm
+
+All of the pages are available as a single [pdf document](./krylov.pdf).
+<!--end_pdf_comment-->
 
 ## Linear Systems
-<!--eventually may want to move this to an introduction to linear systems-->
 Solving a linear system of equations $Ax=b$ is one of the most important tasks in modern science. Applications such as weather forecasting, medical imaging, and training neural nets all require repeatedly solving linear systems. 
 
 Loosely speaking, methods for linear systems can be separated into two categories: direct methods and iterative methods. Direct methods such as Gaussian elimination manipulate the entries of the matrix $A$ in order to compute the solution $x=A^{-1}b$. On the other hand, iterative methods generate a sequence $x_0,x_1,x_2,\ldots$ of approximations to the true solution $x^* = A^{-1}b$, where hopefully each iterate is a better approximation to the true solution.
 
 At first glance, it may seem that direct methods are better. After all, after a known number of steps you get the exact solution. In many cases this is true, especially when the matrix $A$ is dense and relatively small. The main drawback to direct methods is that they are not able to easily take advantage of sparsity. That means that even if $A$ has some nice structure and a lot of entries are zero, direct methods will take the same amount of time and storage to compute the solution as if $A$ were dense. This is where iterative methods come in. Often times iterative methods require only that the product $x\mapsto Ax$ be able to be computed. If $A$ is sparse the product can be done cheaply, and if $A$ has some known structure, a you might not even need to construct $A$. Such methods are aptly called "matrix free". 
 
-The rest of this piece gives an introduction to Conjugate Gradient, a commonly used iterative method for solving $Ax=b$ when $A$ is symmetric positive definite. My intention is not to provide a rigorous explanation of the topic, but rather to provide some (hopefully useful) intuition about where these methods come from and why they are useful in practice. I assume some linear algebra background (roughly at the level of a first undergrad course in linear algebra).
+The rest of this series gives an introduction to the analysis of Conjugate Gradient, a commonly used iterative method for solving $Ax=b$ when $A$ is symmetric positive definite. My intention is not to provide a rigorous explanation of the topic, but rather to provide some (hopefully useful) intuition about where this method comes from and how it works in practice. I assume some linear algebra background (roughly at the level of a first undergrad course in linear algebra).
 
 If you are a bit rusty on your linear algebra I suggest taking a look at the [Khan Academy](https://www.khanacademy.org/math/linear-algebra) videos. For a more rigorous and much broader treatment of iterative methods, I suggest Anne Greenbaum's [book](https://epubs.siam.org/doi/book/10.1137/1.9781611970937?mobileUi=0u) on the topic. Finally, for a relatively recent overview of modern analysis of the Lanczos and Conjugate Gradient methods I suggest Gerard Meurant and Zdenek Strakos's [report](https://www.karlin.mff.cuni.cz/~strakos/download/2006_MeSt.pdf).
 
@@ -117,4 +118,6 @@ $$
 Aq_j = \beta_{j-1} q_{j-1} + \alpha_j q_j + \beta_j q_{j+1}
 $$
 where $\alpha_1,\ldots,\alpha_n$ are the diagonal entries of $T$ and $\beta_1,\ldots,\beta_{n-1}$ are the off diagonal entries of $T$. The Lanczos algorithm is an efficient way of computing this decomposition. 
+
+<!--More on lanczos-->
 

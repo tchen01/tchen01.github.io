@@ -7,7 +7,7 @@ The CG method is well known by minimizing the $A$-norm of the error over success
 
 This is the second piece in a series on Conjugate Gradient. The previous piece provides an [Introduction to Krylov subspace methods](./).
 
-## Some definitions 
+## Linear algebra review
 Before we get into the details, let's define some notation and review a few key concepts from linear algebra which we will rely on when deriving the CG algorithm.
 
 - Any inner product $\langle \cdot,\cdot \rangle$ induces a norm $\|\cdot\|$ defined by $\|x\|^2 = \langle x,x\rangle$.

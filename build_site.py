@@ -7,7 +7,7 @@ start_delimiter = '<body>\n'
 end_delimiter = '</body>\n'
 
 def build_html(folder,file_name):
-    print(f'now building {file[:-3]}')
+    print(f'now building {folder}/{file[:-3]}')
 
     # convert md to html
     os.system(f'pandoc --mathjax -o {folder}/{file_name}1.html {folder}/{file}')
@@ -44,7 +44,8 @@ def build_html(folder,file_name):
                 new_html_file.write(f'<h1>{title}</h1>\n')
                 new_html_file.write(f'<p class="authors">{authors}</p>\n')
                 
-                if file[:-3] != 'index':
+                # idk if we want this..
+                if file[:-3] != 'index' and folder not in ['research/krylov']:
                      new_html_file.write(f'<p>A pdf version of this page can be found <a href="./{file[:-3]}.pdf">here</a></p>\n')
                 
                 for new_line in new_html_content:
@@ -63,16 +64,16 @@ def build_html(folder,file_name):
     os.system(f'mv {folder}/{file_name}2.html {folder}/{file_name}.html')
 
 # folders
-folders = ['.', 'research','research/krylov', 'thoughts']
+folders = ['.', 'research','research/krylov','research/pubs', 'thoughts']
 footers = {'.':'', 
            'research':'<p class="footer">The rest of my research can be found <a href="./">here</a>.</p>',
            'research/krylov':'<p class="footer">More about Krylov methods can be found <a href="./">here</a>.</p>',
+           'research/pubs':'<p class="footer">The rest of my publications can be found <a href="./../">here</a>.</p>',
            'thoughts':'<p class="footer">More writing about my opinions on academia can be found <a href="./">here</a>.</p>'}
 
 
 # search through files
 for folder in folders:
-    print(f'now searching {folder}')
     
     files = sorted(os.listdir(f"./{folder}"))
     html_files = list(filter(lambda f: f[-5:]=='.html' != -1, files))
@@ -82,4 +83,7 @@ for folder in folders:
         #check if we have an html file for a md file
         if file[:-3]+'.html' in html_files:
             build_html(folder,file[:-3])
-            
+
+
+
+
