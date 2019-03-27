@@ -6,7 +6,7 @@ import os
 start_delimiter = '<!--start_pdf_comment-->\n'
 end_delimiter = '<!--end_pdf_comment-->\n'
 
-krylov_topics = ['index','cg_derivation','cg_error','finite_precision_cg']
+krylov_topics = ['index','arnoldi_lanczos','cg_derivation','cg_error','finite_precision_cg']
 os.system(f"cat {' '.join([t+'.md' for t in krylov_topics])} > krylov.md")
 
 with open(f'krylov.md','r') as old_md_file, open(f'krylov1.md','w+') as new_md_file:
@@ -26,7 +26,7 @@ with open(f'krylov.md','r') as old_md_file, open(f'krylov1.md','w+') as new_md_f
             
         if line[0] == '%':
             new_md_file.write(line.replace('%','#'))
-            old_md_file.readline()
+            old_md_file.readline() # skip over author
         else:
             new_md_file.write(line)
             

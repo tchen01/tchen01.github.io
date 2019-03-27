@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Tyler Chen</title>
+<meta name="description" content="I'm Tyler Chen, applied math PhD student at the University of Washington. Find out more about my research, teaching, and educational beliefs, and then get in contact with me.">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width user-scalable=no">
+
+<link href="../../tc.ico" rel="shortcut icon" >
+<link href="../../css/main.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="../../css/print.css" rel="stylesheet" type="text/css" media="print"/>
+<link rel="stylesheet" href="../../font/lato/stylesheet.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-50592837-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-50592837-1');
+</script>
+</head>
+
+<body>
+
+<div id="contentContainer">
+<h1> The Remez Algorithm
+</h1>
+<p class="authors"> Tyler Chen
+</p>
+<p>Recall that the <em>minimax polynomial of degree <span class="math inline">\(k\)</span></em> on <span class="math inline">\(L\)</span> is the polynomial satisfying, <span class="math display">\[
+
+\min_{p\in\mathcal{P}_k} \max_{x\in L} | p(x) |, ~~~~ \mathcal{P}_k = \{p : p(0)=1, \deg p \leq k\}
+
+\]</span></p>
+
+<p>The Remez algorithm is a popular method for computing the minimax polynomial of a given degree on some set. Before we dive into the algorithm, let's first take a look at an important property that minimax polynomials have.</p>
+
+<h3 id="equioscillation-theorem">Equioscillation theorem</h3>
+
+<p>Loosely speaking, the equioscillation theorem gives us a way of checking if a polynomial is the minimax polynomial or not.</p>
+
+<p><strong>Theorem.</strong> The equioscillation theorem states that <span class="math inline">\(p:L\to\mathbb{R}\)</span> is the minimax polynomial of degree <span class="math inline">\(k\)</span> if and only if there are <span class="math inline">\(k+2\)</span> points <span class="math inline">\(x_0&lt;x_1&lt;\cdots&lt;x_{k+1} \in L\)</span> such that <span class="math inline">\(p(x_i) = (-1)^i E\)</span> where <span class="math inline">\(E = \max_{x\in L}|p(x)|\)</span>.</p>
+
+<p>Another way to say this is that <span class="math inline">\(p\)</span> is the minimax polynomial if and only if the value of <span class="math inline">\(p\)</span> at the local extrema of <span class="math inline">\(p\)</span> in <span class="math inline">\(L\)</span> are alternating in sign, and equal in magnitude to the largest value that the minimax polynomial takes on <span class="math inline">\(L\)</span>.</p>
+
+<p><strong>Intuition.</strong> We are minimizing the maximum size of <span class="math inline">\(p\)</span> on the set <span class="math inline">\(L\)</span>. Imagine plates above and below <span class="math inline">\(L\)</span>. The maximum size of <span class="math inline">\(p\)</span> is the furthest the plates are from <span class="math inline">\(0\)</span>. To minimize this distance, we can picture pushing the plates together. As you squeeze them harder and harder together then you force the polynomial to move around and change it's coefficients until eventually you reach the minimum</p>
+
+<p><strong>animation of squeezing here</strong></p>
+
+<p>We note also that the points <span class="math inline">\(x_i\)</span> must be local extrema of <span class="math inline">\(p\)</span> on <span class="math inline">\(L\)</span>. This is due to the fact that <span class="math inline">\(|p(x_i)| = E\)</span> means <span class="math inline">\(p(x_i)\)</span> is an extrema on <span class="math inline">\(L\)</span>, and that since <span class="math inline">\(p\)</span> cannot be constant on <span class="math inline">\(L\)</span>, <span class="math inline">\(|p(x_i+\epsilon)|\)</span> is either smaller than <span class="math inline">\(p(x_i)\)</span> or <span class="math inline">\(x_i+\epsilon\)</span> is not in <span class="math inline">\(L\)</span>.</p>
+
+<p>A very &quot;handwavy&quot; way to understand this theorem is that if a polynomial does not equioscillate at the local extrema, then then there is still some leeway to adjust it and make it smaller at those points.</p>
+
+<p>The Remez algorithm works by iteratively refining a set of points <span class="math inline">\(x_0,x_1,\ldots,x_{k+1} \in L\)</span> (called a reference), until the reference gives exactly the <span class="math inline">\(k+2\)</span> points described in the equioscillation theorem. At each step we force the polynomial to equioscillate, and then get the next reference by finding a set of local extrema of alternating sign for the current polynomial containing the global extrema. Since the polynomial at each step equioscillates on the given reference, this ensures that it has <span class="math inline">\(k\)</span> real roots and that <span class="math inline">\(k+1\)</span> local extrema of alternating signs exist.</p>
+
+<!--Is there a way to write pseudocode with pandoc?-->
+
+<p><strong>Algorithm</strong>. Start with <span class="math inline">\(k+1\)</span> points <span class="math inline">\(\{x_0^{(0)},x_1^{(0)},\ldots,x_{k+1}^{(0)}\}\)</span> meant to approximate the <span class="math inline">\(k+1\)</span> local extrema of the minimax polynomial on <span class="math inline">\(L\)</span>.</p>
+
+<p>For <span class="math inline">\(j=1,2,\ldots\)</span>,</p>
+
+<ol style="list-style-type: decimal">
+
+<li>Find the degree <span class="math inline">\(k\)</span> polynomial <span class="math inline">\(p^{(j)}\)</span> passing through the points <span class="math inline">\((x_i^{(j-1)},(-1)^i)\)</span>. That is, the polynomial which equioscillates on these points scaled appropriately.</li>
+
+<li>Find <span class="math inline">\(k+1\)</span> local extrema of <span class="math inline">\(p^{(j)}\)</span> on <span class="math inline">\(L\)</span> with alternating signs such that one of them is the global extrema. Call these points <span class="math inline">\(\{x_0^{(j)},x_1^{(j)}, \ldots, x_{k+1}^{(j)}\}\)</span></li>
+
+<li>If <span class="math inline">\(x_i^{(j-1)} = x_i^{(j)}\)</span> for all <span class="math inline">\(j\)</span>, terminate.</li>
+
+</ol>
+
+<p>Note that the polynomials constructed in the algorithm equioscillate between 1 and <span class="math inline">\(-1\)</span>. However, by scaling them by their value at the origin we get polynomials where <span class="math inline">\(p(0)=1\)</span>.</p>
+
+<p>We <a href="./remez.py">implement</a> the Remez algorithm in numpy for a discrete set of points. Note that this depends on having code to get an interpolating polynomial. A good way to do this would be Lagrange interpolation with <a href="https://www.nada.kth.se/~olofr/Approx/BarycentricLagrange.pdf">barycentric coordinates</a>.</p>
+
+<pre><code>def remez(L,k):
+
+    return -1</code></pre>
+
+<p class="footer">More about Krylov methods can be found <a href="./">here</a>.</p>
+</div>
+</body>
+</html>

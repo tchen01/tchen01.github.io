@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Tyler Chen</title>
+<meta name="description" content="I'm Tyler Chen, applied math PhD student at the University of Washington. Find out more about my research, teaching, and educational beliefs, and then get in contact with me.">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width user-scalable=no">
+
+<link href="../../tc.ico" rel="shortcut icon" >
+<link href="../../css/main.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="../../css/print.css" rel="stylesheet" type="text/css" media="print"/>
+<link rel="stylesheet" href="../../font/lato/stylesheet.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-50592837-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-50592837-1');
+</script>
+</head>
+
+<body>
+
+<div id="contentContainer">
+<h1> The Arnoldi and Lanczos algorithms
+</h1>
+<p class="authors"> Tyler Chen
+</p>
+<p>The Arnoldi and Lanczos algorithms for computing an orthonormal basis for Krylov subspaces are at the core of most Krylov subspace methods. Essentially, these algorithms are the Gram-Schmidt procedure applied to the vectors <span class="math inline">\(v,Av,A^2v,A^3v,\ldots\)</span> in a clever way.</p>
+
+<h2 id="the-arnoldi-algorithm">The Arnoldi algorithm</h2>
+
+<p>Recall that given a set of vectors <span class="math inline">\(v_0,v_1,\ldots, v_k\)</span> the Gram-Schmidt procedure computes an orthonormal basis <span class="math inline">\(q_0,q_1,\ldots,q_k\)</span> so that for all <span class="math inline">\(j\leq k\)</span>, <span class="math display">\[
+
+\operatorname{span}\{v_0,\ldots,v_j\} = \operatorname{span}\{q_0,\ldots,q_j\}
+
+\]</span></p>
+
+<p>The trick behind the Arnoldi algorithm is the fact that you do not need to construct the whole set <span class="math inline">\(v,Av,A^2v,\ldots\)</span> ahead of time. Instead, you can compute <span class="math inline">\(Aq_{k}\)</span> in place of <span class="math inline">\(A^{k+1}v\)</span> once you have found an orthonormal basis <span class="math inline">\(q_0,q_1,\ldots,q_k\)</span> spanning <span class="math inline">\(v,Av,\ldots, A^k v\)</span>.</p>
+
+<p>If we assume that <span class="math inline">\(\operatorname{span}\{v,Av,\ldots A^k v\}= \operatorname{span}\{q_0,\ldots, q_k\}\)</span> then <span class="math inline">\(q_k\)</span> can be written as a linear combination of <span class="math inline">\(v,Av,\ldots, A^k v\)</span>. Therefore, <span class="math inline">\(Aq_k\)</span> will be a linear combination of <span class="math inline">\(Av,A^2v,\ldots,A^{k+1}v\)</span>. In particular, this means that <span class="math inline">\(\operatorname{span}\{q_0,\ldots,q_j,Aq_k\} = \operatorname{span}\{v,Av,\ldots,A^{k+1}v\}\)</span>. Therefore, we will get exactly the same set of vectors by applying Gram-Schmidt to <span class="math inline">\(\{v,Av,\ldots,A^kv\}\)</span> as if we compute <span class="math inline">\(Aq_k\)</span> once we have computing <span class="math inline">\(q_k\)</span>.</p>
+
+<p>Since we obtain <span class="math inline">\(q_{k+1}\)</span> by orthogonalizing <span class="math inline">\(Aq_k\)</span> against <span class="math inline">\(\{q_0,q_1,\ldots,q_k\}\)</span> then <span class="math inline">\(q_{k+1}\)</span> is in the span of these vectors, there exist some <span class="math inline">\(c_i\)</span> so that, <span class="math display">\[
+
+q_{k+1} = c_0 q_0 + c_1 q_1 + \cdots + c_k q_k + c_{k+1}Aq_k
+
+\]</span></p>
+
+<p>We can rearrange this (using new scalars <span class="math inline">\(d_i\)</span>) to, <span class="math display">\[
+
+Aq_k = d_0q_0 + d_1q_1 + \cdots + d_{k+1} q_{k+1}
+
+\]</span></p>
+
+<p>This can be written in matrix form as, <span class="math display">\[
+
+AQ = QH
+
+\]</span> where <span class="math inline">\(H\)</span> is &quot;upper Hessenburg&quot; (like upper triangular but the first subdiagonal also has nonzero entries). While I'm not going to derive them here, since the entries of <span class="math inline">\(H\)</span> come directly from the Arnoldi algorithm (just like how the entries of <span class="math inline">\(R\)</span> in a QR factorization can be obtained from Gram Schmidt) their explicit expressions can be easily written down.</p>
+
+<p>Since <span class="math inline">\(Q\)</span> is orthogonal then, <span class="math inline">\(Q^*AQ = H\)</span>, so <span class="math inline">\(H\)</span> and <span class="math inline">\(A\)</span> are similar. This means that finding the eigenvalues and vectors of <span class="math inline">\(H\)</span> will give us the eigenvalues and vectors of <span class="math inline">\(A\)</span>. However, since <span class="math inline">\(H\)</span> is upper Hessenburg, then solving the eigenproblem is easier than for a general matrix.</p>
+
+<h2 id="the-lancozs-algorithm">The Lancozs algorithm</h2>
+
+<p>When <span class="math inline">\(A\)</span> is Hermetian, then <span class="math inline">\(Q^*AQ = H\)</span> is also Hermetian. Since <span class="math inline">\(H\)</span> is upper Hessenburg and Hermitian, it must be tridiagonal! This means that the <span class="math inline">\(q_j\)</span> satisfy a three term recurrence, <span class="math display">\[
+
+Aq_k = \beta_{k-1} q_{k-1} + \alpha_k q_k + \beta_k q_{k+1}
+
+\]</span> where <span class="math inline">\(\alpha_1,\ldots,\alpha_n\)</span> are the diagonal entries of <span class="math inline">\(T\)</span> and <span class="math inline">\(\beta_1,\ldots,\beta_{n-1}\)</span> are the off diagonal entries of <span class="math inline">\(T\)</span>. The Lanczos algorithm is an efficient way of computing this decomposition.</p>
+
+<p>I will present a brief derivation for the method motivated by the three term recurrence above. Since we know that the <span class="math inline">\(q_k\)</span> satisfy the three term recurrence, we would like the method to store as few of the <span class="math inline">\(q_k\)</span> as possible (i.e. take advantage of the three term recurrence as opposed to the Arnoldi algorithm).</p>
+
+<p>Suppose that we have <span class="math inline">\(q_k\)</span>, <span class="math inline">\(q_{k-1}\)</span>, and the coefficient <span class="math inline">\(\beta_{k-1}\)</span>. We need to expand the Krylov subspace to find <span class="math inline">\(q_{k+1}\)</span> in a way that takes advantage of the three term recurrence. To do this we can expand the subspace by computing <span class="math inline">\(Aq_k\)</span> and then orthogonalizing <span class="math inline">\(Aq_k\)</span> against <span class="math inline">\(q_k\)</span> and <span class="math inline">\(q_{k-1}\)</span>. By the three term recurrence, <span class="math inline">\(Aq_k\)</span> will be orthogonal to <span class="math inline">\(q_j\)</span> for all <span class="math inline">\(j\leq k-2\)</span> so we do not need to explicitly orthogonalize against those vectors.</p>
+
+<p>We orthogonalize, <span class="math display">\[
+
+\tilde{q}_{k+1} = Aq_k - \alpha_k q_k - \langle Aq_k, q_{k-1} \rangle q_{k-1}, ~~~~ 
+
+\alpha_{k} = \langle A q_k, q_k \rangle
+
+\]</span> and finally normalize, <span class="math display">\[
+
+q_{k+1} = \tilde{q}_{k+1} / \beta_j, ~~~~ \beta_j = \|\tilde{q}_{k+1}\|
+
+\]</span></p>
+
+<p>Note that this is not the most &quot;numerically stable&quot; form of the algorithm, and care must be taken when implementing the Lanczos method in practice. We can improve stability slightly by using <span class="math inline">\(Aq_k - \beta_{k-1} q_{k-1}\)</span> instead of <span class="math inline">\(Aq_k\)</span> when finding a vector in the next Krylov subspace. This allows us to ensure that we have orthogonalized <span class="math inline">\(q_{k+1}\)</span> against <span class="math inline">\(q_k\)</span> and <span class="math inline">\(q_{k-1}\)</span> rather than just <span class="math inline">\(q_k\)</span>. It also ensures that the tridiagonal matrix produces is symmetric in finite precision (since <span class="math inline">\(\langle Aq_k,q_{k-1}\rangle\)</span> may not be equal to <span class="math inline">\(\beta_j\)</span> in finite precision).</p>
+
+<p>We can <a href="./lanczos.py">implement</a> Lanczos iteration in numpy. Here we assume that we only want to output the diagonals of the tridiagonal matrix <span class="math inline">\(T\)</span>, and don't need any of the vectors.</p>
+
+<pre><code>def lanczos(A,q0,max_iter):
+
+    alpha = np.zeros(max_iter)
+
+    beta = np.zeros(max_iter)
+
+    q_ = np.zeros(len(q0))
+
+    q = q0/np.sqrt(q0@q0)
+
+
+
+    for k in range(max_iter):
+
+        qq = A@q-(beta[k-1]*q_ if k&gt;0 else 0)
+
+        alpha[k] = qq@q
+
+        qq -= alpha[k]*q
+
+        beta[k] = np.sqrt(qq@qq)
+
+        q_ = np.copy(q)
+
+        q = qq/beta[k]
+
+
+
+return alpha,beta</code></pre>
+
+<p class="footer">More about Krylov methods can be found <a href="./">here</a>.</p>
+</div>
+</body>
+</html>

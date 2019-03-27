@@ -41,17 +41,23 @@
 
 <ul>
 
-<li>matrix 2-norm</li>
+<li>The 2-norm of a symmetric positive definite matrix is the largest eigenvalue of the matrix</li>
 
-<li>submultiplicative</li>
+<li>The 2-norm is submultiplicative. That is, <span class="math inline">\(\|A\|\|B\|\leq \|AB\|\)</span></li>
 
-<li></li>
+<li>A matrix <span class="math inline">\(U\)</span> is called unitary if <span class="math inline">\(U^*U = UU^* = I\)</span>.</li>
 
 </ul>
 
 <h2 id="polynomial-error-bounds">Polynomial error bounds</h2>
 
-<p><strong>JUSTIFY THIS</strong> Note that at each step, <span class="math display">\[
+<p>Previously we have show that, <span class="math display">\[
+
+e_k \in e_0 +  \operatorname{span}\{p_0,p_1,\ldots,p_{k-1}\} = e_0 + \mathcal{K}_k(A,b)
+
+\]</span></p>
+
+<p>Observing that <span class="math inline">\(r_0 = Ae_0\)</span> we find that, <span class="math display">\[
 
 e_k \in e_0 +  \operatorname{span}\{Ae_0,A^2e_0,\ldots,A^{k}e_0\}
 
@@ -73,7 +79,7 @@ e_k \in e_0 +  \operatorname{span}\{Ae_0,A^2e_0,\ldots,A^{k}e_0\}
 
 \]</span></p>
 
-<p>Now, using the <em>submultiplicative</em> property of the 2-norm, <span class="math display">\[
+<p>Now, using the submultiplicative property of the 2-norm, <span class="math display">\[
 
 \|p(A) A^{1/2}e_0 \|
 
@@ -83,7 +89,7 @@ e_k \in e_0 +  \operatorname{span}\{Ae_0,A^2e_0,\ldots,A^{k}e_0\}
 
 \]</span></p>
 
-<p>Since <span class="math inline">\(A\)</span> is positive definite, it is diagonalizable as <span class="math inline">\(U\Lambda U^*\)</span> where <span class="math inline">\(U\)</span> is unitary (<span class="math inline">\(U^*U = UU^* = I\)</span>) and <span class="math inline">\(\Lambda\)</span> is the diagonal matrix of eigenvalues of <span class="math inline">\(A\)</span>. Thus, <span class="math display">\[
+<p>Since <span class="math inline">\(A\)</span> is positive definite, it is diagonalizable as <span class="math inline">\(U\Lambda U^*\)</span> where <span class="math inline">\(U\)</span> is unitary and <span class="math inline">\(\Lambda\)</span> is the diagonal matrix of eigenvalues of <span class="math inline">\(A\)</span>. Thus, <span class="math display">\[
 
 A^k = (U\Lambda U^*)^k = U\Lambda^kU^*
 
@@ -139,21 +145,11 @@ T_{k+1}(x) = 2xT_k(x) - T_{k-1}(x), ~~~~ T_0=1,~~~~ T_1=x
 
 <p>For <span class="math inline">\(\mathcal{I} \neq [-1,1]\)</span>, the above polynomials are simply stretched and shifted to the interval in question.</p>
 
-<p>Let <span class="math inline">\(\kappa = \lambda_{\text{max}} / \lambda_{\text{min}}\)</span>. Then, from properties of these polynomials, <span class="math display">\[
+<p>Let <span class="math inline">\(\kappa = \lambda_{\text{max}} / \lambda_{\text{min}}\)</span> (this is called the condition number). Then, from properties of these polynomials, <span class="math display">\[
 
 \frac{\|e_k\|_A}{\|e_0\|_A} \leq 2 \left( \frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1} \right)^k
 
 \]</span></p>
-
-<h2 id="remez-algorithm">Remez Algorithm</h2>
-
-<p>As mentioned above, the Remez algorithm is used to compute the minimax polynomial on some set. Before we dive into the algorithm, let's first take a look at an important property that minimax polynomials have.</p>
-
-<h3 id="equioscillation-theorem">Equioscillation theorem</h3>
-
-<p><strong>Theorem.</strong> The equioscillation theorem states that <span class="math inline">\(p:L\to\mathbb{R}\)</span> is the minimax polynomial of degree <span class="math inline">\(k\)</span> if and only if there are <span class="math inline">\(k+2\)</span> points <span class="math inline">\(x_0&lt;x_1&lt;\cdots&lt;x_{k+1} \in L\)</span> such that <span class="math inline">\(p(x_i) = \sigma (-1)^i E\)</span> where <span class="math inline">\(\sigma = \pm1\)</span> and <span class="math inline">\(E = \min_{p\in\mathcal{P}_k}\max_{x\in L}|p(x)|\)</span>.</p>
-
-<p>Another way to say this is that <span class="math inline">\(p\)</span> is the minimax polynomial if and only if the value of <span class="math inline">\(p\)</span> at the local extrema of <span class="math inline">\(p\)</span> in <span class="math inline">\(L\)</span> are alternating in sign, and equal in magnitude to the largest value that the minimax polynomial takes on <span class="math inline">\(L\)</span>.</p>
 
 <p class="footer">More about Krylov methods can be found <a href="./">here</a>.</p>
 </div>
