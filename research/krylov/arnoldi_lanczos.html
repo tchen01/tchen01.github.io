@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Tyler Chen</title>
-<meta name="description" content="I'm Tyler Chen, applied math PhD student at the University of Washington. Find out more about my research, teaching, and educational beliefs, and then get in contact with me.">
+<title>Arnoldi/Lanczos Algorithms</title>
+<meta name="description" content="The Arnoldi and Lanczos algorithms for computing an orthonormal basis for Krylov subspaces are at the core of most Krylov subspace methods.">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width user-scalable=no">
 
@@ -75,7 +75,7 @@ Aq_k = \beta_{k-1} q_{k-1} + \alpha_k q_k + \beta_k q_{k+1}
 
 \]</span> where <span class="math inline">\(\alpha_1,\ldots,\alpha_n\)</span> are the diagonal entries of <span class="math inline">\(T\)</span> and <span class="math inline">\(\beta_1,\ldots,\beta_{n-1}\)</span> are the off diagonal entries of <span class="math inline">\(T\)</span>. The Lanczos algorithm is an efficient way of computing this decomposition.</p>
 
-<p>I will present a brief derivation for the method motivated by the three term recurrence above. Since we know that the <span class="math inline">\(q_k\)</span> satisfy the three term recurrence, we would like the method to store as few of the <span class="math inline">\(q_k\)</span> as possible (i.e. take advantage of the three term recurrence as opposed to the Arnoldi algorithm).</p>
+<p>I will present a brief derivation for the method motivated by the three term recurrence above. Since we know that the <span class="math inline">\(q_k\)</span> satisfy the three term recurrence, we would like the method to store as few of the <span class="math inline">\(q_k\)</span> as possible ( i.e. take advantage of the three term recurrence as opposed to the Arnoldi algorithm).</p>
 
 <p>Suppose that we have <span class="math inline">\(q_k\)</span>, <span class="math inline">\(q_{k-1}\)</span>, and the coefficient <span class="math inline">\(\beta_{k-1}\)</span>. We need to expand the Krylov subspace to find <span class="math inline">\(q_{k+1}\)</span> in a way that takes advantage of the three term recurrence. To do this we can expand the subspace by computing <span class="math inline">\(Aq_k\)</span> and then orthogonalizing <span class="math inline">\(Aq_k\)</span> against <span class="math inline">\(q_k\)</span> and <span class="math inline">\(q_{k-1}\)</span>. By the three term recurrence, <span class="math inline">\(Aq_k\)</span> will be orthogonal to <span class="math inline">\(q_j\)</span> for all <span class="math inline">\(j\leq k-2\)</span> so we do not need to explicitly orthogonalize against those vectors.</p>
 

@@ -53,6 +53,8 @@ def build_html(folder,file_name):
 
                 if file[:-3] != 'index':
                     new_html_file.write(f'{footers[folder]}\n')
+                elif folder in ['research','thoughts']:
+                    new_html_file.write(f'{index_footer}\n')
                 new_html_file.write('</div>\n')
                 new_html_file.write(end_delimiter)
 
@@ -70,7 +72,7 @@ footers = {'.':'',
            'research/krylov':'<p class="footer">More about Krylov methods can be found <a href="./">here</a>.</p>',
            'research/pubs':'<p class="footer">The rest of my publications can be found <a href="./../">here</a>.</p>',
            'thoughts':'<p class="footer">More writing about my opinions on academia can be found <a href="./">here</a>.</p>'}
-
+index_footer = '<p class="footer">Return to my <a href="../">homepage</a>.</p>'
 
 # search through files
 for folder in folders:
