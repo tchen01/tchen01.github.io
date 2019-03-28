@@ -51,13 +51,21 @@
 
 <li><a href="./finite_precision_cg.html">Finite precision CG</a></li>
 
-<li><p>Current Research</p></li>
-
-<li><p><a href="./remez.html">The Remez Algorithm</a></p></li>
+<li>Current Research</li>
 
 </ul>
 
-<p>All of the pages have been compiled into a single <a href="./krylov.pdf">pdf document</a>. <!--end_pdf_comment--></p>
+<p>All of the pages have been compiled into a single <a href="./krylov.pdf">pdf document</a>.</p>
+
+<p>The following are some supplementary pages which are not directly related to Conjugate Gradient, but somewhat related:</p>
+
+<ul>
+
+<li><a href="./remez.html">The Remez Algorithm</a></li>
+
+</ul>
+
+<!--end_pdf_comment-->
 
 <h2 id="linear-systems">Linear Systems</h2>
 
@@ -67,31 +75,31 @@
 
 <!-- why is direct better than GMRES? Less work?? -->
 
-<p>At first glance, it may seem that direct methods are better. After all, after a known number of steps you get the exact solution. this is true, especially when the matrix <span class="math inline">\(A\)</span> is dense and relatively small. The main drawback to direct methods is that they are not able to easily take advantage of sparsity. That means that even if <span class="math inline">\(A\)</span> has some nice structure and a lot of entries are zero, direct methods will take the same amount of time and storage to compute the solution as if <span class="math inline">\(A\)</span> were dense. This is where iterative methods come in. In iterative methods require only that the product <span class="math inline">\(x\mapsto Ax\)</span> be able to be computed. If <span class="math inline">\(A\)</span> is sparse the product can be done cheaply, and if <span class="math inline">\(A\)</span> has some known structure, a you might not even need to construct <span class="math inline">\(A\)</span>. Such methods are aptly called &quot;matrix free&quot;. Similarly, many iterative methods such as Conjugate Gradient do not need much additional storage to compute the solution.</p>
+<p>At first glance, it may seem that direct methods are better. After all, after a known number of steps you get the exact solution. this is true, especially when the matrix <span class="math inline">\(A\)</span> is dense and relatively small. The main drawback to direct methods is that they are not able to easily take advantage of sparsity. That means that even if <span class="math inline">\(A\)</span> has some nice structure and a lot of entries are zero, direct methods will take the same amount of time and storage to compute the solution as if <span class="math inline">\(A\)</span> were dense. This is where iterative methods come in. In iterative methods require only that the product <span class="math inline">\(x\mapsto Ax\)</span> be able to be computed. If <span class="math inline">\(A\)</span> is sparse the product can be done cheaply, and if <span class="math inline">\(A\)</span> has some known structure, a you might not even need to construct <span class="math inline">\(A\)</span>. Such methods are aptly called “matrix free”. Similarly, many iterative methods such as Conjugate Gradient do not need much additional storage to compute the solution.</p>
 
 <p>The rest of this series gives an introduction to the analysis of Conjugate Gradient, a commonly used iterative method for solving <span class="math inline">\(Ax=b\)</span> when <span class="math inline">\(A\)</span> is symmetric positive definite. My intention is not to provide a rigorous explanation of the topic, but rather, to provide some (hopefully useful) intuition about where this method comes from and how it works in practice. I assume some linear algebra background (roughly at the level of a first undergrad course in linear algebra).</p>
 
-<p>If you are a bit rusty on your linear algebra I suggest taking a look at the <a href="https://www.khanacademy.org/math/linear-algebra">Khan Academy</a> videos. For a more rigorous and much broader treatment of iterative methods, I suggest Anne Greenbaum's <a href="https://epubs.siam.org/doi/book/10.1137/1.9781611970937?mobileUi=0u">book</a> on the topic. A popular introduction to Conjugate Gradient in exact arithmetic written by Jonathan Shewchuk can be found <a href="./https://www.cs.cmu.edu/~quake-papers/painless-conjugate-gradient.pdf">here</a>. Finally, for a recent overview of modern analysis of the Lanczos and Conjugate Gradient methods in exact arithmetic and finite precision, I suggest Gerard Meurant and Zdenek Strakos's <a href="https://www.karlin.mff.cuni.cz/~strakos/download/2006_MeSt.pdf">report</a>.</p>
+<p>If you are a bit rusty on your linear algebra I suggest taking a look at the <a href="https://www.khanacademy.org/math/linear-algebra">Khan Academy</a> videos. For a more rigorous and much broader treatment of iterative methods, I suggest Anne Greenbaum’s <a href="https://epubs.siam.org/doi/book/10.1137/1.9781611970937?mobileUi=0u">book</a> on the topic. A popular introduction to Conjugate Gradient in exact arithmetic written by Jonathan Shewchuk can be found <a href="./https://www.cs.cmu.edu/~quake-papers/painless-conjugate-gradient.pdf">here</a>. Finally, for a recent overview of modern analysis of the Lanczos and Conjugate Gradient methods in exact arithmetic and finite precision, I suggest Gerard Meurant and Zdenek Strakos’s <a href="https://www.karlin.mff.cuni.cz/~strakos/download/2006_MeSt.pdf">report</a>.</p>
 
 <h2 id="measuring-the-accuracy-of-solutions">Measuring the accuracy of solutions</h2>
 
-<p>Perhaps the first question that should be asked about an iterative method is, &quot;Does the sequence of approximate solutions <span class="math inline">\(x_0,x_1,x_2,\ldots\)</span> converges to the true solution? If this sequence doesn't converge to the true solution (or something close to the true solution), then it won't be very useful in solving <span class="math inline">\(Ax=b\)</span>.</p>
+<p>Perhaps the first question that should be asked about an iterative method is, &quot;Does the sequence of approximate solutions <span class="math inline">\(x_0,x_1,x_2,\ldots\)</span> converges to the true solution? If this sequence doesn’t converge to the true solution (or something close to the true solution), then it won’t be very useful in solving <span class="math inline">\(Ax=b\)</span>.</p>
 
-<p>Let's quickly introduce the idea of the <em>error</em> and the <em>residual</em> of an approximate solution <span class="math inline">\(x_k\)</span>. These are both useful measures of how close the iterate <span class="math inline">\(x_k\)</span> is to the true solution <span class="math inline">\(x^* = A^{-1}b\)</span>. The <em>error</em> is simply the difference between <span class="math inline">\(x\)</span> and <span class="math inline">\(x_k\)</span>. Taking the norm of this quantity gives us a scalar value which measures the distance between <span class="math inline">\(x\)</span> and <span class="math inline">\(x_k\)</span>. In fact, when we say the sequence <span class="math inline">\(x_0,x_1,x_2,\ldots\)</span> converges to <span class="math inline">\(x_*\)</span>, we mean that the scalar sequence,<span class="math inline">\(\|x^*-x_0\|,\|x^*-x_1\|,\|x^*-x_2\|,\ldots\)</span> converges to zero. Thus, solving <span class="math inline">\(Ax=b\)</span> could be written as minimizing <span class="math inline">\(\|x - x^*\| = \|x-A^{-1}b\|\)</span> for some norm <span class="math inline">\(\|\cdot\|\)</span>.</p>
+<p>Let’s quickly introduce the idea of the <em>error</em> and the <em>residual</em> of an approximate solution <span class="math inline">\(x_k\)</span>. These are both useful measures of how close the iterate <span class="math inline">\(x_k\)</span> is to the true solution <span class="math inline">\(x^* = A^{-1}b\)</span>. The <em>error</em> is simply the difference between <span class="math inline">\(x\)</span> and <span class="math inline">\(x_k\)</span>. Taking the norm of this quantity gives us a scalar value which measures the distance between <span class="math inline">\(x\)</span> and <span class="math inline">\(x_k\)</span>. In fact, when we say the sequence <span class="math inline">\(x_0,x_1,x_2,\ldots\)</span> converges to <span class="math inline">\(x_*\)</span>, we mean that the scalar sequence,<span class="math inline">\(\|x^*-x_0\|,\|x^*-x_1\|,\|x^*-x_2\|,\ldots\)</span> converges to zero. Thus, solving <span class="math inline">\(Ax=b\)</span> could be written as minimizing <span class="math inline">\(\|x - x^*\| = \|x-A^{-1}b\|\)</span> for some norm <span class="math inline">\(\|\cdot\|\)</span>.</p>
 
-<p>Of course, since we are trying to compute <span class="math inline">\(x^*\)</span>, it doesn't make sense for an algorithm to explicitly depend on <span class="math inline">\(x^*\)</span>. The <em>residual</em> of <span class="math inline">\(x_k\)</span> is defined as <span class="math inline">\(b-Ax_k\)</span>. Again <span class="math inline">\(b-Ax^* = 0\)</span>, and minimizing <span class="math inline">\(\|b-Ax\|\)</span> gives the true solution. The advantage here is of course that we can easily compute the residual <span class="math inline">\(b-Ax_k\)</span> once we have <span class="math inline">\(x_k\)</span>.</p>
+<p>Of course, since we are trying to compute <span class="math inline">\(x^*\)</span>, it doesn’t make sense for an algorithm to explicitly depend on <span class="math inline">\(x^*\)</span>. The <em>residual</em> of <span class="math inline">\(x_k\)</span> is defined as <span class="math inline">\(b-Ax_k\)</span>. Again <span class="math inline">\(b-Ax^* = 0\)</span>, and minimizing <span class="math inline">\(\|b-Ax\|\)</span> gives the true solution. The advantage here is of course that we can easily compute the residual <span class="math inline">\(b-Ax_k\)</span> once we have <span class="math inline">\(x_k\)</span>.</p>
 
 <h2 id="krylov-subspaces">Krylov subspaces</h2>
 
 <p>From the previous section, we know that minimizing <span class="math inline">\(\|b-Ax\|\)</span> will give the solution <span class="math inline">\(x^*\)</span>. Unfortunately, this problem is just as hard as solving <span class="math inline">\(Ax=b\)</span>. However, if we restrict <span class="math inline">\(x\)</span> to come from a smaller set of values, then the problem become simpler. For instance, if we say that <span class="math inline">\(x = cy\)</span> for some fixed vector <span class="math inline">\(y\)</span>, then this is a scalar minimization problem. Of course, by restricting what values we choose for <span class="math inline">\(x\)</span> it might not be possible to exactly solve <span class="math inline">\(Ax=b\)</span>.</p>
 
-<p>We would like to somehow balance how easy the problems we have to solve at each step with how accurate the solutions they give are. One way to do this is to start with an easy problem and get a coarse solution, and then gradually increase the difficulty of the problem while refining the solution. If we do it in the right way, &quot;increasing the difficulty&quot; of the problem we are solving won't lead to extra work, because we can take advantage of having solve the easier problems at previous steps.</p>
+<p>We would like to somehow balance how easy the problems we have to solve at each step with how accurate the solutions they give are. One way to do this is to start with an easy problem and get a coarse solution, and then gradually increase the difficulty of the problem while refining the solution. If we do it in the right way, “increasing the difficulty” of the problem we are solving won’t lead to extra work, because we can take advantage of having solve the easier problems at previous steps.</p>
 
 <p>Suppose we have a sequence of subspaces <span class="math inline">\(V_0\subset V_1\subset V_2\subset \cdots V_m\)</span>. Then we can construct a sequence of iterates, <span class="math inline">\(x_0\in V_0, x_1\in V_1,\ldots\)</span>. If at each step we make sure that <span class="math inline">\(x_k\)</span> minimizes <span class="math inline">\(\|b-Ax\|\)</span> over <span class="math inline">\(V_k\)</span>, then the norm of the residuals will decrease (because <span class="math inline">\(V_k \subset V_{k+1}\)</span>).</p>
 
 <p>Ideally this sequences of subspaces would:</p>
 
-<ol style="list-style-type: decimal">
+<ol type="1">
 
 <li>be easy to construct</li>
 

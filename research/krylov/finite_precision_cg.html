@@ -35,15 +35,17 @@
 </p>
 <p>This page is a work in progress.</p>
 
-<p>A key component of our derivations of the <a href="./arnoldi_lanczos.html">Lanczos</a> and <a href="./cg_derivation.html">Conjugate Gradient</a> methods was the orthogonality of certain basis vectors. In finite precision, our induction based arguments no longer hold, and so it's reasonable to expect the algorithms will fail. That said, since you're reading about these methods, they must somehow still be usable in practice. This turns out to be the case, and both methods are widely used for eignevalue problems and solving linear systems.</p>
+<p>A key component of our derivations of the <a href="./arnoldi_lanczos.html">Lanczos</a> and <a href="./cg_derivation.html">Conjugate Gradient</a> methods was the orthogonality of certain basis vectors. In finite precision, our induction based arguments no longer hold, and so it’s reasonable to expect the algorithms will fail. That said, since you’re reading about these methods, they must somehow still be usable in practice. This turns out to be the case, and both methods are widely used for eignevalue problems and solving linear systems.</p>
 
-<p>The first major progress in the analysis of the Lanczos algorithm was done by Chris Paige, who characterized the behavior of the method in finite precision. A similarly important analysis of Conjugate Gradient was done by Anne Greenbaum in her 1989 paper, <a href="https://www.sciencedirect.com/science/article/pii/0024379589902851">&quot;Behavior of slightly perturbed Lanczos and conjugate-gradient recurrences&quot;</a>. A big takeaway from Greenbaum's analysis is that the error bound from the Chevyshev polynomials still holds in finite precision (to a close approximation). My goal here is to present the highlights of that paper.</p>
+<p>The first major progress in the analysis of the Lanczos algorithm was done by Chris Paige, who characterized the behavior of the method in finite precision. A similarly important analysis of Conjugate Gradient was done by Anne Greenbaum in her 1989 paper, <a href="https://www.sciencedirect.com/science/article/pii/0024379589902851">“Behavior of slightly perturbed Lanczos and conjugate-gradient recurrences”</a>. A big takeaway from Greenbaum’s analysis is that the error bound from the Chevyshev polynomials still holds in finite precision (to a close approximation). My goal here is to present the highlights of that paper.</p>
 
 <h2 id="the-results">The results</h2>
 
+<p><a href="./remez.html">Remez Algorithm</a></p>
+
 <h2 id="some-conditions-for-the-analysis">Some conditions for the analysis</h2>
 
-<p>It turns out that CG is doing the Lanczos algorithm in disguise. In particular, normalizing the residuals from CG gives the vectors <span class="math inline">\(q_j\)</span> produced by the Lanczos algorithm, and combing the CG constants in the right way gives the coefficients for the three term Lanczos recurrence.</p>
+<p>CG is doing the Lanczos algorithm in disguise. In particular, normalizing the residuals from CG gives the vectors <span class="math inline">\(q_j\)</span> produced by the Lanczos algorithm, and combing the CG constants in the right way gives the coefficients for the three term Lanczos recurrence.</p>
 
 <p>The analysis by Greenbaum requires that the finite precision Conjugate Gradient algorithm (viewed as the Lanczos algorithm) satisfy a few properties. Namely,</p>
 

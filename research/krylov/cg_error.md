@@ -70,8 +70,7 @@ $$
 
 Since the inequality we obtained from the submultiplicativity of the 2-norm is tight, this bound is also tight in the sense that for a fixed $k$ there exists an initial error $e_0$ so that equality holds.
 
-Computing the optimal $p$ is not trivial, but an algorithm called the Remez algorithm can be used to compute it.
-I discuss this in more detail below.
+Computing the optimal $p$ is not trivial, but an algorithm called the [Remez algorithm](./remez.html) can be used to compute it.
 
 Let $L\subset \mathbb{R}$ be some closed set.
 The *minimax polynomial of degree $k$* on $L$ is the polynomial satisfying,
@@ -109,3 +108,4 @@ Then, from properties of these polynomials,
 $$
 \frac{\|e_k\|_A}{\|e_0\|_A} \leq 2 \left( \frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1} \right)^k
 $$
+

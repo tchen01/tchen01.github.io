@@ -13,9 +13,12 @@ I have split up the content into the following pages:
 - [Finite precision CG](./finite_precision_cg.html)
 - Current Research
 
+All of the pages have been compiled into a single [pdf document](./krylov.pdf).
+
+The following are some supplementary pages which are not directly related to Conjugate Gradient, but somewhat related:
+
 - [The Remez Algorithm](./remez.html)
 
-All of the pages have been compiled into a single [pdf document](./krylov.pdf).
 <!--end_pdf_comment-->
 
 ## Linear Systems

@@ -74,6 +74,15 @@ a:hover {
     background-color: #000
 }
 
+strong {
+    font-weight: 600
+}
+
+img {
+    display: block;
+    margin: auto;
+}
+
 .code {
     font-family: monospace;
 }

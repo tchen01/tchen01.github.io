@@ -1,29 +1,38 @@
 %Research
 
-I work in the field of Numerical Linear Algebra, specifically on [Krylov subspace methods](./krylov). I'm interested in incorporating probabilistic techniques into classical algorithms to develop methods which are fast and reliable, both in theory and in practice. I'm committed to making my research accessible and to facilitating the [reproducibility](../thoughts/reproducibility.html) of my work. Please feel free to contact me with any questions or concerns about my research.
+I work in the field of Numerical Linear Algebra, specifically on [Krylov subspace methods](./krylov). 
+I'm interested in incorporating probabilistic techniques into classical algorithms to develop methods which are fast and reliable, both in theory and in practice.
+I'm committed to making my research accessible and to facilitating the [reproducibility](../thoughts/reproducibility.html) of my work.
+Please feel free to contact me with any questions or concerns about my research.
 
 I am advised by [Anne Greenbaum](http://faculty.washington.edu/greenbau/).
     
-This page contains a collection of the things I've been working on recently. In general, I try to include a preprint and a description of the work which is readable by a broader audience interested in learning about or keeping up with recent advancements in the field. I also have some short introductory pieces on some interesting topics.
+This page contains a collection of the things I've been working on recently.
+In general, I try to include a preprint and a description of the work which is readable by a broader audience interested in learning about or keeping up with recent advancements in the field.
+I also have some short introductory pieces on some interesting topics.
 
     
 ## Publications
 
 <div class="paper">
-    <div class="title"><a href="./greenbaum_liu_chen_19.html">On the Convergence of Conjugate Gradient Varients in Finite Precision Arithmetic.</a></div>
-    <div class="authors">Anne Greenbaum, Hexuan Liu, and Tyler Chen.</div>
-    <div class="details">In preparation.</div>
+<div class="title"><a href="./greenbaum_liu_chen_19.html">On the Convergence of Conjugate Gradient Varients in Finite Precision Arithmetic.</a></div>
+<div class="authors">Anne Greenbaum, Hexuan Liu, and Tyler Chen.</div>
+<div class="details">In preparation.</div>
 </div>
 
 
 ## Introductions to some topics I think are interesting
 
-- [Krylov Subspace Methods](./)
-    - [Derivation of CG](./cg_derivation.html)
-    - [Error bounds for CG and the Remez algorithm](./cg_error.html)
-    - [Finite precision CG](./finite_precision_cg.html)
-    - Extend T algorithm
-- 
+- The Conjugate Gradient Algorithm [(pdf)](./krylov.pdf)
+	- [Introduction to Linear Systems/Krylov subspaces](./krylov) 
+    - [Arnoldi and Lanczos methods](./krylov/arnoldi_lanczos.html)
+    - [Derivation of CG](./krylov/cg_derivation.html)
+    - CG is Lanczos in disguise
+    - [Error bounds for CG](./krylov/cg_error.html)
+    - [Finite precision CG](./krylov/finite_precision_cg.html)
+    - Current Research
+
+- [The Remez Algorithm](./krylov/remez.html)
 
   
 ## Collaboration

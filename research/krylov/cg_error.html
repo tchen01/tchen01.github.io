@@ -115,7 +115,7 @@ A^k = (U\Lambda U^*)^k = U\Lambda^kU^*
 
 <p>Since the inequality we obtained from the submultiplicativity of the 2-norm is tight, this bound is also tight in the sense that for a fixed <span class="math inline">\(k\)</span> there exists an initial error <span class="math inline">\(e_0\)</span> so that equality holds.</p>
 
-<p>Computing the optimal <span class="math inline">\(p\)</span> is not trivial, but an algorithm called the Remez algorithm can be used to compute it. I discuss this in more detail below.</p>
+<p>Computing the optimal <span class="math inline">\(p\)</span> is not trivial, but an algorithm called the <a href="./remez.html">Remez algorithm</a> can be used to compute it.</p>
 
 <p>Let <span class="math inline">\(L\subset \mathbb{R}\)</span> be some closed set. The <em>minimax polynomial of degree <span class="math inline">\(k\)</span></em> on <span class="math inline">\(L\)</span> is the polynomial satisfying, <span class="math display">\[
 
@@ -135,7 +135,7 @@ A^k = (U\Lambda U^*)^k = U\Lambda^kU^*
 
 \]</span></p>
 
-<p>The right hand side requires that we know the largest and smallest eigenvalues of <span class="math inline">\(A\)</span>, but doesn't require any of the ones between. This means it can be useful in practice, since we can easily compute the top and bottom eignevalues with the power method.</p>
+<p>The right hand side requires that we know the largest and smallest eigenvalues of <span class="math inline">\(A\)</span>, but doesn’t require any of the ones between. This means it can be useful in practice, since we can easily compute the top and bottom eignevalues with the power method.</p>
 
 <p>The polynomials satisfying the right hand side are called the <em>Chebyshev Polynomials</em> and can be easily written down with a simple recurrence relation. If <span class="math inline">\(\mathcal{I} = [-1,1]\)</span> then the relation is, <span class="math display">\[
 

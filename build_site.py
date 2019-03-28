@@ -10,7 +10,7 @@ def build_html(folder,file_name):
     print(f'now building {folder}/{file[:-3]}')
 
     # convert md to html
-    os.system(f'pandoc --mathjax -o {folder}/{file_name}1.html {folder}/{file}')
+    os.system(f'pandoc --from markdown+markdown_in_html_blocks --mathjax -o {folder}/{file_name}1.html {folder}/{file}')
     
     # generate updated pdf
     os.system(f'pandoc -o {folder}/{file_name}.pdf {folder}/{file}')
