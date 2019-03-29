@@ -15,7 +15,7 @@ I also have some short introductory pieces on some interesting topics.
 ## Publications
 
 <div class="paper">
-<div class="title"><a href="./greenbaum_liu_chen_19.html">On the Convergence of Conjugate Gradient Varients in Finite Precision Arithmetic.</a></div>
+<div class="title"><a href="./publications/greenbaum_liu_chen_19.html">On the Convergence of Conjugate Gradient Varients in Finite Precision Arithmetic.</a></div>
 <div class="authors">Anne Greenbaum, Hexuan Liu, and Tyler Chen.</div>
 <div class="details">In preparation.</div>
 </div>
@@ -23,14 +23,14 @@ I also have some short introductory pieces on some interesting topics.
 
 ## Introductions to some topics I think are interesting
 
-- The Conjugate Gradient Algorithm [(pdf)](./krylov.pdf)
+- The Conjugate Gradient Algorithm [(pdf with everything below)](./krylov.pdf)
 	- [Introduction to Linear Systems/Krylov subspaces](./krylov) 
     - [Arnoldi and Lanczos methods](./krylov/arnoldi_lanczos.html)
     - [Derivation of CG](./krylov/cg_derivation.html)
-    - CG is Lanczos in disguise
+    - [CG is Lanczos in disguise](./krylov/cg_lanczos.html)
     - [Error bounds for CG](./krylov/cg_error.html)
     - [Finite precision CG](./krylov/finite_precision_cg.html)
-    - Current Research
+    - [Current Research](./krylov/current_research.html)
 
 - [The Remez Algorithm](./krylov/remez.html)
 

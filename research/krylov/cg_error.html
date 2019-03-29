@@ -28,7 +28,7 @@
 
 <body>
 
-<div id="contentContainer">
+<div id="contentContainer" class="article" >
 <h1> Error Bounds for the Conjugate Gradient Algorithm
 </h1>
 <p class="authors"> Tyler Chen
@@ -63,11 +63,15 @@ e_k \in e_0 +  \operatorname{span}\{Ae_0,A^2e_0,\ldots,A^{k}e_0\}
 
 \]</span></p>
 
-<p>Thus, we can write, <span class="math display">\[
+<p>Thus, we can write, <span class="math display">\[\begin{align*}
 
-\| e_k \|_A =  \min_{p\in\mathcal{P}_k}\|p(A)e_0\|_A , ~~~~ \mathcal{P}_k = \{p : p(0) = 1, \operatorname{deg} p \leq k\}
+\| e_k \|_A =  \min_{p\in\mathcal{P}_k}\|p(A)e_0\|_A
 
-\]</span></p>
+,&amp;&amp;
+
+\mathcal{P}_k = \{p : p(0) = 1, \operatorname{deg} p \leq k\}    
+
+\end{align*}\]</span></p>
 
 <p>Since <span class="math inline">\(A^{1/2} p(A) = p(A)A^{1/2}\)</span> we can write, <span class="math display">\[
 
@@ -117,15 +121,19 @@ A^k = (U\Lambda U^*)^k = U\Lambda^kU^*
 
 <p>Computing the optimal <span class="math inline">\(p\)</span> is not trivial, but an algorithm called the <a href="./remez.html">Remez algorithm</a> can be used to compute it.</p>
 
-<p>Let <span class="math inline">\(L\subset \mathbb{R}\)</span> be some closed set. The <em>minimax polynomial of degree <span class="math inline">\(k\)</span></em> on <span class="math inline">\(L\)</span> is the polynomial satisfying, <span class="math display">\[
+<p>Let <span class="math inline">\(L\subset \mathbb{R}\)</span> be some closed set. The <em>minimax polynomial of degree <span class="math inline">\(k\)</span></em> on <span class="math inline">\(L\)</span> is the polynomial satisfying, <span class="math display">\[\begin{align*}
 
-\min_{p\in\mathcal{P}_k} \max_{x\in L} | p(x) |, ~~~~ \mathcal{P}_k = \{p : p(0)=1, \deg p \leq k\}
+\min_{p\in\mathcal{P}_k} \max_{x\in L} | p(x) |
 
-\]</span></p>
+,&amp;&amp;
+
+\mathcal{P}_k = \{p : p(0)=1, \deg p \leq k\}    
+
+\end{align*}\]</span></p>
 
 <h3 id="chebyshev-bounds">Chebyshev bounds</h3>
 
-<p>The minimax polynomial on the eigenvalues of <span class="math inline">\(A\)</span> is a bit tricky to work with. Although we can find it using the Remez algorithm, this is somewhat tedious, and requires knowledge of the whole spectrum of <span class="math inline">\(A\)</span>. We would like to come up with a bound which depends on less informationabout <span class="math inline">\(A\)</span>. One way to obtain such a bound is to expand the set on which we are looking for the minimax polynomial.</p>
+<p>The minimax polynomial on the eigenvalues of <span class="math inline">\(A\)</span> is a bit tricky to work with. Although we can find it using the Remez algorithm, this is somewhat tedious, and requires knowledge of the whole spectrum of <span class="math inline">\(A\)</span>. We would like to come up with a bound which depends on less information about <span class="math inline">\(A\)</span>. One way to obtain such a bound is to expand the set on which we are looking for the minimax polynomial.</p>
 
 <p>To this end, let <span class="math inline">\(\mathcal{I} = [\lambda_{\text{min}},\lambda_{\text{max}}]\)</span>. Then, since <span class="math inline">\(\lambda_i\in\mathcal{I}\)</span>, <span class="math display">\[
 
@@ -137,11 +145,19 @@ A^k = (U\Lambda U^*)^k = U\Lambda^kU^*
 
 <p>The right hand side requires that we know the largest and smallest eigenvalues of <span class="math inline">\(A\)</span>, but doesn’t require any of the ones between. This means it can be useful in practice, since we can easily compute the top and bottom eignevalues with the power method.</p>
 
-<p>The polynomials satisfying the right hand side are called the <em>Chebyshev Polynomials</em> and can be easily written down with a simple recurrence relation. If <span class="math inline">\(\mathcal{I} = [-1,1]\)</span> then the relation is, <span class="math display">\[
+<p>The polynomials satisfying the right hand side are called the <em>Chebyshev Polynomials</em> and can be easily written down with a simple recurrence relation. If <span class="math inline">\(\mathcal{I} = [-1,1]\)</span> then the relation is, <span class="math display">\[\begin{align*}
 
-T_{k+1}(x) = 2xT_k(x) - T_{k-1}(x), ~~~~ T_0=1,~~~~ T_1=x
+T_{k+1}(x) = 2xT_k(x) - T_{k-1}(x)
 
-\]</span></p>
+,&amp;&amp;
+
+T_0=1
+
+,&amp;&amp;
+
+T_1=x    
+
+\end{align*}\]</span></p>
 
 <p>For <span class="math inline">\(\mathcal{I} \neq [-1,1]\)</span>, the above polynomials are simply stretched and shifted to the interval in question.</p>
 

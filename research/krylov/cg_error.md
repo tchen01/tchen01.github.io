@@ -28,9 +28,11 @@ e_k \in e_0 +  \operatorname{span}\{Ae_0,A^2e_0,\ldots,A^{k}e_0\}
 $$ 
 
 Thus, we can write,
-$$
-\| e_k \|_A =  \min_{p\in\mathcal{P}_k}\|p(A)e_0\|_A , ~~~~ \mathcal{P}_k = \{p : p(0) = 1, \operatorname{deg} p \leq k\}
-$$
+\begin{align*}
+\| e_k \|_A =  \min_{p\in\mathcal{P}_k}\|p(A)e_0\|_A
+,&&
+\mathcal{P}_k = \{p : p(0) = 1, \operatorname{deg} p \leq k\}    
+\end{align*}
 
 Since $A^{1/2} p(A) = p(A)A^{1/2}$ we can write,
 $$
@@ -74,15 +76,16 @@ Computing the optimal $p$ is not trivial, but an algorithm called the [Remez alg
 
 Let $L\subset \mathbb{R}$ be some closed set.
 The *minimax polynomial of degree $k$* on $L$ is the polynomial satisfying,
-$$
-\min_{p\in\mathcal{P}_k} \max_{x\in L} | p(x) |, ~~~~ \mathcal{P}_k = \{p : p(0)=1, \deg p \leq k\}
-$$
-
+\begin{align*}
+\min_{p\in\mathcal{P}_k} \max_{x\in L} | p(x) |
+,&&
+\mathcal{P}_k = \{p : p(0)=1, \deg p \leq k\}    
+\end{align*}
 
 ### Chebyshev bounds
 The minimax polynomial on the eigenvalues of $A$ is a bit tricky to work with.
 Although we can find it using the Remez algorithm, this is somewhat tedious, and requires knowledge of the whole spectrum of $A$.
-We would like to come up with a bound which depends on less informationabout $A$.
+We would like to come up with a bound which depends on less information about $A$.
 One way to obtain such a bound is to expand the set on which we are looking for the minimax polynomial. 
 
 To this end, let $\mathcal{I} =  [\lambda_{\text{min}},\lambda_{\text{max}}]$.
@@ -97,9 +100,13 @@ This means it can be useful in practice, since we can easily compute the top and
 
 The polynomials satisfying the right hand side are called the *Chebyshev Polynomials* and can be easily written down with a simple recurrence relation.
 If $\mathcal{I} = [-1,1]$ then the relation is,
-$$
-T_{k+1}(x) = 2xT_k(x) - T_{k-1}(x), ~~~~ T_0=1,~~~~ T_1=x
-$$
+\begin{align*}
+T_{k+1}(x) = 2xT_k(x) - T_{k-1}(x)
+,&&
+T_0=1
+,&&
+T_1=x    
+\end{align*}
 
 For $\mathcal{I} \neq [-1,1]$, the above polynomials are simply stretched and shifted to the interval in question. 
 

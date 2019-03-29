@@ -5,10 +5,12 @@ body,html {
     height: 100%;
     margin: 0;
     padding: 0;
-    font-family: 'Lato','Trebuchet MS';
+    font-family: 'Lato','Trebuchet MS','Sans-Serif';
     font-weight: 300;
     font-size: 110%
 }
+
+
 
 #contentContainer {
     margin: 0 auto;
@@ -24,6 +26,7 @@ section {
     width: 100%
 }
 
+
 h1 {
     margin: 0 0 .5em;
     padding-top: .2em;
@@ -37,19 +40,14 @@ h2 {
     margin: 1.5em 0 -.5em 0;
 }
 
-h2 > a{
-    font-weight:inherit;
-}
-
 h3 {
     font-size: 100%;
     margin: 1.5em 0 -.5em 0;
 }
 
-h3 > a{
+h2 > a, h3 > a{
     font-weight:inherit;
 }
-
 
 pre{
     line-height: .7em;
@@ -81,6 +79,15 @@ strong {
 img {
     display: block;
     margin: auto;
+}
+
+/* decide if we should just turn site's text to Georgia */
+.article {
+    font-family: 'Georgia', 'Serif';
+}
+
+.article > h1, .article > h2, .article > h3{
+    font-family: 'Lato','Trebuchet MS','Sans-Serif';
 }
 
 .code {

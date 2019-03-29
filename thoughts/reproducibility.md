@@ -1,5 +1,13 @@
-% Reproducibility, Inclusivity, and Open Science
-% Tyler Chen
+---
+title: '\sffamily Reproducibility, Inclusivity, and Open Science'
+author: '[Tyler Chen](https://chen.pw)'
+mainfont: Georgia
+sansfont: Lato
+linkcolor: blue
+header-includes: |
+    \usepackage{sectsty}
+    \allsectionsfont{\normalfont\sffamily\bfseries}
+---
 
 Preface: This page is intended as a brief explanation of why I think scientists should care about open source projects.
 It's fairly short, so I only touch on some things very briefly.
@@ -12,10 +20,10 @@ For the purpose of this discussion, I'm going to assume that reproducibility is 
 
 With these assumptions in mind, let's focus on how using open source software is important to reproducibility, both in the sense that it provides full transparency for those trying to replicate your work, and in the sense that it makes science more inclusive to those outside of academia.
 
-A lot of papers relating to my research go something like this: "(~task~) is important for (~grant keywords~) reasons.
-Recently, because of (~big data~), there has been interest in fast algorithms for (~task~).
-Other papers have tried using (~some method~) quickly, however there are limitations with (~some method~).
-We propose an alternative to (~some method~) to address the limitations of (~past paper~)".
+A lot of papers relating to my research go something like this: "(~ task ~) is important for (~ grant keywords ~) reasons.
+Recently, because of (~ big data ~), there has been interest in fast algorithms for (~ task ~).
+Other papers have tried using (~ some method ~) quickly, however there are limitations with (~ some method ~).
+We propose an alternative to (~ some method ~) to address the limitations of (~ past paper ~)".
 A mathematical description of the new algorithm is presented, and then generally, some numerical experiments which demonstrate that the new method works and is possibly better than the old methods.
 Now, based on the descriptions in the paper (and any supplemental material), the readers should be able to reproduce any of the results claimed by the authors.
 In fact, since most publications are intended to be published in peer reviewed journals, ideally the results will be reproduced by someone reviewing the paper before publication (although this is rarely the case).

@@ -5,9 +5,11 @@ The Remez algorithm is used for calculating the degree $k$ minimax polynomial on
 Minimax polynomials can be used in the error analysis of the Conjugate Gradient algorithm in [exact](./cg_error.html) and [finite precion](./finite_precision_cg.html) arithmetic, but even without clear applications, I think this is a cool algorithm.
 
 Recall that the *minimax polynomial of degree $k$* on $L$ is the polynomial satisfying,
-$$
-\min_{p\in\mathcal{P}_k} \max_{x\in L} | p(x) |, ~~~~ \mathcal{P}_k = \{p : p(0)=1, \deg p \leq k\}
-$$
+\begin{align*}
+\min_{p\in\mathcal{P}_k} \max_{x\in L} | p(x) |
+,&&
+\mathcal{P}_k = \{p : p(0)=1, \deg p \leq k\}
+\end{align*}
 
 The Remez algorithm works by iteratively finding better and better approximations to the minimax polynomial (of degree $k$ on some set $L$).
 Before we dive into the algorithm itself, let's first take a look at an important property that minimax polynomials have. 
