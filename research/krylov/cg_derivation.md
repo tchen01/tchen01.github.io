@@ -12,9 +12,9 @@ Before we get into the details, let's define some notation and review a few key 
 
 - Any inner product $\langle \cdot,\cdot \rangle$ induces a norm $\|\cdot\|$ defined by $\|x\|^2 = \langle x,x\rangle$.
 - For the rest of this piece we will denote the standard (Euclidian) inner product by $\langle \cdot,\cdot\rangle$ and the (Euclidian) norm by $\|\cdot\|$ or $\|\cdot\|_2$.
-- A martix $A$ is positive definite if $\langle x, Ax\rangle > 0$ for all $x$.
+- A matrix $A$ is positive definite if $\langle x, Ax\rangle > 0$ for all $x$.
 - A symmetric positive definite matrix $A$ naturally induces the inner product $\langle \cdot,\cdot \rangle_A$ defined by $\langle x,y\rangle_A = \langle x,Ay\rangle = \langle Ax,y \rangle$.
-The associated norm, called the $A$-norm will be denoted by $\langle \cdot,\cdot\rangle_A$ and is defined by,
+The associated norm, called the $A$-norm will be denoted by $\|langle \cdot \|_A$ and is defined by,
 $$
 \|x\|_A^2 = \langle x,x \rangle_A = \langle x,Ax \rangle = \| A^{1/2}x \|
 $$
@@ -24,7 +24,6 @@ Given an orthonormal basis for $V$, this amounts to summing the projection of $x
 $$
 \mathcal{K}_k(A,b) = \operatorname{span}\{b,Ab,\ldots,A^{k-1}b\}
 $$
-
 
 
 ## Minimizing the error

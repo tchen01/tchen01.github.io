@@ -6,7 +6,7 @@ import os
 start_delimiter = '<!--start_pdf_comment-->\n'
 end_delimiter = '<!--end_pdf_comment-->\n'
 
-krylov_topics = ['index','arnoldi_lanczos','cg_derivation','cg_error','finite_precision_cg']
+krylov_topics = ['index','arnoldi_lanczos','cg_derivation','cg_lanczos','cg_error','finite_precision_cg','current_research']
 os.system(f"cat {' '.join([t+'.md' for t in krylov_topics])} > krylov.md")
 
 with open(f'krylov.md','r') as old_md_file, open(f'krylov1.md','w+') as new_md_file:

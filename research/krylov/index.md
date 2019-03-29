@@ -1,35 +1,49 @@
-% Introduction to Conjugate Gradient
+% An Introduction to the Conjugate Gradient Algorithm
 % Tyler Chen
 
 <!--start_pdf_comment-->
-This is the first piece from a series on topics relating to the Conjugate Gradient algorithm.
+This is the first piece from a series on the Conjugate Gradient algorithm.
 I have split up the content into the following pages:
 
-- [Introduction to Linear Systems/Krylov subspaces](./)
+- [Introduction to Krylov subspaces](./)
 - [Arnoldi and Lanczos methods](./arnoldi_lanczos.html)
 - [Derivation of CG](./cg_derivation.html)
-- CG is Lanczos in disguise
+- [CG is Lanczos in disguise](./cg_lanczos.html)
 - [Error bounds for CG](./cg_error.html)
 - [Finite precision CG](./finite_precision_cg.html)
-- Current Research
+- [Current Research](./current_research.html)
 
-All of the pages have been compiled into a single [pdf document](./krylov.pdf).
+All of the pages have been compiled into a single [pdf document](./krylov.pdf) to facilitate offline reading. 
 
 The following are some supplementary pages which are not directly related to Conjugate Gradient, but somewhat related:
 
 - [The Remez Algorithm](./remez.html)
 
+My intention is not to provide a rigorous explanation of the topic, but rather, to provide some (hopefully useful) intuition about where this method comes from, how it works in theory and in practice, and what people are currently interested in learning about it.
+I do assume some linear algebra background (roughly at the level of a first undergrad course in linear algebra), but I try to add some refreshers along the way.
+
+If you are a bit rusty on your linear algebra I suggest taking a look at the [Khan Academy](https://www.khanacademy.org/math/linear-algebra) videos.
+For a more rigorous and much broader treatment of iterative methods, I suggest Anne Greenbaum's [book](https://epubs.siam.org/doi/book/10.1137/1.9781611970937?mobileUi=0u) on the topic.
+A popular introduction to Conjugate Gradient in exact arithmetic written by Jonathan Shewchuk can be found [here](./https://www.cs.cmu.edu/~quake-papers/painless-conjugate-gradient.pdf).
+Finally, for a much more detailed overview of modern analysis of the Lanczos and Conjugate Gradient methods in exact arithmetic and finite precision, I suggest Gerard Meurant and Zdenek Strakos's [report](https://www.karlin.mff.cuni.cz/~strakos/download/2006_MeSt.pdf).
+
 <!--end_pdf_comment-->
 
-## Linear Systems
+## Motivation
 Solving a linear system of equations $Ax=b$ is one of the most important tasks in modern science.
-Applications such as weather forecasting, medical imaging, and training neural nets all require repeatedly solving linear systems. 
+<!--this is a bit strange sounding-->
+A huge number of methods for dealing with more complex equations end up using linear approximations. 
+As a result, applications such as weather forecasting, medical imaging, and training neural nets all require repeatedly solving linear systems to [IMPACT]. 
+The Conjugate Gradient algorithm is widely used to solve linear systems when $A$ is symmetric and positive definite (if you don't remember what that means, don't worry, I have a refresher below).
 
-Loosely speaking, methods for linear systems can be separated into two categories: direct methods and iterative methods.
+- matrix free 
+- CG less storage because of symmetric
+
+<!-- Loosely speaking, methods for linear systems can be separated into two categories: direct methods and iterative methods.
 Direct methods such as Gaussian elimination manipulate the entries of the matrix $A$ in order to compute the solution $x=A^{-1}b$.
 On the other hand, iterative methods generate a sequence $x_0,x_1,x_2,\ldots$ of approximations to the true solution $x^* = A^{-1}b$, where hopefully each iterate is a better approximation to the true solution.
 
-<!-- why is direct better than GMRES? Less work?? -->
+<-- why is direct better than GMRES? Less work?? -->
 At first glance, it may seem that direct methods are better.
 After all, after a known number of steps you get the exact solution.
 this is true, especially when the matrix $A$ is dense and relatively small.
@@ -40,41 +54,39 @@ In iterative methods require only that the product $x\mapsto Ax$ be able to be c
 If $A$ is sparse the product can be done cheaply, and if $A$ has some known structure, a you might not even need to construct $A$.
 Such methods are aptly called "matrix free".
 Similarly, many iterative methods such as Conjugate Gradient do not need much additional storage to compute the solution.
+-->
 
-The rest of this series gives an introduction to the analysis of Conjugate Gradient, a commonly used iterative method for solving $Ax=b$ when $A$ is symmetric positive definite.
-My intention is not to provide a rigorous explanation of the topic, but rather, to provide some (hopefully useful) intuition about where this method comes from and how it works in practice.
-I assume some linear algebra background (roughly at the level of a first undergrad course in linear algebra).
-
-If you are a bit rusty on your linear algebra I suggest taking a look at the [Khan Academy](https://www.khanacademy.org/math/linear-algebra) videos.
-For a more rigorous and much broader treatment of iterative methods, I suggest Anne Greenbaum's [book](https://epubs.siam.org/doi/book/10.1137/1.9781611970937?mobileUi=0u) on the topic.
-A popular introduction to Conjugate Gradient in exact arithmetic written by Jonathan Shewchuk can be found [here](./https://www.cs.cmu.edu/~quake-papers/painless-conjugate-gradient.pdf).
-Finally, for a recent overview of modern analysis of the Lanczos and Conjugate Gradient methods in exact arithmetic and finite precision, I suggest Gerard Meurant and Zdenek Strakos's [report](https://www.karlin.mff.cuni.cz/~strakos/download/2006_MeSt.pdf).
 
 
 ## Measuring the accuracy of solutions
-Perhaps the first question that should be asked about an iterative method is, "Does the sequence of approximate solutions $x_0,x_1,x_2,\ldots$ converges to the true solution? If this sequence doesn't converge to the true solution (or something close to the true solution), then it won't be very useful in solving $Ax=b$.
+Perhaps the first question that should be asked about a numerical method for solving $Ax=b$ is, does the output approximate the true solution? 
+If not, then there isn't much point using the method. 
 
-Let's quickly introduce the idea of the *error* and the *residual* of an approximate solution $x_k$.
-These are both useful measures of how close the iterate $x_k$ is to the true solution $x^* = A^{-1}b$.
-The *error* is simply the difference between $x$ and $x_k$.
-Taking the norm of this quantity gives us a scalar value which measures the distance between $x$ and $x_k$.
+Let's quickly introduce the idea of the *error* and the *residual* of an approximate solution $\tilde{x}$.
+These quantities are both useful (in different ways) measures of how close the iterate $\tilde{x}$ is to the true solution $x^* = A^{-1}b$.
+
+The *error* is simply the difference between $x$ and $\tilde{x}$.
+Taking the norm of this quantity gives us a scalar value which measures the distance between $x$ and $\tilde{x}$.
+In some sense, this is perhaps the most natural way of measuring how close our approximate solution is to the true solution.
 In fact, when we say the sequence $x_0,x_1,x_2,\ldots$ converges to $x_*$, we mean that the scalar sequence,$\|x^*-x_0\|,\|x^*-x_1\|,\|x^*-x_2\|,\ldots$ converges to zero.
 Thus, solving $Ax=b$ could be written as minimizing $\|x - x^*\| = \|x-A^{-1}b\|$ for some norm $\|\cdot\|$.
 
 Of course, since we are trying to compute $x^*$, it doesn't make sense for an algorithm to explicitly depend on $x^*$.
-The *residual* of $x_k$ is defined as $b-Ax_k$.
+The *residual* of $x\tilde{x}$ is defined as $b-A\tilde{x}$.
 Again $b-Ax^* = 0$, and minimizing $\|b-Ax\|$ gives the true solution.
-The advantage here is of course that we can easily compute the residual $b-Ax_k$ once we have $x_k$.
+The advantage here is of course that we can easily compute the residual $b-A\tilde{x}$ once we have our numerical solution $\tilde{x}$.
 
 ## Krylov subspaces
 
 From the previous section, we know that minimizing $\|b-Ax\|$ will give the solution $x^*$.
-Unfortunately, this problem is just as hard as solving $Ax=b$.
-However, if we restrict $x$ to come from a smaller set of values, then the problem become simpler.
-For instance, if we say that $x = cy$ for some fixed vector $y$, then this is a scalar minimization problem.
-Of course, by restricting what values we choose for $x$ it might not be possible to exactly solve $Ax=b$.
+Unfortunately, this problem is "just as hard" as solving $Ax=b$.
 
-We would like to somehow balance how easy the problems we have to solve at each step with how accurate the solutions they give are.
+We would like to relax this problem in some way to make it "easier".
+One way to do this is to restrict the values that $x$ can be. For instance, we can enforce that $x$ comes from a smaller set of values which should make the problem of minimizing $\|b-Ax\|$ simpler (since there are less possibilities for $x$).
+For instance, if we say that $x = cy$ for some fixed vector $y$, then this is a scalar minimization problem.
+Of course, by restricting what values we choose for $x$ it is quite likely that we will not longer be able to exactly solve $Ax=b$.
+
+It then makes sense to try to balance the difficulty of the problems we have to solve at each step with the accuracy of the solutions they give.
 One way to do this is to start with an easy problem and get a coarse solution, and then gradually increase the difficulty of the problem while refining the solution.
 If we do it in the right way, "increasing the difficulty" of the problem we are solving won't lead to extra work, because we can take advantage of having solve the easier problems at previous steps.
 
