@@ -5,12 +5,14 @@ body,html {
     height: 100%;
     margin: 0;
     padding: 0;
-    font-family: 'Lato','Trebuchet MS','Sans-Serif';
+    font-family: Georgia', 'Serif';
     font-weight: 300;
     font-size: 110%
 }
 
-
+h1, h2, h3 {
+    font-family: 'Lato','Trebuchet MS','Sans-Serif';
+}
 
 #contentContainer {
     margin: 0 auto;
@@ -62,14 +64,14 @@ div {
 
 a {
     text-decoration: underline;
-    color: inherit;
+    color: #2d2f92;
     font-weight: 400;
     cursor: pointer
 }
 
 a:hover {
     color: #fff;
-    background-color: #000
+    background-color: #2d2f92
 }
 
 strong {
@@ -79,15 +81,6 @@ strong {
 img {
     display: block;
     margin: auto;
-}
-
-/* decide if we should just turn site's text to Georgia */
-.article {
-    font-family: 'Georgia', 'Serif';
-}
-
-.article > h1, .article > h2, .article > h3{
-    font-family: 'Lato','Trebuchet MS','Sans-Serif';
 }
 
 .code {
@@ -102,8 +95,11 @@ img {
     display: inline;
 }
 
-.authors {
+.title{
     font-style: italic;
+}
+
+.authors {
     font-size: 90%;
 }
 

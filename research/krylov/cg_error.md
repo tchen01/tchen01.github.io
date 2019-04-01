@@ -3,7 +3,7 @@
 
 This page is a work in progress.
 
-In our [derivation](./cg_derivation.html) of the Conjugate Gradient method, we minimized the $A$-norm of the error over sucessive Krylov subspaces.
+In our [derivation](./cg_derivation.html) of the conjugate gradient method, we minimized the $A$-norm of the error over sucessive Krylov subspaces.
 Ideally we would like to know how quickly this method converge.
 That is, how many iterations are needed to reach a specified level of accuracy.
 
@@ -14,13 +14,12 @@ That is, how many iterations are needed to reach a specified level of accuracy.
 That is, $\|A\|\|B\|\leq \|AB\|$
 - A matrix $U$ is called unitary if $U^*U = UU^* = I$.
 
-## Polynomial error bounds
+## Error bounds from minimax polynomials
 
 Previously we have show that,
 $$
-e_k \in e_0 +  \operatorname{span}\{p_0,p_1,\ldots,p_{k-1}\} = e_0 + \mathcal{K}_k(A,b)
+e_k \in e_0 + \operatorname{span}\{p_0,p_1,\ldots,p_{k-1}\} = e_0 + \mathcal{K}_k(A,b)
 $$
-
 
 Observing that $r_0 = Ae_0$ we find that,
 $$
@@ -49,7 +48,7 @@ $$
 $$
 
 Since $A$ is positive definite, it is diagonalizable as $U\Lambda U^*$ where $U$ is unitary and $\Lambda$ is the diagonal matrix of eigenvalues of $A$.
-Thus,
+Thus, since $U^*U = I$,
 $$
 A^k = (U\Lambda U^*)^k = U\Lambda^kU^*
 $$
@@ -115,4 +114,9 @@ Then, from properties of these polynomials,
 $$
 \frac{\|e_k\|_A}{\|e_0\|_A} \leq 2 \left( \frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1} \right)^k
 $$
+
+<!--start_pdf_comment-->
+Next: [The conjugate gradient Algorithm in Finite Precision](./finite_precision_cg.html)
+<!--end_pdf_comment-->
+
 

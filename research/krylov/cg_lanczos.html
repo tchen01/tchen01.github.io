@@ -33,13 +33,13 @@
 </h1>
 <p class="authors"> Tyler Chen
 </p>
-<p>It’s perhaps not so surprising that the Conjugate Gradient and Lanczos algorithms are closely related. After all, they are both Krylov subspace methods for symmetric matrices.</p>
+<p>It’s perhaps not so surprising that the conjugate gradient and Lanczos algorithms are closely related. After all, they are both Krylov subspace methods for symmetric matrices.</p>
 
-<p>More precisely, the Lanczos algorithm will produce an orthonormal basis for <span class="math inline">\(\mathcal{K}_k(A,b)\)</span>, <span class="math inline">\(k=0,1,\ldots\)</span> if we initialize with initial vector <span class="math inline">\(r_0 = b\)</span>. We also know that the Conjugate Gradient residuals form an orthogonal basis for for these spaces, which means that the Lanczos vectors must be scaled versions of the Conjugate Gradient residuals.</p>
+<p>More precisely, the Lanczos algorithm will produce an orthonormal basis for <span class="math inline">\(\mathcal{K}_k(A,b)\)</span>, <span class="math inline">\(k=0,1,\ldots\)</span> if we initialize with initial vector <span class="math inline">\(r_0 = b\)</span>. We also know that the conjugate gradient residuals form an orthogonal basis for for these spaces, which means that the Lanczos vectors must be scaled versions of the conjugate gradient residuals.</p>
 
 <p>This relationship provides a way of transferring research about the Lanczos algorithm to be to CG, and visa versa. In fact, the analysis of <a href="./finite_precision_cg.html">finite precision CG</a> done by Greenbaum requires viewing CG in terms of the Lanczos recurrence.</p>
 
-<p>In case you’re just looking for the punchline, the Lanczos coefficients and vectors can be obtained from the Conjugate Gradient algorithm by the following relationship, <span class="math display">\[\begin{align*}
+<p>In case you’re just looking for the punchline, the Lanczos coefficients and vectors can be obtained from the conjugate gradient algorithm by the following relationship, <span class="math display">\[\begin{align*}
 
 q_{j+1} \equiv (-1)^j\dfrac{r_j}{\|r_j\|}
 
@@ -134,6 +134,10 @@ q_{j+1} \equiv (-1)^j\dfrac{r_j}{\|r_j\|}
 \alpha_j \equiv \left(\frac{1}{a_{j-1}} + \frac{b_{j}}{a_{j-2}}\right)
 
 \end{align*}\]</span></p>
+
+<!--start_pdf_comment-->
+
+<p>Next: <a href="./cg_error.html">Error Bounds for the conjugate gradient Algorithm</a> <!--end_pdf_comment--></p>
 
 <p class="footer">More about Krylov methods can be found <a href="./">here</a>.</p>
 </div>

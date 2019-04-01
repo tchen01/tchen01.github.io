@@ -35,7 +35,7 @@
 </p>
 <p>This page is a work in progress.</p>
 
-<p>In our <a href="./cg_derivation.html">derivation</a> of the Conjugate Gradient method, we minimized the <span class="math inline">\(A\)</span>-norm of the error over sucessive Krylov subspaces. Ideally we would like to know how quickly this method converge. That is, how many iterations are needed to reach a specified level of accuracy.</p>
+<p>In our <a href="./cg_derivation.html">derivation</a> of the conjugate gradient method, we minimized the <span class="math inline">\(A\)</span>-norm of the error over sucessive Krylov subspaces. Ideally we would like to know how quickly this method converge. That is, how many iterations are needed to reach a specified level of accuracy.</p>
 
 <h2 id="linear-algebra-review">Linear algebra review</h2>
 
@@ -49,11 +49,11 @@
 
 </ul>
 
-<h2 id="polynomial-error-bounds">Polynomial error bounds</h2>
+<h2 id="error-bounds-from-minimax-polynomials">Error bounds from minimax polynomials</h2>
 
 <p>Previously we have show that, <span class="math display">\[
 
-e_k \in e_0 +  \operatorname{span}\{p_0,p_1,\ldots,p_{k-1}\} = e_0 + \mathcal{K}_k(A,b)
+e_k \in e_0 + \operatorname{span}\{p_0,p_1,\ldots,p_{k-1}\} = e_0 + \mathcal{K}_k(A,b)
 
 \]</span></p>
 
@@ -93,7 +93,7 @@ e_k \in e_0 +  \operatorname{span}\{Ae_0,A^2e_0,\ldots,A^{k}e_0\}
 
 \]</span></p>
 
-<p>Since <span class="math inline">\(A\)</span> is positive definite, it is diagonalizable as <span class="math inline">\(U\Lambda U^*\)</span> where <span class="math inline">\(U\)</span> is unitary and <span class="math inline">\(\Lambda\)</span> is the diagonal matrix of eigenvalues of <span class="math inline">\(A\)</span>. Thus, <span class="math display">\[
+<p>Since <span class="math inline">\(A\)</span> is positive definite, it is diagonalizable as <span class="math inline">\(U\Lambda U^*\)</span> where <span class="math inline">\(U\)</span> is unitary and <span class="math inline">\(\Lambda\)</span> is the diagonal matrix of eigenvalues of <span class="math inline">\(A\)</span>. Thus, since <span class="math inline">\(U^*U = I\)</span>, <span class="math display">\[
 
 A^k = (U\Lambda U^*)^k = U\Lambda^kU^*
 
@@ -166,6 +166,10 @@ T_1=x
 \frac{\|e_k\|_A}{\|e_0\|_A} \leq 2 \left( \frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1} \right)^k
 
 \]</span></p>
+
+<!--start_pdf_comment-->
+
+<p>Next: <a href="./finite_precision_cg.html">The conjugate gradient Algorithm in Finite Precision</a> <!--end_pdf_comment--></p>
 
 <p class="footer">More about Krylov methods can be found <a href="./">here</a>.</p>
 </div>

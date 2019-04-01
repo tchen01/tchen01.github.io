@@ -1,13 +1,22 @@
-%On the Convergence of Conjugate Gradient Variants in Finite Precision Arithmetic
-%Tyler Chen
-
+---
+title: '\sffamily \textbf{On the Convergence of Conjugate Gradient Variants in Finite Precision Arithmetic}'
+author: '[Tyler Chen](https://chen.pw)'
+mainfont: Georgia
+sansfont: Lato
+linkcolor: blue
+header-includes: |
+    \usepackage{sectsty}
+    \allsectionsfont{\normalfont\sffamily\bfseries}
+---
 
 This is a companion piece to the publication:
 
     @article{greenbaum_liu_chen_19
         Author = {Anne Greenbaum, Hexuan Liu, and Tyler Chen}
-        Title = {On the Convergence of Conjugate Gradient Variants in Finite Precision Arithmetic.}
+        Title = {On the Convergence of Conjugate Gradient Variants 
+                 in Finite Precision Arithmetic.}
         Howpublished = {In progress.}
+        Year = {2019}
     }
 
 A preprint will be on ArXiV in the near future.
@@ -18,7 +27,7 @@ Need new algorithms to deal with modern HPC architecture. But can't sacrifice ac
 Take advantage of lower precision for ML type applications.
  
 ## Introduction
-If you are not familiar with the Conjugate Gradient method, it may be worth reading [this page](./cg_intro.html) first.
+If you are not familiar with the Conjugate Gradient method, it may be worth reading [this page](../krylov/index.html) first.
 
 The Conjugate Gradient algorithm is a widely used method for solving $Ax=b$ when $A$ is positive definite (all eigenvalues are positive). 
 

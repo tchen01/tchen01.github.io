@@ -1,0 +1,186 @@
+% Communication Hiding Conjugate Gradient Algorithms
+% Tyler Chen
+
+So far, all we have considered are error bounds in terms of the number of iterations. 
+However, in practice, what we really care about is how long a computation takes.
+A natural way to try and speed up an algorithm is through parallelization, and many variants of the conjugate gradient algorithm have been introduced to try and take advantage of high performance computers.
+However, while these variants are all equivalent in exact arithmetic, they perform operations in different orders.
+Based on our discussion about conjugate gradient in [finite precision](./finite_precision_cg.html), it should be too big of a surprise that the variants all behave differently.
+
+![Convergence of different variants in finite precision. Note that the computation would finish in at most 112 steps in exact arithmetic.](./convergence.svg)
+
+The DOE supercomputer "Summit" is able to compute 122 petaflops per second. 
+That's something like $10^{16}$ floating point operations every second!
+Unfortunately, on high performance machines, conjugate gradient often perform orders of magnitude fewer floating point operations per second than the computer is theoretically capable of.
+
+The reason for this is *communication*. 
+
+Traditionally, analysis of algorithms has been done in terms of counting the number of operations computed, and the amount of storage used. However, an important factor in the real world performance is the time it takes to move data around. 
+Even on a single core computer, the cost of moving a big matrix off the hard drive into memory can be much more significant than the floating point operations done.
+There is naturally a lot of interest in reducing the communication costs of various algorithms, and conjugate gradient certainly has a lot of room for improvement.
+
+Parallel computers work by having different processors work on different parts of a computation at the same time.
+Naturally, many things can be sped up this way, but like in our example, doubling the computing power doesn't necessarily mean doubling the speed of the computation.
+In many numerical algorithms, "global communication" is one of the main causes of latency.
+Loosely speaking, global communication means that all processors working on a larger task must finish with their subtask and report on the result before the computation can proceed.
+This means that even if we can distribute a computation to many processors, the time it takes to move the data required for those computations will eventually limit how effective adding more processors is. 
+So, a 1000x increase in processor power won't necessarily cut the computation time to 1/1000.
+
+
+## Communication bottlenecks in CG
+
+Recall the standard Hestenes and Stifel CG implementation.
+In the below description, every block of code after a "**set**" must wait for the output from the previous block.
+Much of the algorithm is scalar and vector updates which are relatively cheap (in terms of floating point operations and communication).
+The most expensive computations each iteration are the matrix vector product, and the two inner products.
+
+**Algorithm.** (Hestenes and Stiefel conjugate gradient)
+\begin{align*}
+&\textbf{procedure}\text{ HSCG}( A,b,x_0 ) 
+\\[-.4em]&~~~~\textbf{set } r_0 = b-Ax_0, \nu_0 = \langle r_0,r_0 \rangle, p_0 = r_0, s_0 = Ar_0, 
+\\[-.4em]&~~~~\phantom{\textbf{set }}a_0 = \nu_0 / \langle p_0,s_0 \rangle
+\\[-.4em]&~~~~\textbf{for } k=1,2,\ldots \textbf{:} 
+\\[-.4em]&~~~~~~~~\textbf{set } x_k = x_{k-1} + a_{k-1} p_{k-1} 
+\\[-.4em]&~~~~~~~~\phantom{\textbf{set }} r_k = r_{k-1} - a_{k-1} s_{k-1} 
+\\[-.4em]&~~~~~~~~\textbf{set } \nu_{k} = \langle r_k,r_k \rangle, \textbf{ and } b_k = \nu_k / \nu_{k-1}
+\\[-.4em]&~~~~~~~~\textbf{set }p_k = r_k + b_k p_{k-1}
+\\[-.4em]&~~~~~~~~\textbf{set }s_k = A p_k
+\\[-.4em]&~~~~~~~~\textbf{set }\mu_k = \langle p_k,s_k \rangle, \textbf{ and } a_k = \nu_k / \mu_k
+\\[-.4em]&~~~~~\textbf{end for}
+\\[-.4em]&\textbf{end procedure}
+\end{align*}
+
+A matrix vector product requires $\mathcal{O}(\text{nnz})$ (number of nonzero) floating point operations, while an inner product of dense vectors requires $\mathcal{O}(n)$ operations. 
+For many applications of CG, the number of nonzero entries is something like $kn$, where $k$ relatively small. 
+In these cases, the cost of floating point arithmetic for a matrix vector product and an inner product is roughly the same. 
+On the other hand, the communication costs for the inner products can be much higher.
+
+There are multiply ways to address the communication bottleneck in CG. The two main approaches are "hiding" communication, and "avoiding" communication.
+Communication hiding algorithm such as as pipelined CG introduce auxiliary vectors so that the inner products can be computed at the same time, allowing the communication to be overlapped with other computations.
+On the other hand, communication avoiding algorithms such as $s$-step CG compute iterations in blocks of size $s$, reducing the synchronization costs by a factor around $s$.
+
+In this piece I will be talking about some common communicating hiding methods.
+If you're interested in communication avoiding methods, or want more information about communication hiding methods, Erin Carson has very useful [slides](https://math.nyu.edu/~erinc/ppt/Carson_PP18.pdf).
+
+
+## Overlapping inner products
+
+We would like to be able to reduce the number of points in the algorithm a global communication is required.
+However, in the current form, we need to wait for each of the previous computations before we are able to do a matrix vector product or an inner product.
+This means there are two global communications per iteration.
+
+Using our recurrences we can write,
+$$
+s_k = Ap_k = A(r_k + b_k p_{k-1}) 
+= Ar_k + b_k s_{k-1}
+$$
+
+If we define the axillary vector $w_k = Ar_k$, in exact arithmetic using this formula for $s_k$ will be equivalent to the original formula for $s_k$. 
+However, we can now compute $w_k$ as soon as we have $r_k$.
+Therefore, the computation of $\nu_k = \langle r_k,r_k \rangle$ can be overlapped with the computation of $w_k = Ar_k$.
+However, this still requires two global communication points each iteration.
+
+We now note that,
+\begin{align*}
+\mu_k = \langle p_k,s_k \rangle
+&= \langle r_k + b_k p_{k-1}, w_k + b_k s_{k-1} \rangle
+\\&= \langle r_k, w_k \rangle + b_k \langle p_{k-1}, w_k \rangle + b_k \langle r_k, s_{k-1} \rangle + b_k^2 \langle p_{k-1}, s_{k-1} \rangle
+\end{align*}
+
+
+Now, since $w_k = Ar_k$ and $s_{k-1} = Ap_{k-1}$, then $\langle p_{k-1},w_k \rangle = \langle r_{k}, s_{k-1} \rangle$. 
+Thus,
+$$
+\mu_k = \langle r_k,w_k\rangle + 2 b_k \langle r_k,s_k \rangle + b_k^2 \mu_{k-1}
+$$
+
+Notice now that $\langle r_k,w_k \rangle$, and $\langle r_k,s_k \rangle$ can both be overlapped with $\nu_k = \langle r_k,r_k\rangle$. 
+Thus, using this coefficient formula there is only a single global synchronization per iteration.
+However, this came at the cost of having to compute an additional inner product. 
+
+
+
+Now, using our recurrence for $r_k$,
+$$
+\langle r_k, s_{k-1} \rangle
+= \langle p_k - b_k p_{k-1}, s_{k-1} \rangle
+= -b_{k} \langle p_{k-1},s_{k-1} \rangle
+= -b_k\mu_{k-1}
+$$
+
+Thus, defining $\eta_k = \langle w_k,r_k \rangle$ and canceling terms,
+$$
+\mu_k = \langle w_k,r_k \rangle - b_k^2 \mu_{k-1}
+= \eta_k - (b_k/a_k) \nu_k
+$$
+
+This variant is known as Chronopoulos and Gear conjugate gradient.
+
+**Algorithm.** (Chronopoulos and Gear conjugate gradient)
+\begin{align*}
+&\textbf{procedure}\text{ CGCG}( A,b,x_0 ) 
+\\[-.4em]&~~~~\textbf{set } r_0 = b-Ax_0, \nu_0 = \langle r_0,r_0 \rangle, p_0 = r_0, s_0 = Ar_0, 
+\\[-.4em]&~~~~\phantom{\textbf{set }}a_0 = \nu_0 / \langle p_0,s_0 \rangle
+\\[-.4em]&~~~~\textbf{for } k=1,2,\ldots \textbf{:} 
+\\[-.4em]&~~~~~~~~\textbf{set } x_k = x_{k-1} + a_{k-1} p_{k-1} 
+\\[-.4em]&~~~~~~~~\phantom{\textbf{set }} r_k = r_{k-1} - a_{k-1} s_{k-1} 
+\\[-.4em]&~~~~~~~~\textbf{set } w_k = Ar_k 
+\\[-.4em]&~~~~~~~~\textbf{set } \nu_{k} = \langle r_k,r_k \rangle, \textbf{ and } b_k = \nu_k / \nu_{k-1}
+\\[-.4em]&~~~~~~~~\phantom{\textbf{set }}\eta_k = \langle r_k, w_k \rangle, \textbf{ and } a_k = \nu_k / (\eta_k - (b_k/a_{k-1})\nu_k)
+\\[-.4em]&~~~~~~~~\phantom{\textbf{set }} p_k = r_k + b_k p_{k-1}
+\\[-.4em]&~~~~~~~~\phantom{\textbf{set }} s_k = w_k + b_k s_{k-1}
+\\[-.4em]&~~~~~\textbf{end for}
+\\[-.4em]&\textbf{end procedure}
+\end{align*}
+
+
+However, while we have only a single global communication per iteration, the matrix vector product must still be computed before we are able to compute the inner products. 
+To allow the matrix vector product to be overlapped with the inner products, we again introduce auxiliary vectors.
+Observe that,
+$$
+w_k = Ar_k = A(r_{k-1} - a_{k-1}s_{k-1}) 
+= A r_{k-1} - a_{k-1} As_{k-1}
+= w_{l-1} - a_{k-1} As_{k-1}
+$$
+
+Now, define $u_{k} = As_{k}$ and note that,
+$$
+u_{k} = As_k = A(w_k + b_k s_{k-1}) 
+= Aw_k + b_k As_{k-1} 
+= Aw_k + b_k u_{k-1}
+$$
+
+That's it. For convenience we define $t_k = Aw_k$. 
+Then, the matrix vector product $Aw_k$ can occur as soon as we have computed $w_k$.
+This variant is known as either Ghysels and Vanroose conjugate gradient or pipelined conjugate gradient.
+
+**Algorithm.** (Ghysels and Vanroose (pipelined) conjugate gradient)
+\begin{align*}
+&\textbf{procedure}\text{ GVCG}( A,b,x_0 ) 
+\\[-.4em]&~~~~\textbf{set } r_0 = b-Ax_0, \nu_0 = \langle r_0,r_0 \rangle, p_0 = r_0, s_0 = Ar_0, 
+\\[-.4em]&~~~~\phantom{\textbf{set }}w_0 = s_0, u_0 = Aw_0, a_0 = \nu_0 / \langle p_0,s_0 \rangle
+\\[-.4em]&~~~~\textbf{for } k=1,2,\ldots \textbf{:} 
+\\[-.4em]&~~~~~~~~\textbf{set } x_k = x_{k-1} + a_{k-1} p_{k-1} 
+\\[-.4em]&~~~~~~~~\phantom{\textbf{set }} r_k = r_{k-1} - a_{k-1} s_{k-1} 
+\\[-.4em]&~~~~~~~~\phantom{\textbf{set }} w_k = w_{k-1} - a_{k-1} u_{k-1}
+\\[-.4em]&~~~~~~~~\textbf{set } \nu_k = \langle r_k,r_k\rangle, \textbf{ and } b_k = \nu_k/\nu_{k-1}
+\\[-.4em]&~~~~~~~~\phantom{\textbf{set }} \eta_{k} = \langle r_k,w_k \rangle, \textbf{ and } a_k = \nu_k / (\eta_k - (b_k/a_{k-1})\nu_k)
+\\[-.4em]&~~~~~~~~\phantom{\textbf{set }} t_k = Aw_k
+\\[-.4em]&~~~~~~~~\textbf{set } p_k = r_k + b_k p_{k-1}
+\\[-.4em]&~~~~~~~~\phantom{\textbf{set }} s_k = w_k + b_k s_{k-1}
+\\[-.4em]&~~~~~~~~\phantom{\textbf{set }} u_k = t_k + b_k u_{k-1}
+\\[-.4em]&~~~~~\textbf{end for}
+\\[-.4em]&\textbf{end procedure}
+\end{align*}
+
+Recently, [cite ppl] have developed a "deep pipelined" conjugate gradient, which essentially introduces even more auxiliary vectors to allow for more overlapping. 
+
+As mentioned above, 
+
+
+<!--start_pdf_comment-->
+Next: [Current research on CG and related Krylov subspace methods](./current_research.html)
+<!--end_pdf_comment-->
+
+
+

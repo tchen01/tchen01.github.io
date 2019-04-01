@@ -75,6 +75,21 @@ We can improve stability slightly by using $Aq_j - \beta_{j-1} q_{j-1}$ instead 
 This allows us to ensure that we have orthogonalized $q_{j+1}$ against $q_j$ and $q_{j-1}$ rather than just $q_j$.
 It also ensures that the tridiagonal matrix produces is symmetric in finite precision (since $\langle Aq_j,q_{j-1}\rangle$ may not be equal to $\beta_j$ in finite precision).
 
+**Algorithm.** (Lanczos)
+\begin{align*}
+&\textbf{procedure}\text{ lanczos}( A,v ) 
+\\[-.4em]&~~~~\textbf{set } q_1 = v / \|v\|, \beta_0 = 0
+\\[-.4em]&~~~~\textbf{for } k=1,2,\ldots \textbf{:} 
+\\[-.4em]&~~~~~~~~\textbf{set } \tilde{q}_{k+1} = Aq_k - \beta_{k-1} q_{k-1}
+\\[-.4em]&~~~~~~~~\textbf{set } \alpha_k = \langle \tilde{q}_{k+1}, q_k \rangle
+\\[-.4em]&~~~~~~~~\textbf{set } \tilde{q}_{k+1} = \tilde{q}_{k+1} - \alpha_k q_{k}
+\\[-.4em]&~~~~~~~~\textbf{set } \beta_k = \| \tilde{q}_{k+1} \|
+\\[-.4em]&~~~~~~~~\textbf{set } q_{k+1} = \tilde{q}_{k+1} / \beta_k
+\\[-.4em]&~~~~~\textbf{end for}
+\\[-.4em]&\textbf{end procedure}
+\end{align*}
+
+<!--
 We can [implement](./lanczos.py) Lanczos iteration in numpy.
 Here we assume that we only want to output the diagonals of the tridiagonal matrix $T$, and don't need any of the vectors (this would be useful if we wanted to compute the eigenvalues of $A$, but not the eigenvectors).
 
@@ -93,3 +108,10 @@ Here we assume that we only want to output the diagonals of the tridiagonal matr
             q = qq/beta[k]
 
     return alpha,beta
+-->
+
+<!--start_pdf_comment-->
+Next: [A derivation of the conjugate gradient algorithm](./cg_derivation.html)
+<!--end_pdf_comment-->
+
+

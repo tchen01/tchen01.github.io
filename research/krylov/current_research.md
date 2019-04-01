@@ -1,12 +1,10 @@
-% Current research on CG and related Krylov subspace methods
+% Current research on Conjugate Gradient and related Krylov subspace methods
 % Tyler Chen
 
 
 
 ## Avoiding communication 
 
-- CGCG, GVCG
-- $s$-step methods
 
 ## Computing matrix functions
 

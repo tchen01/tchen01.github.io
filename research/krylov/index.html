@@ -29,13 +29,13 @@
 <body>
 
 <div id="contentContainer" class="article" >
-<h1> An Introduction to Conjugate Gradient
+<h1> An Introduction to Modern Analysis of the Conjugate Gradient Algorithm in Exact and Finite Precision
 </h1>
 <p class="authors"> Tyler Chen
 </p>
 <!--start_pdf_comment-->
 
-<p>This is the first piece from a series on the Conjugate Gradient algorithm. I have split up the content into the following pages:</p>
+<p>This is the first piece from a series on the conjugate gradient algorithm. It is still very much a work in progress, so please bear with me while it’s under construction. I have split up the content into the following pages:</p>
 
 <ul>
 
@@ -51,13 +51,15 @@
 
 <li><a href="./finite_precision_cg.html">Finite precision CG</a></li>
 
+<li><a href="./communication_hiding_variants.html">Communication Hiding CG variants</a></li>
+
 <li><a href="./current_research.html">Current Research</a></li>
 
 </ul>
 
-<p>All of the pages have been compiled into a single <a href="./krylov.pdf">pdf document</a> to facilitate offline reading.</p>
+<p>All of the pages have been compiled into a single <a href="./krylov.pdf">pdf document</a> to facilitate offline reading. At the moment the PDF document is nearly identical to the web version, so some links are not working. I will eventually turn the PDF into a more self contained document with proper references to external sources.</p>
 
-<p>The following are some supplementary pages which are not directly related to Conjugate Gradient, but somewhat related:</p>
+<p>The following are some supplementary pages which are not directly related to conjugate gradient, but somewhat related:</p>
 
 <ul>
 
@@ -65,17 +67,19 @@
 
 </ul>
 
-<p>The intention of this website is not to provide a rigorous explanation of the topic, but rather, to provide some (hopefully useful) intuition about where this method comes from, how it works in theory and in practice, and what people are currently interested in learning about it. I do assume some linear algebra background (roughly at the level of a first undergrad course in linear algebra), but I try to add some refreshers along the way. My hope is that it can be a useful resources for undergraduates, engineers, tech workers, etc. who want to learn about some of the most recent developments in the study of Conjugate Gradient (i.e. communication avoiding methods work).</p>
+<p>The intention of this website is not to provide a rigorous explanation of the topic, but rather, to provide some (hopefully useful) intuition about where this method comes from, how it works in theory and in practice, and what people are currently interested in learning about it. I do assume some linear algebra background (roughly at the level of a first undergrad course in linear algebra), but I try to add some refreshers along the way. My hope is that it can be a useful resources for undergraduates, engineers, tech workers, etc. who want to learn about some of the most recent developments in the study of conjugate gradient (i.e. communication avoiding methods work).</p>
 
-<p>If you are a bit rusty on your linear algebra I suggest taking a look at the <a href="https://www.khanacademy.org/math/linear-algebra">Khan Academy</a> videos. For a more rigorous and much broader treatment of iterative methods, I suggest Anne Greenbaum’s <a href="https://epubs.siam.org/doi/book/10.1137/1.9781611970937?mobileUi=0u">book</a> on the topic. A popular introduction to Conjugate Gradient in exact arithmetic written by Jonathan Shewchuk can be found <a href="./https://www.cs.cmu.edu/~quake-papers/painless-conjugate-gradient.pdf">here</a>. Finally, for a much more detailed overview of modern analysis of the Lanczos and Conjugate Gradient methods in exact arithmetic and finite precision, I suggest Gerard Meurant and Zdenek Strakos’s <a href="https://www.karlin.mff.cuni.cz/~strakos/download/2006_MeSt.pdf">report</a>.</p>
+<p>If you are a bit rusty on your linear algebra I suggest taking a look at the <a href="https://www.khanacademy.org/math/linear-algebra">Khan Academy</a> videos. For a more rigorous and much broader treatment of iterative methods, I suggest Anne Greenbaum’s <a href="https://epubs.siam.org/doi/book/10.1137/1.9781611970937?mobileUi=0u">book</a> on the topic. A popular introduction to conjugate gradient in exact arithmetic written by Jonathan Shewchuk can be found <a href="./https://www.cs.cmu.edu/~quake-papers/painless-conjugate-gradient.pdf">here</a>. Finally, for a much more detailed overview of modern analysis of the Lanczos and conjugate gradient methods in exact arithmetic and finite precision, I suggest Gerard Meurant and Zdenek Strakos’s <a href="https://www.karlin.mff.cuni.cz/~strakos/download/2006_MeSt.pdf">report</a>.</p>
 
 <!--end_pdf_comment-->
 
 <h2 id="motivation">Motivation</h2>
 
-<p>Solving a linear system of equations <span class="math inline">\(Ax=b\)</span> is one of the most important tasks in modern science. A huge number of techniques and algorithms for dealing with more complex equations end up using linear approximations. As a result, applications such as weather forecasting, medical imaging, and training neural nets all require repeatedly solving linear systems to achieve the real world impact that we often take for granted. When <span class="math inline">\(A\)</span> is symmetric and positive definite (if you don’t remember what that means, don’t worry, I have a refresher below), the Conjugate Gradient algorithm is a very popular choice for methods of solving <span class="math inline">\(Ax=b\)</span>.</p>
+<p>Solving a linear system of equations <span class="math inline">\(Ax=b\)</span> is one of the most important tasks in modern science. A huge number of techniques and algorithms for dealing with more complex equations end up using linear approximations. As a result, applications such as weather forecasting, medical imaging, and training neural nets all require repeatedly solving linear systems to achieve the real world impact that we often take for granted. When <span class="math inline">\(A\)</span> is symmetric and positive definite (if you don’t remember what that means, don’t worry, I have a refresher below), the conjugate gradient algorithm is a very popular choice for methods of solving <span class="math inline">\(Ax=b\)</span>.</p>
 
-<p>This popularity of CG is due to a couple factors. First, like most Krylov subspace methods, CG is <em>matrix free</em>. This means that you don’t ever need to explicitly represent <span class="math inline">\(A\)</span> as a matrix, you only need to be able to compute the product <span class="math inline">\(v\mapsto Av\)</span> for a given input vector <span class="math inline">\(v\)</span>. For very large problems this means a big reduction in storage, and if <span class="math inline">\(A\)</span> has some structure (eg, <span class="math inline">\(A\)</span> comes from a DFT, difference/integral operator, is very sparse, etc.), it allows the algorithm to take advantage of fast matrix vector products. Second, CG only requires <span class="math inline">\(\mathcal{O}(n)\)</span> additional storage to run (as compared to <span class="math inline">\(\mathcal{O}(n^2)\)</span> that many other algorithms require). This can be very useful when the size of the system is very large as it reduces the communication costs of moving data in and out of memory/caches.</p>
+<p>This popularity of the conjugate gradient algorithm (CG) is due to a couple factors. First, like most Krylov subspace methods, CG is <em>matrix free</em>. This means that you don’t ever need to explicitly represent <span class="math inline">\(A\)</span> as a matrix, you only need to be able to compute the product <span class="math inline">\(v\mapsto Av\)</span> for a given input vector <span class="math inline">\(v\)</span>. For very large problems this means a big reduction in storage, and if <span class="math inline">\(A\)</span> has some structure (eg, <span class="math inline">\(A\)</span> comes from a DFT, difference/integral operator, is very sparse, etc.), it allows the algorithm to take advantage of fast matrix vector products. Second, CG only requires <span class="math inline">\(\mathcal{O}(n)\)</span> additional storage to run (as compared to <span class="math inline">\(\mathcal{O}(n^2)\)</span> that many other algorithms require). This can be very useful when the size of the system is very large as it reduces the communication costs of moving data in and out of memory/caches.</p>
+
+<p>While the conjugate gradient algorithm has many nice theoretical properties, its behavior in finite precision can be <em>extremely</em> different than the behavior predicted by assuming exact arithmetic. Understanding what leads to these vastly different behaviors has been an active area of research since the 60s and 70s. My intention is to provide an overview of the conjugate gradient algorithm in exact precision, then introduce some of what is know about it in finite precision, and finally, present some modern research interests into the algorithm.</p>
 
 <h2 id="measuring-the-accuracy-of-solutions">Measuring the accuracy of solutions</h2>
 
@@ -150,6 +154,10 @@ x^* = A^{-1}b = -(c_1/c_0) b - (c_2/c_0) Ab - \cdots - (1/c_0) A^{n-1}b
 \]</span></p>
 
 <p>That is, the solution <span class="math inline">\(x^*\)</span> to the system <span class="math inline">\(Ax = b\)</span> is a linear combination of <span class="math inline">\(b, Ab, A^2b, \ldots, A^{n-1}b\)</span> (i.e. <span class="math inline">\(x^*\in\mathcal{K}_n(A,b)\)</span>). This observation is the motivation behind Krylov subspace methods. I might be useful to think of Krylov subspace methods as building low degree polynomial approximations to <span class="math inline">\(A^{-1}b\)</span> using powers of <span class="math inline">\(A\)</span> times <span class="math inline">\(b\)</span> (in fact Krylov subspace methods can be used to approximate <span class="math inline">\(f(A)b\)</span> where <span class="math inline">\(f\)</span> is any <a href="./current_research.html">function</a>).</p>
+
+<!--start_pdf_comment-->
+
+<p>Next: <a href="./arnoldi_lanczos.html">Arnoldi and Lanczos methods</a> <!--end_pdf_comment--></p>
 
 </div>
 </body>

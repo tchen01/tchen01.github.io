@@ -1,7 +1,7 @@
-% A derivation of the Conjugate Gradient algorithm
+% A Derivation of the Conjugate Gradient Algorithm
 % Tyler Chen
 
-There are many ways to view/derive the Conjugate Gradient algorithm. 
+There are many ways to view/derive the conjugate gradient algorithm. 
 I'll derive the algorithm by directly minimizing by minimizing the $A$-norm of the error over successive Krylov subspaces, $\mathcal{K}_k(A,b)$, which I think is the most natural way to view the algorithm.
 My hope is that the derivation here provides an intuitive introduction to CG.
 Of course, what I think is a good way to present the topic won't match up exactly with every reader's own preference, so I highly recommend looking through some other resources as well.
@@ -160,9 +160,7 @@ p_k = r_k + b_k p_{k-1}
 b_k = - \frac{\langle r_k, p_{k-1} \rangle_A}{\langle p_{k-1}, p_{k-1} \rangle_A}
 \end{align*}
 
-
-The immediate consequence is that we do not need to save the entire basis $\{p_0,p_1,\ldots,p_{k-1}\}$, but instead can just keep $x_k$,$r_k$, and $p_{k-1}$.
-**expand on this**!!
+The immediate consequence is that we do not need to save the entire basis $\{p_0,p_1,\ldots,p_{k-1}\}$, but instead can just keep $x_k$,$r_k$, and $p_{k-1}$. This is perhaps somewhat unsurprising give then we have seen that when $A$ is symmetric we have a three term [Lanczos recurrence](./arnoldi_lanczos.html#the-lanczos-algorithm). 
 
 
 ## Putting it all together
@@ -176,7 +174,7 @@ b_k = \frac{\langle r_k,r_k\rangle}{\langle r_{k-1},r_{k-1}\rangle}
 
 The first people to discover this algorithm Magnus Hestenes and Eduard Stiefel who independently developed it around 1952. As such, the standard implementation is attributed to them. 
 
-**Algorithm.** (Hestenes and Stiefel Conjugate Gradient)
+**Algorithm.** (Hestenes and Stiefel conjugate gradient)
 \begin{align*}
 &\textbf{procedure}\text{ HSCG}( A,b,x_0 ) 
 \\[-.4em]&~~~~\textbf{set } r_0 = b-Ax_0, \nu_0 = \langle r_0,r_0 \rangle, p_0 = r_0, s_0 = Ar_0, 
@@ -192,8 +190,7 @@ The first people to discover this algorithm Magnus Hestenes and Eduard Stiefel w
 \\[-.4em]&\textbf{end procedure}
 \end{align*}
 
-
-
+<!--
 This can be easily [implemented](./cg.py) in numpy.
 Note that we use $f$ for the right hand side vector to avoid conflict with the coefficient $b$.
 
@@ -214,7 +211,10 @@ Note that we use $f$ for the right hand side vector to avoid conflict with the c
             a = nu/(p@s)
 
         return x
+-->
 
-
+<!--start_pdf_comment-->
+Next: [conjugate gradient is Lanczos in Disguise](./cg_lanczos.html)
+<!--end_pdf_comment-->
 
 

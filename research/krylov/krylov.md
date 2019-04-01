@@ -1,5 +1,5 @@
 ---
-title: '\sffamily An Introduction to Conjugate Gradient'
+title: '\sffamily \textbf{An Introduction to Modern Analysis of the Conjugate Gradient Algorithm in Exact and Finite Precision}'
 author: '[Tyler Chen](https://chen.pw)'
 mainfont: Georgia
 sansfont: Lato
@@ -16,12 +16,14 @@ header-includes: |
 Solving a linear system of equations $Ax=b$ is one of the most important tasks in modern science.
 A huge number of techniques and algorithms for dealing with more complex equations end up using linear approximations.
 As a result, applications such as weather forecasting, medical imaging, and training neural nets all require repeatedly solving linear systems to achieve the real world impact that we often take for granted.
-When $A$ is symmetric and positive definite (if you don't remember what that means, don't worry, I have a refresher below), the Conjugate Gradient algorithm is a very popular choice for methods of solving $Ax=b$.
+When $A$ is symmetric and positive definite (if you don't remember what that means, don't worry, I have a refresher below), the conjugate gradient algorithm is a very popular choice for methods of solving $Ax=b$.
 
-This popularity of CG is due to a couple factors. First, like most Krylov subspace methods, CG is *matrix free*. 
+This popularity of the conjugate gradient algorithm (CG) is due to a couple factors. First, like most Krylov subspace methods, CG is *matrix free*. 
 This means that you don't ever need to explicitly represent $A$ as a matrix, you only need to be able to compute the product $v\mapsto Av$ for a given input vector $v$.
 For very large problems this means a big reduction in storage, and if $A$ has some structure (eg, $A$ comes from a DFT, difference/integral operator, is very sparse, etc.), it allows the algorithm to take advantage of fast matrix vector products.
 Second, CG only requires $\mathcal{O}(n)$ additional storage to run (as compared to $\mathcal{O}(n^2)$ that many other algorithms require). This can be very useful when the size of the system is very large as it reduces the communication costs of moving data in and out of memory/caches. 
+
+While the conjugate gradient algorithm has many nice theoretical properties, its behavior in finite precision can be *extremely* different than the behavior predicted by assuming exact arithmetic. Understanding what leads to these vastly different behaviors has been an active area of research since the 60s and 70s. My intention is to provide an overview of the conjugate gradient algorithm in exact precision, then introduce some of what is know about it in finite precision, and finally, present some modern research interests into the algorithm.
 
 ## Measuring the accuracy of solutions
 Perhaps the first question that should be asked about any numerical method is , *does it solve the intended problem?* In the case of solving linear systems, this means asking *does the output approximate the true solution?* 
@@ -107,6 +109,8 @@ This observation is the motivation behind Krylov subspace methods.
 I might be useful to think of Krylov subspace methods as building low degree polynomial approximations to $A^{-1}b$ using powers of $A$ times $b$ (in fact Krylov subspace methods can be used to approximate $f(A)b$ where $f$ is any [function](./current_research.html)).
 
 
+<!--start_pdf_comment-->
+
 
 # The Arnoldi and Lanczos algorithms
 
@@ -184,6 +188,21 @@ We can improve stability slightly by using $Aq_j - \beta_{j-1} q_{j-1}$ instead 
 This allows us to ensure that we have orthogonalized $q_{j+1}$ against $q_j$ and $q_{j-1}$ rather than just $q_j$.
 It also ensures that the tridiagonal matrix produces is symmetric in finite precision (since $\langle Aq_j,q_{j-1}\rangle$ may not be equal to $\beta_j$ in finite precision).
 
+**Algorithm.** (Lanczos)
+\begin{align*}
+&\textbf{procedure}\text{ lanczos}( A,v ) 
+\\[-.4em]&~~~~\textbf{set } q_1 = v / \|v\|, \beta_0 = 0
+\\[-.4em]&~~~~\textbf{for } k=1,2,\ldots \textbf{:} 
+\\[-.4em]&~~~~~~~~\textbf{set } \tilde{q}_{k+1} = Aq_k - \beta_{k-1} q_{k-1}
+\\[-.4em]&~~~~~~~~\textbf{set } \alpha_k = \langle \tilde{q}_{k+1}, q_k \rangle
+\\[-.4em]&~~~~~~~~\textbf{set } \tilde{q}_{k+1} = \tilde{q}_{k+1} - \alpha_k q_{k}
+\\[-.4em]&~~~~~~~~\textbf{set } \beta_k = \| \tilde{q}_{k+1} \|
+\\[-.4em]&~~~~~~~~\textbf{set } q_{k+1} = \tilde{q}_{k+1} / \beta_k
+\\[-.4em]&~~~~~\textbf{end for}
+\\[-.4em]&\textbf{end procedure}
+\end{align*}
+
+<!--
 We can [implement](./lanczos.py) Lanczos iteration in numpy.
 Here we assume that we only want to output the diagonals of the tridiagonal matrix $T$, and don't need any of the vectors (this would be useful if we wanted to compute the eigenvalues of $A$, but not the eigenvectors).
 
@@ -202,9 +221,14 @@ Here we assume that we only want to output the diagonals of the tridiagonal matr
             q = qq/beta[k]
 
     return alpha,beta
-# A derivation of the Conjugate Gradient algorithm
+-->
 
-There are many ways to view/derive the Conjugate Gradient algorithm. 
+<!--start_pdf_comment-->
+
+
+# A Derivation of the Conjugate Gradient Algorithm
+
+There are many ways to view/derive the conjugate gradient algorithm. 
 I'll derive the algorithm by directly minimizing by minimizing the $A$-norm of the error over successive Krylov subspaces, $\mathcal{K}_k(A,b)$, which I think is the most natural way to view the algorithm.
 My hope is that the derivation here provides an intuitive introduction to CG.
 Of course, what I think is a good way to present the topic won't match up exactly with every reader's own preference, so I highly recommend looking through some other resources as well.
@@ -363,9 +387,7 @@ p_k = r_k + b_k p_{k-1}
 b_k = - \frac{\langle r_k, p_{k-1} \rangle_A}{\langle p_{k-1}, p_{k-1} \rangle_A}
 \end{align*}
 
-
-The immediate consequence is that we do not need to save the entire basis $\{p_0,p_1,\ldots,p_{k-1}\}$, but instead can just keep $x_k$,$r_k$, and $p_{k-1}$.
-**expand on this**!!
+The immediate consequence is that we do not need to save the entire basis $\{p_0,p_1,\ldots,p_{k-1}\}$, but instead can just keep $x_k$,$r_k$, and $p_{k-1}$. This is perhaps somewhat unsurprising give then we have seen that when $A$ is symmetric we have a three term [Lanczos recurrence](./arnoldi_lanczos.html#the-lanczos-algorithm). 
 
 
 ## Putting it all together
@@ -379,7 +401,7 @@ b_k = \frac{\langle r_k,r_k\rangle}{\langle r_{k-1},r_{k-1}\rangle}
 
 The first people to discover this algorithm Magnus Hestenes and Eduard Stiefel who independently developed it around 1952. As such, the standard implementation is attributed to them. 
 
-**Algorithm.** (Hestenes and Stiefel Conjugate Gradient)
+**Algorithm.** (Hestenes and Stiefel conjugate gradient)
 \begin{align*}
 &\textbf{procedure}\text{ HSCG}( A,b,x_0 ) 
 \\[-.4em]&~~~~\textbf{set } r_0 = b-Ax_0, \nu_0 = \langle r_0,r_0 \rangle, p_0 = r_0, s_0 = Ar_0, 
@@ -395,8 +417,7 @@ The first people to discover this algorithm Magnus Hestenes and Eduard Stiefel w
 \\[-.4em]&\textbf{end procedure}
 \end{align*}
 
-
-
+<!--
 This can be easily [implemented](./cg.py) in numpy.
 Note that we use $f$ for the right hand side vector to avoid conflict with the coefficient $b$.
 
@@ -417,21 +438,22 @@ Note that we use $f$ for the right hand side vector to avoid conflict with the c
             a = nu/(p@s)
 
         return x
+-->
 
-
+<!--start_pdf_comment-->
 
 
 # Conjugate Gradient is Lanczos in Disguise
 
-It's perhaps not so surprising that the Conjugate Gradient and Lanczos algorithms are closely related. After all, they are both Krylov subspace methods for symmetric matrices.
+It's perhaps not so surprising that the conjugate gradient and Lanczos algorithms are closely related. After all, they are both Krylov subspace methods for symmetric matrices.
 
 More precisely, the Lanczos algorithm will produce an orthonormal basis for $\mathcal{K}_k(A,b)$, $k=0,1,\ldots$ if we initialize with initial vector $r_0 = b$. 
-We also know that the Conjugate Gradient residuals form an orthogonal basis for for these spaces, which means that the Lanczos vectors must be scaled versions of the Conjugate Gradient residuals.
+We also know that the conjugate gradient residuals form an orthogonal basis for for these spaces, which means that the Lanczos vectors must be scaled versions of the conjugate gradient residuals.
 
 This relationship provides a way of transferring research about the Lanczos algorithm to be to CG, and visa versa.
 In fact, the analysis of [finite precision CG](./finite_precision_cg.html) done by Greenbaum requires viewing CG in terms of the Lanczos recurrence.
 
-In case you're just looking for the punchline, the Lanczos coefficients and vectors can be obtained from the Conjugate Gradient algorithm by the following relationship,
+In case you're just looking for the punchline, the Lanczos coefficients and vectors can be obtained from the conjugate gradient algorithm by the following relationship,
 \begin{align*}
 q_{j+1} \equiv (-1)^j\dfrac{r_j}{\|r_j\|}
 ,&&
@@ -504,12 +526,16 @@ q_{j+1} \equiv (-1)^j\dfrac{r_j}{\|r_j\|}
 \alpha_j \equiv \left(\frac{1}{a_{j-1}} + \frac{b_{j}}{a_{j-2}}\right)
 \end{align*}
 
+<!--start_pdf_comment-->
+
+
+
 
 # Error Bounds for the Conjugate Gradient Algorithm
 
 This page is a work in progress.
 
-In our [derivation](./cg_derivation.html) of the Conjugate Gradient method, we minimized the $A$-norm of the error over sucessive Krylov subspaces.
+In our [derivation](./cg_derivation.html) of the conjugate gradient method, we minimized the $A$-norm of the error over sucessive Krylov subspaces.
 Ideally we would like to know how quickly this method converge.
 That is, how many iterations are needed to reach a specified level of accuracy.
 
@@ -520,13 +546,12 @@ That is, how many iterations are needed to reach a specified level of accuracy.
 That is, $\|A\|\|B\|\leq \|AB\|$
 - A matrix $U$ is called unitary if $U^*U = UU^* = I$.
 
-## Polynomial error bounds
+## Error bounds from minimax polynomials
 
 Previously we have show that,
 $$
-e_k \in e_0 +  \operatorname{span}\{p_0,p_1,\ldots,p_{k-1}\} = e_0 + \mathcal{K}_k(A,b)
+e_k \in e_0 + \operatorname{span}\{p_0,p_1,\ldots,p_{k-1}\} = e_0 + \mathcal{K}_k(A,b)
 $$
-
 
 Observing that $r_0 = Ae_0$ we find that,
 $$
@@ -555,7 +580,7 @@ $$
 $$
 
 Since $A$ is positive definite, it is diagonalizable as $U\Lambda U^*$ where $U$ is unitary and $\Lambda$ is the diagonal matrix of eigenvalues of $A$.
-Thus,
+Thus, since $U^*U = I$,
 $$
 A^k = (U\Lambda U^*)^k = U\Lambda^kU^*
 $$
@@ -622,48 +647,121 @@ $$
 \frac{\|e_k\|_A}{\|e_0\|_A} \leq 2 \left( \frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1} \right)^k
 $$
 
+<!--start_pdf_comment-->
+
+
 # The Conjugate Gradient Algorithm in Finite Precision
 
 This page is a work in progress.
 
-A key component of our derivations of the [Lanczos](./arnoldi_lanczos.html) and [Conjugate Gradient](./cg_derivation.html) methods was the orthogonality of certain basis vectors.
-In finite precision, our induction based arguments no longer hold, and so it's reasonable to expect the algorithms will fail.
-That said, since you're reading about these methods, they must somehow still be usable in practice.
-This turns out to be the case, and both methods are widely used for eignevalue problems and solving linear systems.
+A key component of our derivations of the [Lanczos](./arnoldi_lanczos.html) and [conjugate gradient](./cg_derivation.html) methods was the orthogonality of certain vectors.
+In finite precision, we cannot have exact orthogonality, so our induction based arguments no longer hold.
+Even so, both methods are widely used in practice, which suggests that there are subtle forces at play allowing the algorithms to work.
 
-The first major progress in the analysis of the Lanczos algorithm was done by Chris Paige, who characterized the behavior of the method in finite precision. 
-A similarly important analysis of Conjugate Gradient was done by Anne Greenbaum in her 1989 paper, ["Behavior of slightly perturbed Lanczos and conjugate-gradient recurrences"](https://www.sciencedirect.com/science/article/pii/0024379589902851).
+In exact arithmetic, CG will obtain the exact solution in at most $n$ steps, and the error at step $k$ can be bounded by the size of the degree $k$ minimax polynomial on the eigenvalues of $A$.
+In finite precision, the loss of orthogonality leads to two easily observable effects: delayed convergence, and reduced final accuracy.
+The following figure shows both of these phenomena for various precisions.
+
+![Convergence of conjugate gradient in various precisions. Note that the computation would finish in at most 48 steps in exact arithmetic.](./multiple_precision.svg)
+
+
+### Delay of convergence
+
+In our [derivation](./cg_derivation.html) of the conjugate gradient algorithm, we used the $A$-orthogonality of successive search directions to show that we only needed to optimize over the current search direction. 
+In finite precision, once orthogonality is lost, we not longer know that minimizing along a given search direction will also result in a solution which is optimal in the previous search directions.
+As such, a conjugate gradient algorithm in finite precision will end up doing "redundant" optimization.
+
+### Loss of attainable accuracy
+
+Even if we knew the solution $x^*$ to the system $Ax=b$, it's unlikely that we could represent it in finite precision.  
+
+$\epsilon \| A \|$
+- different variants converge to worse levels
+
+### Updated vs. true residual
+
+In exact precision, the updated residual $r_k$ was equal to the true residual $b-Ax_k$.
+In finite precision, this is not longer the case. 
+Interestingly, even in finite precision, the updated residual (of many variants) keeps decreasing far below machine precision, until it eventually underflows.
+**Do we know why or have citations about this?**
+
+## The analysis of Greenbaum
+The first major progress in the analysis of the Lanczos algorithm was done by Chris Paige, who characterized the behavior of the method in finite precision in his 1971 PhD thesis. 
+An analysis of similar importance was done by Anne Greenbaum in her 1989 paper, ["Behavior of slightly perturbed Lanczos and conjugate-gradient recurrences"](https://www.sciencedirect.com/science/article/pii/0024379589902851).
 A big takeaway from Greenbaum's analysis is that the error bound from the Chevyshev polynomials still holds in finite precision (to a close approximation).
-My goal here is to present the highlights of that paper.
 
-## The results
+The analysis from this paper is quite involved, and does not provides sufficient conditions for good convergence. However, necessary conditions of similar strength are not known, so it is not clear whether the conditions from the analysis can be relaxed significantly or not.
+In essence, Greenbaum showed that, in finite precision, a "good" conjugate gradient algorithm applied to the matrix $A$ will behave like exact conjugate gradient applied to a larger matrix $\hat{T}$ with eigenvalues near those of $A$. 
 
+Thus, while the [error bounds](./cg_error.html) derived based on the minimax polynomial on the spectrum of $A$ no longer hold in exact arithmetic, bounds of a similar form can be obtained by finding the minimax polynomial on the union of small intervals about the eigenvalues of $A$. In particular, the bound from Chebyshev polynomials will not be significantly affect, as the condition number of the larger matrix will be nearly identical to that of $A$.
 
-[Remez Algorithm](./remez.html)
+As before, the [Remez algorithm](./remez.html) can be used to compute the minimax polynomial of a given degree on the union of intervals.
 
-## Some conditions for the analysis
-CG is doing the Lanczos algorithm in disguise. In particular, normalizing the residuals from CG gives the vectors $q_j$ produced by the Lanczos algorithm, and combing the CG constants in the right way gives the coefficients for the three term Lanczos recurrence.
+### Finding the larger matrix
+A constructive algorithm for finding an extended matrix $\hat{T}$ where exact CG behaves like finite precision CG on $A$ was presented in [greenbaum_89]. 
+The algorithm is given the Lanczos vectors and coefficients from the finite precision computation, and extends the tridiagonal matrix $T$ by slightly perturbing a new, exact, Lanczos recurrence so that it terminates. The resulting larger tridiagonal matrix $\hat{T}$, which contains $T$ in the top left block, will have eigenvalues near those of $A$ (assuming $T$ came from a "good" implementation).
 
-The analysis by Greenbaum requires that the finite precision Conjugate Gradient algorithm (viewed as the Lanczos algorithm) satisfy a few properties.
+An explanation of the algorithm is given in the appendix of [greenbaum_liu_chen_19], and an jupyter notebook is available [here](https://github.com/tchen01/Conjugate_Gradient/blob/master/experiments/extend_t.ipynb), and two Python implementations of the algorithm are available in the same Github repository. 
+
+### Some conditions for the analysis
+I have brushed what a "good" conjugate gradient implementation means.
+In some sense this is still not known, since there has been no analysis providing both necessary and sufficient conditions for convergence to behave in a certain way.
+That said, the conditions given in [greenbaum_89] are sufficient, and should be discussed.
+
+We have already seen that [CG is doing the Lanczos algorithm in disguise](./cg_lanczos.html). In particular, normalizing the residuals from CG gives the vectors $q_j$ produced by the Lanczos algorithm, and combing the CG constants in the right way gives the coefficients $\alpha_j,\beta_j$ for the three term Lanczos recurrence.
+
+The analysis by Greenbaum requires that the finite precision conjugate gradient algorithm (viewed as the Lanczos algorithm) satisfy a few properties.
 Namely,
 
 - the three term Lanczos recurrence is well satisfied
 - the Lanczos vectors have norm close to one
 - successive Lanczos vectors are nearly orthogonal
 
-As it turns out, nobody has actually ever proved that any of the Conjugate Variant methods used in practice actually satisfy these conditions (although some do numerically satisfy the conditions).
+We know that in exact arithmetic, each of these properties is satisfied exactly. In fact, in exact arithmetic, all Lanczos vectors are orthogonal. However, in finite precision it is well known that the Lancozs vectors eventually lose orthogonality. Paige described the way in which this orthogonality is lost, and proved that (what is now) the standard Lanczos implementation satisfies the three properties above. Greenbaum extended Paige's analysis, which is why her results use the same conditions.
 
-# Communication Avoiding Conjugate Gradient Algorithms
+As it turns out, nobody has actually ever proved that any of the Conjugate Variant methods used in practice actually satisfy these conditions. In our paper, ["On the Convergence of Conjugate Gradient Variants in Finite Precision Arithmetic"](./../publications/greenbaum_liu_chen_19.html) we analyze some variants in terms of these quantities, and try to provide rounding error analysis which will explain why these properties are or are not satisfied for each variant.
 
-One of the main drawbacks to Conjugate gradient in a high performance setting is .....
+Any proof that a given method satisfies these properties would constitute a significant theoretical advancement in the understanding of the conjugate gradient algorithm in finite precision. 
+Similarly, finding weaker conditions which provide some sort of convergence guarantees for a finite precision CG implementation would also be of significant importance.
 
+<!--start_pdf_comment-->
+
+# Communication Hiding Conjugate Gradient Algorithms
+
+So far, all we have considered are error bounds in terms of the number of iterations. 
+However, in practice, what we really care about is how long a computation takes.
+A natural way to try and speed up an algorithm is through parallelization, and many variants of the conjugate gradient algorithm have been introduced to try and take advantage of high performance computers.
+However, while these variants are all equivalent in exact arithmetic, they perform operations in different orders.
+Based on our discussion about conjugate gradient in [finite precision](./finite_precision_cg.html), it should be too big of a surprise that the variants all behave differently.
+
+![Convergence of different variants in finite precision. Note that the computation would finish in at most 112 steps in exact arithmetic.](./convergence.svg)
+
+The DOE supercomputer "Summit" is able to compute 122 petaflops per second. 
+That's something like $10^{16}$ floating point operations every second!
+Unfortunately, on high performance machines, conjugate gradient often perform orders of magnitude fewer floating point operations per second than the computer is theoretically capable of.
+
+The reason for this is *communication*. 
+
+Traditionally, analysis of algorithms has been done in terms of counting the number of operations computed, and the amount of storage used. However, an important factor in the real world performance is the time it takes to move data around. 
+Even on a single core computer, the cost of moving a big matrix off the hard drive into memory can be much more significant than the floating point operations done.
+There is naturally a lot of interest in reducing the communication costs of various algorithms, and conjugate gradient certainly has a lot of room for improvement.
+
+Parallel computers work by having different processors work on different parts of a computation at the same time.
+Naturally, many things can be sped up this way, but like in our example, doubling the computing power doesn't necessarily mean doubling the speed of the computation.
+In many numerical algorithms, "global communication" is one of the main causes of latency.
+Loosely speaking, global communication means that all processors working on a larger task must finish with their subtask and report on the result before the computation can proceed.
+This means that even if we can distribute a computation to many processors, the time it takes to move the data required for those computations will eventually limit how effective adding more processors is. 
+So, a 1000x increase in processor power won't necessarily cut the computation time to 1/1000.
 
 
 ## Communication bottlenecks in CG
 
-Recall the standard Hestenes and Stifel CG implementation. In the below description, every block of code after a "**set**" must wait for the output from the previous block. Much of the algorithm is scalar and vector updates which are relatively cheap (in terms of floating point operations and communication). The most expensive computations each iteration are the matrix vector product, and the two inner products.
+Recall the standard Hestenes and Stifel CG implementation.
+In the below description, every block of code after a "**set**" must wait for the output from the previous block.
+Much of the algorithm is scalar and vector updates which are relatively cheap (in terms of floating point operations and communication).
+The most expensive computations each iteration are the matrix vector product, and the two inner products.
 
-**Algorithm.** (Hestenes and Stiefel Conjugate Gradient)
+**Algorithm.** (Hestenes and Stiefel conjugate gradient)
 \begin{align*}
 &\textbf{procedure}\text{ HSCG}( A,b,x_0 ) 
 \\[-.4em]&~~~~\textbf{set } r_0 = b-Ax_0, \nu_0 = \langle r_0,r_0 \rangle, p_0 = r_0, s_0 = Ar_0, 
@@ -679,18 +777,24 @@ Recall the standard Hestenes and Stifel CG implementation. In the below descript
 \\[-.4em]&\textbf{end procedure}
 \end{align*}
 
-A matrix vector product requires $\mathcal{O}(\text{nnz})$ (number of nonzero) floating point operations, while an inner product requires $\mathcal{O}(n)$ operations. For many applications of CG, the number of nonzero entries is something like $kn$, where $k$ relatively small. In these cases, the cost of floating point arithmetic for a matrix vector product and an inner product is roughly the same. On the other hand, the communication costs for the inner products are much lower.
+A matrix vector product requires $\mathcal{O}(\text{nnz})$ (number of nonzero) floating point operations, while an inner product of dense vectors requires $\mathcal{O}(n)$ operations. 
+For many applications of CG, the number of nonzero entries is something like $kn$, where $k$ relatively small. 
+In these cases, the cost of floating point arithmetic for a matrix vector product and an inner product is roughly the same. 
+On the other hand, the communication costs for the inner products can be much higher.
 
-matvec is usually sparse
+There are multiply ways to address the communication bottleneck in CG. The two main approaches are "hiding" communication, and "avoiding" communication.
+Communication hiding algorithm such as as pipelined CG introduce auxiliary vectors so that the inner products can be computed at the same time, allowing the communication to be overlapped with other computations.
+On the other hand, communication avoiding algorithms such as $s$-step CG compute iterations in blocks of size $s$, reducing the synchronization costs by a factor around $s$.
 
-inner products require "all reduce"
-i.e. collect information back from all the different processors/nodes
-would like to be able to overlap these as much as possible
+In this piece I will be talking about some common communicating hiding methods.
+If you're interested in communication avoiding methods, or want more information about communication hiding methods, Erin Carson has very useful [slides](https://math.nyu.edu/~erinc/ppt/Carson_PP18.pdf).
 
 
 ## Overlapping inner products
 
-We would like to be able to *overlap* as many of the heavy computations as possible. However, in the current form, we need to wait for each of the previous computations before we are able to do a matrix vector product or an inner product.
+We would like to be able to reduce the number of points in the algorithm a global communication is required.
+However, in the current form, we need to wait for each of the previous computations before we are able to do a matrix vector product or an inner product.
+This means there are two global communications per iteration.
 
 Using our recurrences we can write,
 $$
@@ -698,11 +802,48 @@ s_k = Ap_k = A(r_k + b_k p_{k-1})
 = Ar_k + b_k s_{k-1}
 $$
 
-If we define the axillary vector $w_k = Ar_k$, in exact arithmetic using this formula for $s_k$ will be equivalent to the original formula for $s_k$. However, we can now compute $w_k$ as soon as we have $r_k$. Therefore, the computation of $\nu_k = \langle r_k,r_k \rangle$ can be overlapped with the computation of $w_k = Ar_k$.
+If we define the axillary vector $w_k = Ar_k$, in exact arithmetic using this formula for $s_k$ will be equivalent to the original formula for $s_k$. 
+However, we can now compute $w_k$ as soon as we have $r_k$.
+Therefore, the computation of $\nu_k = \langle r_k,r_k \rangle$ can be overlapped with the computation of $w_k = Ar_k$.
+However, this still requires two global communication points each iteration.
 
-These coefficient formulas seem to work better that CGCG..
+We now note that,
+\begin{align*}
+\mu_k = \langle p_k,s_k \rangle
+&= \langle r_k + b_k p_{k-1}, w_k + b_k s_{k-1} \rangle
+\\&= \langle r_k, w_k \rangle + b_k \langle p_{k-1}, w_k \rangle + b_k \langle r_k, s_{k-1} \rangle + b_k^2 \langle p_{k-1}, s_{k-1} \rangle
+\end{align*}
 
-**Algorithm.** (Chronopoulos and Gear Conjugate Gradient)
+
+Now, since $w_k = Ar_k$ and $s_{k-1} = Ap_{k-1}$, then $\langle p_{k-1},w_k \rangle = \langle r_{k}, s_{k-1} \rangle$. 
+Thus,
+$$
+\mu_k = \langle r_k,w_k\rangle + 2 b_k \langle r_k,s_k \rangle + b_k^2 \mu_{k-1}
+$$
+
+Notice now that $\langle r_k,w_k \rangle$, and $\langle r_k,s_k \rangle$ can both be overlapped with $\nu_k = \langle r_k,r_k\rangle$. 
+Thus, using this coefficient formula there is only a single global synchronization per iteration.
+However, this came at the cost of having to compute an additional inner product. 
+
+
+
+Now, using our recurrence for $r_k$,
+$$
+\langle r_k, s_{k-1} \rangle
+= \langle p_k - b_k p_{k-1}, s_{k-1} \rangle
+= -b_{k} \langle p_{k-1},s_{k-1} \rangle
+= -b_k\mu_{k-1}
+$$
+
+Thus, defining $\eta_k = \langle w_k,r_k \rangle$ and canceling terms,
+$$
+\mu_k = \langle w_k,r_k \rangle - b_k^2 \mu_{k-1}
+= \eta_k - (b_k/a_k) \nu_k
+$$
+
+This variant is known as Chronopoulos and Gear conjugate gradient.
+
+**Algorithm.** (Chronopoulos and Gear conjugate gradient)
 \begin{align*}
 &\textbf{procedure}\text{ CGCG}( A,b,x_0 ) 
 \\[-.4em]&~~~~\textbf{set } r_0 = b-Ax_0, \nu_0 = \langle r_0,r_0 \rangle, p_0 = r_0, s_0 = Ar_0, 
@@ -711,17 +852,38 @@ These coefficient formulas seem to work better that CGCG..
 \\[-.4em]&~~~~~~~~\textbf{set } x_k = x_{k-1} + a_{k-1} p_{k-1} 
 \\[-.4em]&~~~~~~~~\phantom{\textbf{set }} r_k = r_{k-1} - a_{k-1} s_{k-1} 
 \\[-.4em]&~~~~~~~~\textbf{set } w_k = Ar_k 
-\\[-.4em]&~~~~~~~~\phantom{\textbf{set }} \nu_{k} = \langle r_k,r_k \rangle, \textbf{ and } b_k = \nu_k / \nu_{k-1}
-\\[-.4em]&~~~~~~~~\textbf{set }\eta_k = \langle r_k, w_k \rangle, \textbf{ and } a_k = \nu_k / (\eta_k - (b_k/a_{k-1})\nu_k)
+\\[-.4em]&~~~~~~~~\textbf{set } \nu_{k} = \langle r_k,r_k \rangle, \textbf{ and } b_k = \nu_k / \nu_{k-1}
+\\[-.4em]&~~~~~~~~\phantom{\textbf{set }}\eta_k = \langle r_k, w_k \rangle, \textbf{ and } a_k = \nu_k / (\eta_k - (b_k/a_{k-1})\nu_k)
 \\[-.4em]&~~~~~~~~\phantom{\textbf{set }} p_k = r_k + b_k p_{k-1}
 \\[-.4em]&~~~~~~~~\phantom{\textbf{set }} s_k = w_k + b_k s_{k-1}
 \\[-.4em]&~~~~~\textbf{end for}
 \\[-.4em]&\textbf{end procedure}
 \end{align*}
 
-**Algorithm.** (Ghysels and Vanroose Conjugate Gradient)
+
+However, while we have only a single global communication per iteration, the matrix vector product must still be computed before we are able to compute the inner products. 
+To allow the matrix vector product to be overlapped with the inner products, we again introduce auxiliary vectors.
+Observe that,
+$$
+w_k = Ar_k = A(r_{k-1} - a_{k-1}s_{k-1}) 
+= A r_{k-1} - a_{k-1} As_{k-1}
+= w_{l-1} - a_{k-1} As_{k-1}
+$$
+
+Now, define $u_{k} = As_{k}$ and note that,
+$$
+u_{k} = As_k = A(w_k + b_k s_{k-1}) 
+= Aw_k + b_k As_{k-1} 
+= Aw_k + b_k u_{k-1}
+$$
+
+That's it. For convenience we define $t_k = Aw_k$. 
+Then, the matrix vector product $Aw_k$ can occur as soon as we have computed $w_k$.
+This variant is known as either Ghysels and Vanroose conjugate gradient or pipelined conjugate gradient.
+
+**Algorithm.** (Ghysels and Vanroose (pipelined) conjugate gradient)
 \begin{align*}
-&\textbf{procedure}\text{ CGCG}( A,b,x_0 ) 
+&\textbf{procedure}\text{ GVCG}( A,b,x_0 ) 
 \\[-.4em]&~~~~\textbf{set } r_0 = b-Ax_0, \nu_0 = \langle r_0,r_0 \rangle, p_0 = r_0, s_0 = Ar_0, 
 \\[-.4em]&~~~~\phantom{\textbf{set }}w_0 = s_0, u_0 = Aw_0, a_0 = \nu_0 / \langle p_0,s_0 \rangle
 \\[-.4em]&~~~~\textbf{for } k=1,2,\ldots \textbf{:} 
@@ -733,20 +895,21 @@ These coefficient formulas seem to work better that CGCG..
 \\[-.4em]&~~~~~~~~\phantom{\textbf{set }} t_k = Aw_k
 \\[-.4em]&~~~~~~~~\textbf{set } p_k = r_k + b_k p_{k-1}
 \\[-.4em]&~~~~~~~~\phantom{\textbf{set }} s_k = w_k + b_k s_{k-1}
-\\[-.4em]&~~~~~~~~\phantom{\textbf{set }} u_k = b_k u_{k-1}
+\\[-.4em]&~~~~~~~~\phantom{\textbf{set }} u_k = t_k + b_k u_{k-1}
 \\[-.4em]&~~~~~\textbf{end for}
 \\[-.4em]&\textbf{end procedure}
 \end{align*}
 
+Recently, [cite ppl] have developed a "deep pipelined" conjugate gradient, which essentially introduces even more auxiliary vectors to allow for more overlapping. 
+
+As mentioned above, 
 
 
-fda
-
-## fdas
+<!--start_pdf_comment-->
 
 
 
-# Current research on CG and related Krylov subspace methods
+# Current research on Conjugate Gradient and related Krylov subspace methods
 
 
 

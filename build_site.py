@@ -17,7 +17,8 @@ def build_html(folder,file_name):
     if is_article(folder,file_name): 
         opts+='--pdf-engine=xelatex'
     
-    if folder not in ['research/krylov']:
+    #
+    if (folder not in ['research/krylov'] or file_name in ['remez']) and file_name not in ['index']:
         os.system(f'pandoc {opts} -o {folder}/{file_name}.pdf {folder}/{file}')
     
     # open old html file, pandoc converted html file, and temp new file
@@ -99,12 +100,12 @@ def is_article(folder,file_name):
     if folder == 'thoughts':
         if file_name != 'index':
             return True
-    elif folder == 'research/krylov':
+    elif folder in ['research/krylov','research/publications']:
         return True
 
     return False
 
-YAML_clean = ['title', 'author',':', '\sffamily ', "'",'https','//','chen.pw','(',')','[',']']
+YAML_clean = ['title', 'author',':', r'\sffamily ',r'\textbf',"'",'https','//','chen.pw','(',')','[',']','{','}']
 
 # folders
 folders = ['.', 'research','research/krylov','research/publications', 'thoughts']

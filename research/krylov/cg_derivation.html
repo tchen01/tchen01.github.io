@@ -29,11 +29,11 @@
 <body>
 
 <div id="contentContainer" class="article" >
-<h1> A derivation of the Conjugate Gradient algorithm
+<h1> A Derivation of the Conjugate Gradient Algorithm
 </h1>
 <p class="authors"> Tyler Chen
 </p>
-<p>There are many ways to view/derive the Conjugate Gradient algorithm. I’ll derive the algorithm by directly minimizing by minimizing the <span class="math inline">\(A\)</span>-norm of the error over successive Krylov subspaces, <span class="math inline">\(\mathcal{K}_k(A,b)\)</span>, which I think is the most natural way to view the algorithm. My hope is that the derivation here provides an intuitive introduction to CG. Of course, what I think is a good way to present the topic won’t match up exactly with every reader’s own preference, so I highly recommend looking through some other resources as well. To me, this is of those topics where you have to go through the explanations a few times before you start to understand what is going on.</p>
+<p>There are many ways to view/derive the conjugate gradient algorithm. I’ll derive the algorithm by directly minimizing by minimizing the <span class="math inline">\(A\)</span>-norm of the error over successive Krylov subspaces, <span class="math inline">\(\mathcal{K}_k(A,b)\)</span>, which I think is the most natural way to view the algorithm. My hope is that the derivation here provides an intuitive introduction to CG. Of course, what I think is a good way to present the topic won’t match up exactly with every reader’s own preference, so I highly recommend looking through some other resources as well. To me, this is of those topics where you have to go through the explanations a few times before you start to understand what is going on.</p>
 
 <h2 id="linear-algebra-review">Linear algebra review</h2>
 
@@ -227,7 +227,7 @@ b_k = - \frac{\langle r_k, p_{k-1} \rangle_A}{\langle p_{k-1}, p_{k-1} \rangle_A
 
 \end{align*}\]</span></p>
 
-<p>The immediate consequence is that we do not need to save the entire basis <span class="math inline">\(\{p_0,p_1,\ldots,p_{k-1}\}\)</span>, but instead can just keep <span class="math inline">\(x_k\)</span>,<span class="math inline">\(r_k\)</span>, and <span class="math inline">\(p_{k-1}\)</span>. <strong>expand on this</strong>!!</p>
+<p>The immediate consequence is that we do not need to save the entire basis <span class="math inline">\(\{p_0,p_1,\ldots,p_{k-1}\}\)</span>, but instead can just keep <span class="math inline">\(x_k\)</span>,<span class="math inline">\(r_k\)</span>, and <span class="math inline">\(p_{k-1}\)</span>. This is perhaps somewhat unsurprising give then we have seen that when <span class="math inline">\(A\)</span> is symmetric we have a three term <a href="./arnoldi_lanczos.html#the-lanczos-algorithm">Lanczos recurrence</a>.</p>
 
 <h2 id="putting-it-all-together">Putting it all together</h2>
 
@@ -243,7 +243,7 @@ b_k = \frac{\langle r_k,r_k\rangle}{\langle r_{k-1},r_{k-1}\rangle}
 
 <p>The first people to discover this algorithm Magnus Hestenes and Eduard Stiefel who independently developed it around 1952. As such, the standard implementation is attributed to them.</p>
 
-<p><strong>Algorithm.</strong> (Hestenes and Stiefel Conjugate Gradient) <span class="math display">\[\begin{align*}
+<p><strong>Algorithm.</strong> (Hestenes and Stiefel conjugate gradient) <span class="math display">\[\begin{align*}
 
 &amp;\textbf{procedure}\text{ HSCG}( A,b,x_0 ) 
 
@@ -271,41 +271,53 @@ b_k = \frac{\langle r_k,r_k\rangle}{\langle r_{k-1},r_{k-1}\rangle}
 
 \end{align*}\]</span></p>
 
-<p>This can be easily <a href="./cg.py">implemented</a> in numpy. Note that we use <span class="math inline">\(f\)</span> for the right hand side vector to avoid conflict with the coefficient <span class="math inline">\(b\)</span>.</p>
+<!--
 
-<pre><code>def cg(A,f,max_iter):
+This can be easily [implemented](./cg.py) in numpy.
 
-    x = np.zeros(len(f)); r = np.copy(f); p = np.copy(r); s=A@p
-
-    nu = r @ r; a = nu/(p@s); b = 0
-
-    for k in range(1,max_iter):
-
-        x += a*p
-
-        r -= a*s
+Note that we use $f$ for the right hand side vector to avoid conflict with the coefficient $b$.
 
 
 
-        nu_ = nu
+    def cg(A,f,max_iter):
 
-        nu = r@r
+        x = np.zeros(len(f)); r = np.copy(f); p = np.copy(r); s=A@p
 
-        b = nu/nu_
+        nu = r @ r; a = nu/(p@s); b = 0
 
+        for k in range(1,max_iter):
 
+            x += a*p
 
-        p = r + b*p
-
-        s = A@p
-
-
-
-        a = nu/(p@s)
+            r -= a*s
 
 
 
-    return x</code></pre>
+            nu_ = nu
+
+            nu = r@r
+
+            b = nu/nu_
+
+
+
+            p = r + b*p
+
+            s = A@p
+
+
+
+            a = nu/(p@s)
+
+
+
+        return x
+
+-->
+
+<!--start_pdf_comment-->
+
+<p>Next: <a href="./cg_lanczos.html">conjugate gradient is Lanczos in Disguise</a> <!--end_pdf_comment--></p>
 
 <p class="footer">More about Krylov methods can be found <a href="./">here</a>.</p>
 </div>

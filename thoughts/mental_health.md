@@ -1,5 +1,13 @@
-%Mental Health in Gradschool
-%Tyler Chen
+---
+title: '\sffamily Mental Health in Gradschool'
+author: '[Tyler Chen](https://chen.pw)'
+mainfont: Georgia
+sansfont: Lato
+linkcolor: blue
+header-includes: |
+    \usepackage{sectsty}
+    \allsectionsfont{\normalfont\sffamily\bfseries}
+---
 
 More to come...
 

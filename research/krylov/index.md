@@ -1,5 +1,5 @@
 ---
-title: '\sffamily An Introduction to Conjugate Gradient'
+title: '\sffamily \textbf{An Introduction to Modern Analysis of the Conjugate Gradient Algorithm in Exact and Finite Precision}'
 author: '[Tyler Chen](https://chen.pw)'
 mainfont: Georgia
 sansfont: Lato
@@ -11,7 +11,7 @@ header-includes: |
 
 
 <!--start_pdf_comment-->
-This is the first piece from a series on the Conjugate Gradient algorithm.
+This is the first piece from a series on the conjugate gradient algorithm. It is still very much a work in progress, so please bear with me while it's under construction.
 I have split up the content into the following pages:
 
 - [Introduction to Krylov subspaces](./)
@@ -20,21 +20,22 @@ I have split up the content into the following pages:
 - [CG is Lanczos in disguise](./cg_lanczos.html)
 - [Error bounds for CG](./cg_error.html)
 - [Finite precision CG](./finite_precision_cg.html)
+- [Communication Hiding CG variants](./communication_hiding_variants.html)
 - [Current Research](./current_research.html)
 
-All of the pages have been compiled into a single [pdf document](./krylov.pdf) to facilitate offline reading. 
+All of the pages have been compiled into a single [pdf document](./krylov.pdf) to facilitate offline reading. At the moment the PDF document is nearly identical to the web version, so some links are not working. I will eventually turn the PDF into a more self contained document with proper references to external sources.
 
-The following are some supplementary pages which are not directly related to Conjugate Gradient, but somewhat related:
+The following are some supplementary pages which are not directly related to conjugate gradient, but somewhat related:
 
 - [The Remez Algorithm](./remez.html)
 
 The intention of this website is not to provide a rigorous explanation of the topic, but rather, to provide some (hopefully useful) intuition about where this method comes from, how it works in theory and in practice, and what people are currently interested in learning about it.
-I do assume some linear algebra background (roughly at the level of a first undergrad course in linear algebra), but I try to add some refreshers along the way. My hope is that it can be a useful resources for undergraduates, engineers, tech workers, etc. who want to learn about some of the most recent developments in the study of Conjugate Gradient (i.e. communication avoiding methods work).
+I do assume some linear algebra background (roughly at the level of a first undergrad course in linear algebra), but I try to add some refreshers along the way. My hope is that it can be a useful resources for undergraduates, engineers, tech workers, etc. who want to learn about some of the most recent developments in the study of conjugate gradient (i.e. communication avoiding methods work).
 
 If you are a bit rusty on your linear algebra I suggest taking a look at the [Khan Academy](https://www.khanacademy.org/math/linear-algebra) videos.
 For a more rigorous and much broader treatment of iterative methods, I suggest Anne Greenbaum's [book](https://epubs.siam.org/doi/book/10.1137/1.9781611970937?mobileUi=0u) on the topic.
-A popular introduction to Conjugate Gradient in exact arithmetic written by Jonathan Shewchuk can be found [here](./https://www.cs.cmu.edu/~quake-papers/painless-conjugate-gradient.pdf).
-Finally, for a much more detailed overview of modern analysis of the Lanczos and Conjugate Gradient methods in exact arithmetic and finite precision, I suggest Gerard Meurant and Zdenek Strakos's [report](https://www.karlin.mff.cuni.cz/~strakos/download/2006_MeSt.pdf).
+A popular introduction to conjugate gradient in exact arithmetic written by Jonathan Shewchuk can be found [here](./https://www.cs.cmu.edu/~quake-papers/painless-conjugate-gradient.pdf).
+Finally, for a much more detailed overview of modern analysis of the Lanczos and conjugate gradient methods in exact arithmetic and finite precision, I suggest Gerard Meurant and Zdenek Strakos's [report](https://www.karlin.mff.cuni.cz/~strakos/download/2006_MeSt.pdf).
 
 <!--end_pdf_comment-->
 
@@ -42,12 +43,14 @@ Finally, for a much more detailed overview of modern analysis of the Lanczos and
 Solving a linear system of equations $Ax=b$ is one of the most important tasks in modern science.
 A huge number of techniques and algorithms for dealing with more complex equations end up using linear approximations.
 As a result, applications such as weather forecasting, medical imaging, and training neural nets all require repeatedly solving linear systems to achieve the real world impact that we often take for granted.
-When $A$ is symmetric and positive definite (if you don't remember what that means, don't worry, I have a refresher below), the Conjugate Gradient algorithm is a very popular choice for methods of solving $Ax=b$.
+When $A$ is symmetric and positive definite (if you don't remember what that means, don't worry, I have a refresher below), the conjugate gradient algorithm is a very popular choice for methods of solving $Ax=b$.
 
-This popularity of CG is due to a couple factors. First, like most Krylov subspace methods, CG is *matrix free*. 
+This popularity of the conjugate gradient algorithm (CG) is due to a couple factors. First, like most Krylov subspace methods, CG is *matrix free*. 
 This means that you don't ever need to explicitly represent $A$ as a matrix, you only need to be able to compute the product $v\mapsto Av$ for a given input vector $v$.
 For very large problems this means a big reduction in storage, and if $A$ has some structure (eg, $A$ comes from a DFT, difference/integral operator, is very sparse, etc.), it allows the algorithm to take advantage of fast matrix vector products.
 Second, CG only requires $\mathcal{O}(n)$ additional storage to run (as compared to $\mathcal{O}(n^2)$ that many other algorithms require). This can be very useful when the size of the system is very large as it reduces the communication costs of moving data in and out of memory/caches. 
+
+While the conjugate gradient algorithm has many nice theoretical properties, its behavior in finite precision can be *extremely* different than the behavior predicted by assuming exact arithmetic. Understanding what leads to these vastly different behaviors has been an active area of research since the 60s and 70s. My intention is to provide an overview of the conjugate gradient algorithm in exact precision, then introduce some of what is know about it in finite precision, and finally, present some modern research interests into the algorithm.
 
 ## Measuring the accuracy of solutions
 Perhaps the first question that should be asked about any numerical method is , *does it solve the intended problem?* In the case of solving linear systems, this means asking *does the output approximate the true solution?* 
@@ -132,5 +135,9 @@ That is, the solution $x^*$ to the system $Ax = b$ is a linear combination of $b
 This observation is the motivation behind Krylov subspace methods.
 I might be useful to think of Krylov subspace methods as building low degree polynomial approximations to $A^{-1}b$ using powers of $A$ times $b$ (in fact Krylov subspace methods can be used to approximate $f(A)b$ where $f$ is any [function](./current_research.html)).
 
+
+<!--start_pdf_comment-->
+Next: [Arnoldi and Lanczos methods](./arnoldi_lanczos.html)
+<!--end_pdf_comment-->
 
 

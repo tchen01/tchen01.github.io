@@ -1,5 +1,13 @@
-%Power Structures in Academia
-%Tyler Chen
+---
+title: '\sffamily Power Structures in Academia'
+author: '[Tyler Chen](https://chen.pw)'
+mainfont: Georgia
+sansfont: Lato
+linkcolor: blue
+header-includes: |
+    \usepackage{sectsty}
+    \allsectionsfont{\normalfont\sffamily\bfseries}
+---
 
 More to come...
         

@@ -1,15 +1,15 @@
 % Conjugate Gradient is Lanczos in Disguise
 % Tyler Chen
 
-It's perhaps not so surprising that the Conjugate Gradient and Lanczos algorithms are closely related. After all, they are both Krylov subspace methods for symmetric matrices.
+It's perhaps not so surprising that the conjugate gradient and Lanczos algorithms are closely related. After all, they are both Krylov subspace methods for symmetric matrices.
 
 More precisely, the Lanczos algorithm will produce an orthonormal basis for $\mathcal{K}_k(A,b)$, $k=0,1,\ldots$ if we initialize with initial vector $r_0 = b$. 
-We also know that the Conjugate Gradient residuals form an orthogonal basis for for these spaces, which means that the Lanczos vectors must be scaled versions of the Conjugate Gradient residuals.
+We also know that the conjugate gradient residuals form an orthogonal basis for for these spaces, which means that the Lanczos vectors must be scaled versions of the conjugate gradient residuals.
 
 This relationship provides a way of transferring research about the Lanczos algorithm to be to CG, and visa versa.
 In fact, the analysis of [finite precision CG](./finite_precision_cg.html) done by Greenbaum requires viewing CG in terms of the Lanczos recurrence.
 
-In case you're just looking for the punchline, the Lanczos coefficients and vectors can be obtained from the Conjugate Gradient algorithm by the following relationship,
+In case you're just looking for the punchline, the Lanczos coefficients and vectors can be obtained from the conjugate gradient algorithm by the following relationship,
 \begin{align*}
 q_{j+1} \equiv (-1)^j\dfrac{r_j}{\|r_j\|}
 ,&&
@@ -81,5 +81,11 @@ q_{j+1} \equiv (-1)^j\dfrac{r_j}{\|r_j\|}
 ,&&
 \alpha_j \equiv \left(\frac{1}{a_{j-1}} + \frac{b_{j}}{a_{j-2}}\right)
 \end{align*}
+
+<!--start_pdf_comment-->
+Next: [Error Bounds for the conjugate gradient Algorithm](./cg_error.html)
+<!--end_pdf_comment-->
+
+
 
 

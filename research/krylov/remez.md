@@ -1,8 +1,16 @@
-% The Remez Algorithm
-% Tyler Chen
+---
+title: '\sffamily \textbf{An Introduction to conjugate gradient}'
+author: '[Tyler Chen](https://chen.pw)'
+mainfont: Georgia
+sansfont: Lato
+linkcolor: blue
+header-includes: |
+    \usepackage{sectsty}
+    \allsectionsfont{\normalfont\sffamily\bfseries}
+---
 
 The Remez algorithm is used for calculating the degree $k$ minimax polynomial on a given set. 
-Minimax polynomials can be used in the error analysis of the Conjugate Gradient algorithm in [exact](./cg_error.html) and [finite precion](./finite_precision_cg.html) arithmetic, but even without clear applications, I think this is a cool algorithm.
+Minimax polynomials can be used in the error analysis of the conjugate gradient algorithm in [exact](./cg_error.html) and [finite precion](./finite_precision_cg.html) arithmetic, but even without clear applications, I think this is a cool algorithm.
 
 Recall that the *minimax polynomial of degree $k$* on $L$ is the polynomial satisfying,
 \begin{align*}
