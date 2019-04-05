@@ -33,21 +33,7 @@
 </h1>
 <p class="authors"> Tyler Chen
 </p>
-<p>This page is a work in progress.</p>
-
 <p>In our <a href="./cg_derivation.html">derivation</a> of the conjugate gradient method, we minimized the <span class="math inline">\(A\)</span>-norm of the error over sucessive Krylov subspaces. Ideally we would like to know how quickly this method converge. That is, how many iterations are needed to reach a specified level of accuracy.</p>
-
-<h2 id="linear-algebra-review">Linear algebra review</h2>
-
-<ul>
-
-<li>The 2-norm of a symmetric positive definite matrix is the largest eigenvalue of the matrix</li>
-
-<li>The 2-norm is submultiplicative. That is, <span class="math inline">\(\|A\|\|B\|\leq \|AB\|\)</span></li>
-
-<li>A matrix <span class="math inline">\(U\)</span> is called unitary if <span class="math inline">\(U^*U = UU^* = I\)</span>.</li>
-
-</ul>
 
 <h2 id="error-bounds-from-minimax-polynomials">Error bounds from minimax polynomials</h2>
 
@@ -93,15 +79,15 @@ e_k \in e_0 +  \operatorname{span}\{Ae_0,A^2e_0,\ldots,A^{k}e_0\}
 
 \]</span></p>
 
-<p>Since <span class="math inline">\(A\)</span> is positive definite, it is diagonalizable as <span class="math inline">\(U\Lambda U^*\)</span> where <span class="math inline">\(U\)</span> is unitary and <span class="math inline">\(\Lambda\)</span> is the diagonal matrix of eigenvalues of <span class="math inline">\(A\)</span>. Thus, since <span class="math inline">\(U^*U = I\)</span>, <span class="math display">\[
+<p>Since <span class="math inline">\(A\)</span> is positive definite, it is diagonalizable as <span class="math inline">\(U\Lambda U^{\mathsf{H}}\)</span> where <span class="math inline">\(U\)</span> is unitary and <span class="math inline">\(\Lambda\)</span> is the diagonal matrix of eigenvalues of <span class="math inline">\(A\)</span>. Thus, since <span class="math inline">\(U^{\mathsf{H}}U = I\)</span>, <span class="math display">\[
 
-A^k = (U\Lambda U^*)^k = U\Lambda^kU^*
+A^k = (U\Lambda U^{\mathsf{H}})^k = U\Lambda^kU^{\mathsf{H}}
 
 \]</span></p>
 
 <p>We can then write <span class="math inline">\(p(A) = Up(\Lambda)U^*\)</span> where <span class="math inline">\(p(\Lambda)\)</span> has diagonal entries <span class="math inline">\(p(\lambda_i)\)</span>. Therefore, using the <em>unitary invariance</em> property of the 2-norm, <span class="math display">\[
 
-\|p(A)\| = \|Up(\Lambda)U^*\| = \|p(\Lambda)\|
+\|p(A)\| = \|Up(\Lambda)U^{\mathsf{H}}\| = \|p(\Lambda)\|
 
 \]</span></p>
 
@@ -117,11 +103,9 @@ A^k = (U\Lambda U^*)^k = U\Lambda^kU^*
 
 \]</span></p>
 
-<p>Since the inequality we obtained from the submultiplicativity of the 2-norm is tight, this bound is also tight in the sense that for a fixed <span class="math inline">\(k\)</span> there exists an initial error <span class="math inline">\(e_0\)</span> so that equality holds.</p>
+<p>Since the inequality we obtained from the submultiplicativity of the 2-norm is tight, this bound is also tight (in the sense that for a fixed <span class="math inline">\(k\)</span> there exists an initial error <span class="math inline">\(e_0\)</span> so that equality holds).</p>
 
-<p>Computing the optimal <span class="math inline">\(p\)</span> is not trivial, but an algorithm called the <a href="./remez.html">Remez algorithm</a> can be used to compute it.</p>
-
-<p>Let <span class="math inline">\(L\subset \mathbb{R}\)</span> be some closed set. The <em>minimax polynomial of degree <span class="math inline">\(k\)</span></em> on <span class="math inline">\(L\)</span> is the polynomial satisfying, <span class="math display">\[\begin{align*}
+<p>Polynomials of this form are called minimax polynomials. More formally, let <span class="math inline">\(L\subset \mathbb{R}\)</span> be some closed set. The <em>minimax polynomial of degree <span class="math inline">\(k\)</span></em> on <span class="math inline">\(L\)</span> is the polynomial satisfying, <span class="math display">\[\begin{align*}
 
 \min_{p\in\mathcal{P}_k} \max_{x\in L} | p(x) |
 
@@ -131,9 +115,11 @@ A^k = (U\Lambda U^*)^k = U\Lambda^kU^*
 
 \end{align*}\]</span></p>
 
+<p>Computing a minimax polynomial for a given set is not trivial, but an algorithm called the <a href="./remez.html">Remez algorithm</a> can be used to compute it.</p>
+
 <h3 id="chebyshev-bounds">Chebyshev bounds</h3>
 
-<p>The minimax polynomial on the eigenvalues of <span class="math inline">\(A\)</span> is a bit tricky to work with. Although we can find it using the Remez algorithm, this is somewhat tedious, and requires knowledge of the whole spectrum of <span class="math inline">\(A\)</span>. We would like to come up with a bound which depends on less information about <span class="math inline">\(A\)</span>. One way to obtain such a bound is to expand the set on which we are looking for the minimax polynomial.</p>
+<p>The minimax polynomial on the eigenvalues of <span class="math inline">\(A\)</span> is a bit tricky to work with. Although we can find it using the Remez algorithm, this is somewhat tedious, and requires knowledge of the whole spectrum of <span class="math inline">\(A\)</span>. To be useful in practice we would like a bound which depends only on information about <span class="math inline">\(A\)</span> that we might reasonably expect to have prior to solving the linear system. One way to obtain such a bound is to expand the set on which we are looking for the minimax polynomial.</p>
 
 <p>To this end, let <span class="math inline">\(\mathcal{I} = [\lambda_{\text{min}},\lambda_{\text{max}}]\)</span>. Then, since <span class="math inline">\(\lambda_i\in\mathcal{I}\)</span>, <span class="math display">\[
 
@@ -143,9 +129,11 @@ A^k = (U\Lambda U^*)^k = U\Lambda^kU^*
 
 \]</span></p>
 
-<p>The right hand side requires that we know the largest and smallest eigenvalues of <span class="math inline">\(A\)</span>, but doesn’t require any of the ones between. This means it can be useful in practice, since we can easily compute the top and bottom eignevalues with the power method.</p>
+<p>The right hand side requires that we know the largest and smallest eigenvalues of <span class="math inline">\(A\)</span>, but doesn’t require knowledge of any of the ones between. This means it can be useful in practice, since we can easily compute the top and bottom eignevalues with the power method.</p>
 
-<p>The polynomials satisfying the right hand side are called the <em>Chebyshev Polynomials</em> and can be easily written down with a simple recurrence relation. If <span class="math inline">\(\mathcal{I} = [-1,1]\)</span> then the relation is, <span class="math display">\[\begin{align*}
+<p>The minimax polynomials on a single closed interval <span class="math inline">\(\mathcal{I}\)</span> are called the <em>Chebyshev Polynomials</em>, and can be easily written down with a simple recurrence relation.</p>
+
+<p>If <span class="math inline">\(\mathcal{I} = [-1,1]\)</span> then the relation is, <span class="math display">\[\begin{align*}
 
 T_{k+1}(x) = 2xT_k(x) - T_{k-1}(x)
 

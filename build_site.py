@@ -116,6 +116,11 @@ footers = {'.':'',
            'thoughts':'<p class="footer">More writing about my opinions on academia can be found <a href="./">here</a>.</p>'}
 index_footer = '<p class="footer">Return to my <a href="../">homepage</a>.</p>'
 
+print('building krylov')
+os.chdir('research/krylov')
+os.system('python build_krylov.py')
+os.chdir('../..')
+
 # search through files
 for folder in folders:
     

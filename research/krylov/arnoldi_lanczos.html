@@ -33,47 +33,71 @@
 </h1>
 <p class="authors"> Tyler Chen
 </p>
-<p>The Arnoldi and Lanczos algorithms for computing an orthonormal basis for Krylov subspaces are, in one way or another, at the core of all Krylov subspace methods. Essentially, these algorithms are the Gram-Schmidt procedure applied to the vectors <span class="math inline">\(v,Av,A^2v,A^3v,\ldots\)</span> in a clever way.</p>
+<p>The Arnoldi and Lanczos algorithms for computing an orthonormal basis for Krylov subspaces are, in one way or another, at the core of all Krylov subspace methods. Essentially, these algorithms are the Gram-Schmidt procedure applied to the vectors <span class="math inline">\(\{v,Av,A^2v,A^3v,\ldots\}\)</span> in clever ways. The Arnoldi algorithm works for any matrix, and the Lanczos algorithm works for Hermitian matrices.</p>
 
 <h2 id="the-arnoldi-algorithm">The Arnoldi algorithm</h2>
 
-<p>Recall that given a set of vectors <span class="math inline">\(v_1,v_2,\ldots, v_k\)</span> the Gram-Schmidt procedure computes an orthonormal basis <span class="math inline">\(q_1,q_2,\ldots,q_k\)</span> so that for all <span class="math inline">\(j\leq k\)</span>, <span class="math display">\[
+<p>Recall that given a set of vectors <span class="math inline">\(\{v_1,v_2,\ldots, v_k\}\)</span> the Gram-Schmidt procedure computes an orthonormal basis <span class="math inline">\(\{q_1,q_2,\ldots,q_k\}\)</span> so that for all <span class="math inline">\(j\leq k\)</span>, <span class="math display">\[
 
 \operatorname{span}\{v_1,\ldots,v_j\} = \operatorname{span}\{q_1,\ldots,q_j\}
 
 \]</span></p>
 
-<p>The trick behind the Arnoldi algorithm is the fact that you do not need to construct the whole set <span class="math inline">\(v,Av,A^2v,\ldots\)</span> ahead of time (in practice, if you tried to do this, it wouldn’t really work because eventually <span class="math inline">\(A^jv\)</span> and <span class="math inline">\(A^{j+1}v\)</span> will be nearly linearly dependent since this is essentially the <a href="https://en.wikipedia.org/wiki/Power_iteration">power method</a>). Instead, you can compute <span class="math inline">\(Aq_{k}\)</span> in place of <span class="math inline">\(A^{k+1}v\)</span> once you have found an orthonormal basis <span class="math inline">\(q_1,q_2,\ldots,q_k\)</span> spanning <span class="math inline">\(v,Av,\ldots, A^{k-1} v\)</span>.</p>
+<p>In short, at step <span class="math inline">\(j\)</span>, <span class="math inline">\(v_{j+1}\)</span> is orthogonalized against each of <span class="math inline">\(\{q_1,q_2,\ldots, q_j\}\)</span>.</p>
 
-<p>If we assume that <span class="math inline">\(\operatorname{span}\{v,Av,\ldots A^{k-1} v\}= \operatorname{span}\{q_1,\ldots, q_k\}\)</span> then <span class="math inline">\(q_{k+1}\)</span> can be written as a linear combination of <span class="math inline">\(v,Av,\ldots, A^k v\)</span>. Therefore, <span class="math inline">\(Aq_k\)</span> will be a linear combination of <span class="math inline">\(Av,A^2v,\ldots,A^k v\)</span>. In particular, this means that <span class="math inline">\(\operatorname{span}\{q_1,\ldots,q_k,Aq_k\} = \operatorname{span}\{v,Av,\ldots,A^k v\}\)</span>. Therefore, we will get exactly the same set of vectors by applying Gram-Schmidt to <span class="math inline">\(\{v,Av,\ldots,A^kv\}\)</span> as if we compute <span class="math inline">\(Aq_k\)</span> once we have computing <span class="math inline">\(q_k\)</span>.</p>
+<p>If we tried to compute the set <span class="math inline">\(\{v,Av,A^2v,\ldots\}\)</span>, it would become very close to linearly dependent (and with rounding errors essentially numerically linearly dependent). This is because this basis is essentially the <a href="https://en.wikipedia.org/wiki/Power_iteration">power method</a>. The trick behind the Arnoldi algorithm is the fact that you do not need to construct the whole set <span class="math inline">\(\{v,Av,A^2v,\ldots\}\)</span> ahead of time. This allows us to come up with a basis for <span class="math inline">\(\{v,Av,A^2v,\ldots\}\)</span> in a more “stable” way.</p>
 
-<p>Since we obtain <span class="math inline">\(q_{k+1}\)</span> by orthogonalizing <span class="math inline">\(Aq_k\)</span> against <span class="math inline">\(\{q_1,q_2,\ldots,q_k\}\)</span> then <span class="math inline">\(q_{k+1}\)</span> is in the span of these vectors, there exist some <span class="math inline">\(c_i\)</span> so that, <span class="math display">\[
+<p>Suppose at the beginning of step <span class="math inline">\(k\)</span> that we have already computed a basis <span class="math inline">\(\{q_1,q_2,\ldots,q_{k-1}\}\)</span> which has the same span as <span class="math inline">\(\{v,Av,\ldots, A^{k-2}v\}\)</span>. If we were doing Gram-Schmidt, then we would obtain <span class="math inline">\(q_k\)</span> by orthogonalizing <span class="math inline">\(A^{k-1}v\)</span> against each of the vectors in the basis <span class="math inline">\(\{q_1,q_2, \ldots, q_{k-1}\}\)</span>. In the Arnoldi algorithm we instead orthogonalize <span class="math inline">\(Aq_{k-1}\)</span> against <span class="math inline">\(\{q_1,q_2,\ldots, q_{k-1}\}\)</span>.</p>
 
-q_{k+1} = c_1 q_1 + c_2 q_2 + \cdots + c_k q_k + c_{k+1}Aq_k
+<p>Let’s understand why these are the same. First, since the span of <span class="math inline">\(\{q_1,q_2,\ldots, q_{k-1}\}\)</span> is equal to the span of <span class="math inline">\(\{v,Av,\ldots, A^{k-2}v\}\)</span>, then <span class="math inline">\(q_{k-1}\)</span> can be written as a linear combination of <span class="math inline">\(\{v,Av,\ldots, A^{k-2}v\}\)</span>. That is, there exists coefficients <span class="math inline">\(c_i\)</span> such that, <span class="math display">\[
 
-\]</span></p>
-
-<p>We can rearrange this (using new scalars <span class="math inline">\(d_i\)</span>) to, <span class="math display">\[
-
-Aq_k = d_1q_1 + d_2q_2 + \cdots + d_{k+1} q_{k+1}
+q_{k-1} = c_1v + c_2Av + \cdots + c_{k-1} A^{k-2}v
 
 \]</span></p>
 
-<p>This can be written in matrix form as, <span class="math display">\[
+<p>Therefore, multiplying by <span class="math inline">\(A\)</span> we have, <span class="math display">\[
 
-AQ = QH
+Aq_{k-1} = c_1Av + c_2A^2v + \cdots c_{k-1}A^{k-1}v
 
-\]</span> where <span class="math inline">\(H\)</span> is “upper Hessenburg” (like upper triangular but the first subdiagonal also has nonzero entries). While I’m not going to derive them here, since the entries of <span class="math inline">\(H\)</span> come directly from the Arnoldi algorithm (just like how the entries of <span class="math inline">\(R\)</span> in a QR factorization can be obtained from Gram Schmidt) their explicit expressions can be easily written down.</p>
+\]</span></p>
 
-<p>Since <span class="math inline">\(Q\)</span> is orthogonal then, <span class="math inline">\(Q^*AQ = H\)</span>, so <span class="math inline">\(H\)</span> and <span class="math inline">\(A\)</span> are similar. This means that finding the eigenvalues and vectors of <span class="math inline">\(H\)</span> will give us the eigenvalues and vectors of <span class="math inline">\(A\)</span>. However, since <span class="math inline">\(H\)</span> is upper Hessenburg, then solving the eigenproblem is easier than for a general matrix.</p>
+<p>Now, since each of <span class="math inline">\(\{Av,A^2v,\ldots, A^{k-2}v\}\)</span> are in the span of <span class="math inline">\(\{q_1,q_2,\ldots, q_{k-1}\}\)</span>, each of these components will disappear when we orthogonalize <span class="math inline">\(Aq_{k-1}\)</span> against <span class="math inline">\(\{q_1,q_2,\ldots,q_{k-1}\}\)</span>. This gives a vector in the same direction as the vector we get by orthogonalizing <span class="math inline">\(A^{k-1}v\)</span> against <span class="math inline">\(\{q_1,q_2,\ldots,q_{k-1}\}\)</span>. Since we get <span class="math inline">\(q_k\)</span> by normalizing the resulting vector, using <span class="math inline">\(Aq_{k-1}\)</span> will give us the same value for <span class="math inline">\(q_k\)</span> as using <span class="math inline">\(A^{k-1}v\)</span>.</p>
+
+<p>The Arnoldi algorithm gives the relationship, <span class="math display">\[
+
+AQ_k = Q_k H_k + h_{k+1,k} q_{k+1} \xi_k^T
+
+\]</span> where <span class="math inline">\(Q_k = [q_1,q_2,\ldots,q_k]\)</span> is the <span class="math inline">\(n\times k\)</span> matrix whose columns are <span class="math inline">\(\{q_1,q_2,\ldots,q_k\}\)</span>, <span class="math inline">\(H_k\)</span> is a <span class="math inline">\(k\times k\)</span> <a href="https://en.wikipedia.org/wiki/Hessenberg_matrix"><em>Upper Hessenburg</em></a> matrix, and <span class="math inline">\(\xi_k = [0,\ldots,0,1]^T\)</span> is the <span class="math inline">\(k\)</span>-th unit vector.</p>
+
+<h3 id="ritz-vectors">Ritz vectors</h3>
+
+<p>For instance, suppose that <span class="math inline">\(H_nv = \lambda v\)</span>. Then, <span class="math display">\[
+
+A(Q_nv) = (Q_nH_nQ_n^{\mathsf{H}})(Q_nv) = Q_nH_nv = Q_n(\lambda v) = \lambda (Q_nv)
+
+\]</span></p>
+
+<p>This proves that if <span class="math inline">\(v\)</span> is an eigenvector of <span class="math inline">\(H_n\)</span> with eigenvalue <span class="math inline">\(\lambda\)</span>, then <span class="math inline">\(Q_nv\)</span> is an eigenvector of <span class="math inline">\(A\)</span> with eigenvalue <span class="math inline">\(\lambda\)</span>.</p>
+
+<p>We have just seen that if <span class="math inline">\(Q_n\)</span> is unitary, then if <span class="math inline">\(v\)</span> is an eigenvector of <span class="math inline">\(H_n\)</span> then <span class="math inline">\(Q_nv\)</span> is an eigenvalue of <span class="math inline">\(A\)</span> when <span class="math inline">\(v\)</span>.</p>
+
+<p>When <span class="math inline">\(k&lt;n\)</span> then <span class="math inline">\(Q_k\)</span> although <span class="math inline">\(Q_k\)</span> has orthonormal columns, it is not square. Even so, we can use <span class="math inline">\(Q_kv\)</span> as an “approximate” eigenvector of <span class="math inline">\(Q\)</span>.</p>
+
+<p>More specifically, if <span class="math inline">\(v\)</span> is an eigenvector of <span class="math inline">\(H_k\)</span> with eigenvalue <span class="math inline">\(\lambda\)</span>, then <span class="math inline">\(Q_kv\)</span> is called a <em>Ritz vector</em>, and <span class="math inline">\(\lambda\)</span> is called a <em>Ritz value</em>.</p>
 
 <h2 id="the-lancozs-algorithm">The Lancozs algorithm</h2>
 
-<p>When <span class="math inline">\(A\)</span> is Hermetian, then <span class="math inline">\(Q^*AQ = H\)</span> is also Hermetian. Since <span class="math inline">\(H\)</span> is upper Hessenburg and Hermitian, it must be tridiagonal! This means that the <span class="math inline">\(q_j\)</span> satisfy a three term recurrence, <span class="math display">\[
+<p>When <span class="math inline">\(A\)</span> is Hermitian, then <span class="math inline">\(Q_k^{\mathsf{H}}AQ_k = H_k\)</span> is also Hermetian. This means that <span class="math inline">\(H_k\)</span> is upper Hessenburg and Hermitian, so it must be tridiagonal! Thus, the <span class="math inline">\(q_j\)</span> satisfy a three term recurrence, <span class="math display">\[
 
 Aq_j = \beta_{j-1} q_{j-1} + \alpha_j q_j + \beta_j q_{j+1}
 
-\]</span> where <span class="math inline">\(\alpha_1,\ldots,\alpha_n\)</span> are the diagonal entries of <span class="math inline">\(T\)</span> and <span class="math inline">\(\beta_1,\ldots,\beta_{n-1}\)</span> are the off diagonal entries of <span class="math inline">\(T\)</span>. The Lanczos algorithm is an efficient way of computing this decomposition.</p>
+\]</span> which we can write in matrix form as, <span class="math display">\[
+
+AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^T
+
+\]</span></p>
+
+<p>The Lanczos algorithm is an efficient way of computing this decomposition which takes advantage of the three term recurrence.</p>
 
 <p>I will present a brief derivation for the method motivated by the three term recurrence above. Since we know that the <span class="math inline">\(q_j\)</span> satisfy the three term recurrence, we would like the method to store as few of the <span class="math inline">\(q_j\)</span> as possible (i.e. take advantage of the three term recurrence as opposed to the Arnoldi algorithm).</p>
 
@@ -97,7 +121,7 @@ q_{j+1} = \tilde{q}_{j+1} / \beta_j
 
 \end{align*}\]</span></p>
 
-<p>Note that this is not the most “numerically stable” form of the algorithm, and care must be taken when implementing the Lanczos method in practice. We can improve stability slightly by using <span class="math inline">\(Aq_j - \beta_{j-1} q_{j-1}\)</span> instead of <span class="math inline">\(Aq_j\)</span> when finding a vector in the next Krylov subspace. This allows us to ensure that we have orthogonalized <span class="math inline">\(q_{j+1}\)</span> against <span class="math inline">\(q_j\)</span> and <span class="math inline">\(q_{j-1}\)</span> rather than just <span class="math inline">\(q_j\)</span>. It also ensures that the tridiagonal matrix produces is symmetric in finite precision (since <span class="math inline">\(\langle Aq_j,q_{j-1}\rangle\)</span> may not be equal to <span class="math inline">\(\beta_j\)</span> in finite precision).</p>
+<p>Note that this is not the most “numerically stable” form of the algorithm, and care must be taken when implementing the Lanczos method in practice. We can improve stability slightly by using <span class="math inline">\(Aq_j - \beta_{j-1} q_{j-1}\)</span> instead of <span class="math inline">\(Aq_j\)</span> when finding a vector in the next Krylov subspace. This allows us to explicitly orthogonalize <span class="math inline">\(q_{j+1}\)</span> against both <span class="math inline">\(q_j\)</span> and <span class="math inline">\(q_{j-1}\)</span> rather than just <span class="math inline">\(q_j\)</span>. It also ensures that the tridiagonal matrix produces is symmetric in finite precision (since <span class="math inline">\(\langle Aq_j,q_{j-1}\rangle\)</span> may not be equal to <span class="math inline">\(\beta_j\)</span> in finite precision).</p>
 
 <p><strong>Algorithm.</strong> (Lanczos) <span class="math display">\[\begin{align*}
 

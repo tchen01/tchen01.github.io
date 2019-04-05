@@ -2,53 +2,81 @@
 % Tyler Chen
 
 The Arnoldi and Lanczos algorithms for computing an orthonormal basis for Krylov subspaces are, in one way or another, at the core of all Krylov subspace methods.
-Essentially, these algorithms are the Gram-Schmidt procedure applied to the vectors $v,Av,A^2v,A^3v,\ldots$ in a clever way.
+Essentially, these algorithms are the Gram-Schmidt procedure applied to the vectors $\{v,Av,A^2v,A^3v,\ldots\}$ in clever ways.
+The Arnoldi algorithm works for any matrix, and the Lanczos algorithm works for Hermitian matrices.
 
 ## The Arnoldi algorithm
 
-Recall that given a set of vectors $v_1,v_2,\ldots, v_k$ the Gram-Schmidt procedure computes an orthonormal basis $q_1,q_2,\ldots,q_k$ so that for all $j\leq k$,
+Recall that given a set of vectors $\{v_1,v_2,\ldots, v_k\}$ the Gram-Schmidt procedure computes an orthonormal basis $\{q_1,q_2,\ldots,q_k\}$ so that for all $j\leq k$,
 $$
 \operatorname{span}\{v_1,\ldots,v_j\} = \operatorname{span}\{q_1,\ldots,q_j\}
 $$
 
-The trick behind the Arnoldi algorithm is the fact that you do not need to construct the whole set $v,Av,A^2v,\ldots$ ahead of time (in practice, if you tried to do this, it wouldn't really work because eventually $A^jv$ and $A^{j+1}v$ will be nearly linearly dependent since this is essentially the [power method](https://en.wikipedia.org/wiki/Power_iteration)).
-Instead, you can compute $Aq_{k}$ in place of $A^{k+1}v$ once you have found an orthonormal basis $q_1,q_2,\ldots,q_k$ spanning $v,Av,\ldots, A^{k-1} v$. 
+In short, at step $j$, $v_{j+1}$ is orthogonalized against each of $\{q_1,q_2,\ldots, q_j\}$.
 
-If we assume that $\operatorname{span}\{v,Av,\ldots A^{k-1} v\}= \operatorname{span}\{q_1,\ldots, q_k\}$ then $q_{k+1}$ can be written as a linear combination of $v,Av,\ldots, A^k v$.
-Therefore, $Aq_k$ will be a linear combination of $Av,A^2v,\ldots,A^k v$.
-In particular, this means that $\operatorname{span}\{q_1,\ldots,q_k,Aq_k\} = \operatorname{span}\{v,Av,\ldots,A^k v\}$.
-Therefore, we will get exactly the same set of vectors by applying Gram-Schmidt to $\{v,Av,\ldots,A^kv\}$ as if we compute $Aq_k$ once we have computing $q_k$.
+If we tried to compute the set $\{v,Av,A^2v,\ldots\}$, it would become very close to linearly dependent (and with rounding errors essentially numerically linearly dependent).
+This is because this basis is essentially the [power method](https://en.wikipedia.org/wiki/Power_iteration).
+The trick behind the Arnoldi algorithm is the fact that you do not need to construct the whole set $\{v,Av,A^2v,\ldots\}$ ahead of time.
+This allows us to come up with a basis for $\{v,Av,A^2v,\ldots\}$ in a more "stable" way.
 
-Since we obtain $q_{k+1}$ by orthogonalizing $Aq_k$ against $\{q_1,q_2,\ldots,q_k\}$ then $q_{k+1}$ is in the span of these vectors, there exist some $c_i$ so that,
+Suppose at the beginning of step $k$ that we have already computed a basis $\{q_1,q_2,\ldots,q_{k-1}\}$ which has the same span as $\{v,Av,\ldots, A^{k-2}v\}$. 
+If we were doing Gram-Schmidt, then we would obtain $q_k$ by orthogonalizing $A^{k-1}v$ against each of the vectors in the basis $\{q_1,q_2, \ldots, q_{k-1}\}$.
+In the Arnoldi algorithm we instead orthogonalize $Aq_{k-1}$ against $\{q_1,q_2,\ldots, q_{k-1}\}$.
+
+Let's understand why these are the same. First, since the span of $\{q_1,q_2,\ldots, q_{k-1}\}$ is equal to the span of $\{v,Av,\ldots, A^{k-2}v\}$, then $q_{k-1}$ can be written as a linear combination of $\{v,Av,\ldots, A^{k-2}v\}$. 
+That is, there exists coefficients $c_i$ such that,
 $$
-q_{k+1} = c_1 q_1 + c_2 q_2 + \cdots + c_k q_k + c_{k+1}Aq_k
+q_{k-1} = c_1v + c_2Av + \cdots + c_{k-1} A^{k-2}v
 $$
 
-We can rearrange this (using new scalars $d_i$) to,
+Therefore, multiplying by $A$ we have,
 $$
-Aq_k = d_1q_1 + d_2q_2 + \cdots + d_{k+1} q_{k+1}
+Aq_{k-1} = c_1Av + c_2A^2v + \cdots c_{k-1}A^{k-1}v
 $$
 
-This can be written in matrix form as,
-$$
-AQ = QH
-$$
-where $H$ is "upper Hessenburg" (like upper triangular but the first subdiagonal also has nonzero entries).
-While I'm not going to derive them here, since the entries of $H$ come directly from the Arnoldi algorithm (just like how the entries of $R$ in a QR factorization can be obtained from Gram Schmidt) their explicit expressions can be easily written down.
+Now, since each of $\{Av,A^2v,\ldots, A^{k-2}v\}$ are in the span of $\{q_1,q_2,\ldots, q_{k-1}\}$, each of these components will disappear when we orthogonalize $Aq_{k-1}$ against $\{q_1,q_2,\ldots,q_{k-1}\}$. 
+This gives a vector in the same direction as the vector we get by orthogonalizing $A^{k-1}v$ against $\{q_1,q_2,\ldots,q_{k-1}\}$.
+Since we get $q_k$ by normalizing the resulting vector, using $Aq_{k-1}$ will give us the same value for $q_k$ as using $A^{k-1}v$.
 
-Since $Q$ is orthogonal then, $Q^*AQ = H$, so $H$ and $A$ are similar.
-This means that finding the eigenvalues and vectors of $H$ will give us the eigenvalues and vectors of $A$.
-However, since $H$ is upper Hessenburg, then solving the eigenproblem is easier than for a general matrix.
+The Arnoldi algorithm gives the relationship,
+$$
+AQ_k = Q_k H_k + h_{k+1,k} q_{k+1} \xi_k^T
+$$
+where $Q_k = [q_1,q_2,\ldots,q_k]$ is the $n\times k$ matrix whose columns are $\{q_1,q_2,\ldots,q_k\}$, $H_k$ is a $k\times k$ [*Upper Hessenburg*](https://en.wikipedia.org/wiki/Hessenberg_matrix) matrix, and $\xi_k = [0,\ldots,0,1]^T$ is the $k$-th unit vector.
+
+
+
+### Ritz vectors
+
+For instance, suppose that $H_nv = \lambda v$. Then,
+$$
+A(Q_nv) = (Q_nH_nQ_n^{\mathsf{H}})(Q_nv) = Q_nH_nv = Q_n(\lambda v) = \lambda (Q_nv)
+$$
+
+This proves that if $v$ is an eigenvector of $H_n$ with eigenvalue $\lambda$, then $Q_nv$ is an eigenvector of $A$ with eigenvalue $\lambda$.
+
+
+We have just seen that if $Q_n$ is unitary, then if $v$ is an eigenvector of $H_n$ then $Q_nv$ is an eigenvalue of $A$ when $v$. 
+
+When $k<n$ then $Q_k$ although $Q_k$ has orthonormal columns, it is not square. Even so, we can use $Q_kv$ as an "approximate" eigenvector of $Q$.
+
+More specifically, if $v$ is an eigenvector of $H_k$ with eigenvalue $\lambda$, then $Q_kv$ is called a *Ritz vector*, and $\lambda$ is called a *Ritz value*. 
 
 
 ## The Lancozs algorithm
-When $A$ is Hermetian, then $Q^*AQ = H$ is also Hermetian.
-Since $H$ is upper Hessenburg and Hermitian, it must be tridiagonal! This means that the $q_j$ satisfy a three term recurrence,
+When $A$ is Hermitian, then $Q_k^{\mathsf{H}}AQ_k = H_k$ is also Hermetian.
+This means that $H_k$ is upper Hessenburg and Hermitian, so it must be tridiagonal! 
+Thus, the $q_j$ satisfy a three term recurrence,
 $$
 Aq_j = \beta_{j-1} q_{j-1} + \alpha_j q_j + \beta_j q_{j+1}
 $$
-where $\alpha_1,\ldots,\alpha_n$ are the diagonal entries of $T$ and $\beta_1,\ldots,\beta_{n-1}$ are the off diagonal entries of $T$.
-The Lanczos algorithm is an efficient way of computing this decomposition.
+which we can write in matrix form as,
+$$
+AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^T
+$$
+
+
+The Lanczos algorithm is an efficient way of computing this decomposition which takes advantage of the three term recurrence.
 
 I will present a brief derivation for the method motivated by the three term recurrence above.
 Since we know that the $q_j$ satisfy the three term recurrence, we would like the method to store as few of the $q_j$ as possible (i.e. take advantage of the three term recurrence as opposed to the Arnoldi algorithm).
@@ -72,7 +100,7 @@ q_{j+1} = \tilde{q}_{j+1} / \beta_j
 
 Note that this is not the most "numerically stable" form of the algorithm, and care must be taken when implementing the Lanczos method in practice.
 We can improve stability slightly by using $Aq_j - \beta_{j-1} q_{j-1}$ instead of $Aq_j$ when finding a vector in the next Krylov subspace.
-This allows us to ensure that we have orthogonalized $q_{j+1}$ against $q_j$ and $q_{j-1}$ rather than just $q_j$.
+This allows us to explicitly orthogonalize $q_{j+1}$ against both $q_j$ and $q_{j-1}$ rather than just $q_j$.
 It also ensures that the tridiagonal matrix produces is symmetric in finite precision (since $\langle Aq_j,q_{j-1}\rangle$ may not be equal to $\beta_j$ in finite precision).
 
 **Algorithm.** (Lanczos)

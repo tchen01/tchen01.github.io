@@ -1,5 +1,5 @@
 ---
-title: '\sffamily \textbf{An Introduction to conjugate gradient}'
+title: '\sffamily \textbf{The Remez Algorithm}'
 author: '[Tyler Chen](https://chen.pw)'
 mainfont: Georgia
 sansfont: Lato

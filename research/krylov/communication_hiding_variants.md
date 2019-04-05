@@ -3,8 +3,8 @@
 
 So far, all we have considered are error bounds in terms of the number of iterations. 
 However, in practice, what we really care about is how long a computation takes.
-A natural way to try and speed up an algorithm is through parallelization, and many variants of the conjugate gradient algorithm have been introduced to try and take advantage of high performance computers.
-However, while these variants are all equivalent in exact arithmetic, they perform operations in different orders.
+A natural way to try and speed up an algorithm is through parallelization, and many variants of the conjugate gradient algorithm have been introduced to try to reduce the runtime per iteration.
+However, while these variants are all equivalent in exact arithmetic, they perform operations in different orders meaning they are not equivalent in finite precision arithmetic.
 Based on our discussion about conjugate gradient in [finite precision](./finite_precision_cg.html), it should be too big of a surprise that the variants all behave differently.
 
 ![Convergence of different variants in finite precision. Note that the computation would finish in at most 112 steps in exact arithmetic.](./convergence.svg)
@@ -15,17 +15,17 @@ Unfortunately, on high performance machines, conjugate gradient often perform or
 
 The reason for this is *communication*. 
 
-Traditionally, analysis of algorithms has been done in terms of counting the number of operations computed, and the amount of storage used. However, an important factor in the real world performance is the time it takes to move data around. 
-Even on a single core computer, the cost of moving a big matrix off the hard drive into memory can be much more significant than the floating point operations done.
-There is naturally a lot of interest in reducing the communication costs of various algorithms, and conjugate gradient certainly has a lot of room for improvement.
+Traditionally, analysis of algorithm runtime has been done in terms the number of operations computed, and the amount of storage used. 
+However, an important factor in the real world performance is the time it takes to move data around. 
+Even on a single core computer, the cost of moving a big matrix from the hard drive to memory can be significant compared to the cost of the floating point operations done.
+Because of this, there is a lot of interest in reducing the communication costs of various algorithms, and conjugate gradient certainly has a lot of room for improvement.
 
 Parallel computers work by having different processors work on different parts of a computation at the same time.
-Naturally, many things can be sped up this way, but like in our example, doubling the computing power doesn't necessarily mean doubling the speed of the computation.
+Naturally, many algorithms can be sped up this way, but the speedups are not necessarily proportional to the increase in computation power.
 In many numerical algorithms, "global communication" is one of the main causes of latency.
 Loosely speaking, global communication means that all processors working on a larger task must finish with their subtask and report on the result before the computation can proceed.
 This means that even if we can distribute a computation to many processors, the time it takes to move the data required for those computations will eventually limit how effective adding more processors is. 
-So, a 1000x increase in processor power won't necessarily cut the computation time to 1/1000.
-
+So, a 1000x increase in processing power won't necessarily cut the computation time to 1/1000th of the original time.
 
 ## Communication bottlenecks in CG
 
@@ -54,12 +54,13 @@ A matrix vector product requires $\mathcal{O}(\text{nnz})$ (number of nonzero) f
 For many applications of CG, the number of nonzero entries is something like $kn$, where $k$ relatively small. 
 In these cases, the cost of floating point arithmetic for a matrix vector product and an inner product is roughly the same. 
 On the other hand, the communication costs for the inner products can be much higher.
+**explain more**
 
 There are multiply ways to address the communication bottleneck in CG. The two main approaches are "hiding" communication, and "avoiding" communication.
 Communication hiding algorithm such as as pipelined CG introduce auxiliary vectors so that the inner products can be computed at the same time, allowing the communication to be overlapped with other computations.
 On the other hand, communication avoiding algorithms such as $s$-step CG compute iterations in blocks of size $s$, reducing the synchronization costs by a factor around $s$.
 
-In this piece I will be talking about some common communicating hiding methods.
+This piece focuses on some common communicating hiding methods.
 If you're interested in communication avoiding methods, or want more information about communication hiding methods, Erin Carson has very useful [slides](https://math.nyu.edu/~erinc/ppt/Carson_PP18.pdf).
 
 
@@ -67,7 +68,7 @@ If you're interested in communication avoiding methods, or want more information
 
 We would like to be able to reduce the number of points in the algorithm a global communication is required.
 However, in the current form, we need to wait for each of the previous computations before we are able to do a matrix vector product or an inner product.
-This means there are two global communications per iteration.
+This means there are two global communications per iteration and that none of the heavy computations can be overlapped.
 
 Using our recurrences we can write,
 $$
@@ -87,8 +88,7 @@ We now note that,
 \\&= \langle r_k, w_k \rangle + b_k \langle p_{k-1}, w_k \rangle + b_k \langle r_k, s_{k-1} \rangle + b_k^2 \langle p_{k-1}, s_{k-1} \rangle
 \end{align*}
 
-
-Now, since $w_k = Ar_k$ and $s_{k-1} = Ap_{k-1}$, then $\langle p_{k-1},w_k \rangle = \langle r_{k}, s_{k-1} \rangle$. 
+Moreover, since $w_k = Ar_k$ and $s_{k-1} = Ap_{k-1}$, then $\langle p_{k-1},w_k \rangle = \langle r_{k}, s_{k-1} \rangle$. 
 Thus,
 $$
 \mu_k = \langle r_k,w_k\rangle + 2 b_k \langle r_k,s_k \rangle + b_k^2 \mu_{k-1}
@@ -98,9 +98,8 @@ Notice now that $\langle r_k,w_k \rangle$, and $\langle r_k,s_k \rangle$ can bot
 Thus, using this coefficient formula there is only a single global synchronization per iteration.
 However, this came at the cost of having to compute an additional inner product. 
 
-
-
-Now, using our recurrence for $r_k$,
+It turns out that we can eliminate one of the inner products.
+Indeed, using our recurrence for $r_k$,
 $$
 \langle r_k, s_{k-1} \rangle
 = \langle p_k - b_k p_{k-1}, s_{k-1} \rangle
@@ -151,7 +150,7 @@ u_{k} = As_k = A(w_k + b_k s_{k-1})
 $$
 
 That's it. For convenience we define $t_k = Aw_k$. 
-Then, the matrix vector product $Aw_k$ can occur as soon as we have computed $w_k$.
+Then, the matrix vector product $Aw_k$ can occur as soon as we have computed $w_k$ and can be overlapped with both inner products.
 This variant is known as either Ghysels and Vanroose conjugate gradient or pipelined conjugate gradient.
 
 **Algorithm.** (Ghysels and Vanroose (pipelined) conjugate gradient)
@@ -173,10 +172,7 @@ This variant is known as either Ghysels and Vanroose conjugate gradient or pipel
 \\[-.4em]&\textbf{end procedure}
 \end{align*}
 
-Recently, [cite ppl] have developed a "deep pipelined" conjugate gradient, which essentially introduces even more auxiliary vectors to allow for more overlapping. 
-
-As mentioned above, 
-
+Recently, Cornelis, Cools, and Van Roose have developed a ["deep pipelined"](https://arxiv.org/pdf/1801.04728.pdf) conjugate gradient, which essentially introduces even more auxiliary vectors to allow for more overlapping.
 
 <!--start_pdf_comment-->
 Next: [Current research on CG and related Krylov subspace methods](./current_research.html)

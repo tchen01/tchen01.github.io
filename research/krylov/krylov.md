@@ -14,51 +14,57 @@ header-includes: |
 
 ## Motivation
 Solving a linear system of equations $Ax=b$ is one of the most important tasks in modern science.
-A huge number of techniques and algorithms for dealing with more complex equations end up using linear approximations.
-As a result, applications such as weather forecasting, medical imaging, and training neural nets all require repeatedly solving linear systems to achieve the real world impact that we often take for granted.
+A huge number of techniques and algorithms for dealing with more complex equations end up, in one way or another, requiring repeatedly solving linear systems.
+As a result, applications such as weather forecasting, medical imaging, and training neural nets all rely on methods for efficiently solving linear systems to achieve the real world impact that we often take for granted.
 When $A$ is symmetric and positive definite (if you don't remember what that means, don't worry, I have a refresher below), the conjugate gradient algorithm is a very popular choice for methods of solving $Ax=b$.
 
 This popularity of the conjugate gradient algorithm (CG) is due to a couple factors. First, like most Krylov subspace methods, CG is *matrix free*. 
-This means that you don't ever need to explicitly represent $A$ as a matrix, you only need to be able to compute the product $v\mapsto Av$ for a given input vector $v$.
-For very large problems this means a big reduction in storage, and if $A$ has some structure (eg, $A$ comes from a DFT, difference/integral operator, is very sparse, etc.), it allows the algorithm to take advantage of fast matrix vector products.
-Second, CG only requires $\mathcal{O}(n)$ additional storage to run (as compared to $\mathcal{O}(n^2)$ that many other algorithms require). This can be very useful when the size of the system is very large as it reduces the communication costs of moving data in and out of memory/caches. 
+This means that you don't ever need to explicitly represent $A$ as a matrix, you only need to have some way of computing the product $v\mapsto Av$, for a given input vector $v$.
+For very large problems, this means a big reduction in storage, and if $A$ has some structure (eg. $A$ comes from a DFT, difference/integral operator, is very sparse, etc.), it allows the algorithm to take advantage of fast matrix vector products.
+Second, CG only requires $\mathcal{O}(n)$ storage to run, as compared to $\mathcal{O}(n^2)$ that many other algorithms require (we use $n$ to denote the size of $A$, i.e. $A$ has shape $n\times n$). 
+When the size of $A$ is very large, this becomes increasingly important.
 
-While the conjugate gradient algorithm has many nice theoretical properties, its behavior in finite precision can be *extremely* different than the behavior predicted by assuming exact arithmetic. Understanding what leads to these vastly different behaviors has been an active area of research since the 60s and 70s. My intention is to provide an overview of the conjugate gradient algorithm in exact precision, then introduce some of what is know about it in finite precision, and finally, present some modern research interests into the algorithm.
+While the conjugate gradient algorithm has many nice theoretical properties, its behavior in finite precision can be *extremely* different than the behavior predicted by assuming exact arithmetic.
+Understanding what leads to these vastly different behaviors has been an active area of research since the introduction of the algorithm in the 50s.
+The intent of this document is to provide an overview of the conjugate gradient algorithm in exact precision, then introduce some of what is know about it in finite precision, and finally, present some modern research interests into the algorithm.
 
 ## Measuring the accuracy of solutions
-Perhaps the first question that should be asked about any numerical method is , *does it solve the intended problem?* In the case of solving linear systems, this means asking *does the output approximate the true solution?* 
+Perhaps the first question that should be asked about any numerical method is, *does it solve the intended problem?* In the case of solving linear systems, this means asking *does the output approximate the true solution?* 
 If not, then there isn't much point using the method. 
 
 Let's quickly introduce the idea of the *error* and the *residual*.
 These quantities are both useful (in different ways) for measuring how close the approximate solution $\tilde{x}$ is to the true solution $x^* = A^{-1}b$.
 
-The *error* is simply the difference between $x$ and $\tilde{x}$.
-Taking the norm of this quantity gives us a scalar value which measures the distance between $x$ and $\tilde{x}$.
+The *error* is simply the difference between $x^*$ and $\tilde{x}$.
+Taking the norm of this quantity gives us a scalar value which measures the distance between $x^*$ and $\tilde{x}$.
 In some sense, this is perhaps the most natural way of measuring how close our approximate solution is to the true solution.
-In fact, when we say the sequence $x_0,x_1,x_2,\ldots$ converges to $x_*$, we mean that the scalar sequence,$\|x^*-x_0\|,\|x^*-x_1\|,\|x^*-x_2\|,\ldots$ converges to zero.
-Thus, solving $Ax=b$ could be written as minimizing $\|x - x^*\| = \|x-A^{-1}b\|$.
+In fact, when we say that a sequence $x_0,x_1,x_2,\ldots$ of vectors converges to $x_*$, we mean that the sequence of scalars, $\|x^*-x_0\|,\|x^*-x_1\|,\|x^*-x_2\|,\ldots$ converges to zero.
+Thus, finding $x$ which solves $Ax=b$ could be written as finding $x$ which minimizes $\|x - x^*\| = \|x-A^{-1}b\|$.
 
 Of course, since we are trying to compute $x^*$, it doesn't make sense for an algorithm to explicitly depend on $x^*$.
 The *residual* of $\tilde{x}$ is defined as $b-A\tilde{x}$.
-Again, $\|b-Ax^*\| = 0$, and since $x^*$ is the only point where this is true, minimizing $\|b-Ax\|$ gives the true solution.
-The advantage is that we can easily compute the residual $b-A\tilde{x}$ once we have our numerical solution $\tilde{x}$, while there is not necessarily a good way to compute the error $x^*-x$.
+Again, $\|b-Ax^*\| = 0$, and since $x^*$ is the only point where this is true, finding $x$ to minimize $\|b-Ax\|$ gives the true solution.
+The advantage is that we can easily compute the residual $b-A\tilde{x}$ once we have our numerical solution $\tilde{x}$, while there is not necessarily a good way to compute the error $x^*-\tilde{x}$.
+This means that the residual gives us a way of inspecting convergence of a method.
 
 ## Krylov subspaces
 
 From the previous section, we know that minimizing $\|b-Ax\|$ will give the solution $x^*$.
 Unfortunately, this problem is "just as hard" as solving $Ax=b$.
 
-We would like to relax this problem in some way to make it "easier".
-One way to do this is to restrict the values that $x$ can be. For instance, we can enforce that $x$ comes from a smaller set of values which should make the problem of minimizing $\|b-Ax\|$ simpler (since there are less possibilities for $x$).
-For instance, if we say that $x = cy$ for some fixed vector $y$, then this is a scalar minimization problem.
+We would like to find a related "easier" problem.
+One way to do this is to restrict the choice of values which $x$ can take. 
+For instance, if we enforce that $x$ must be come from a smaller set of values, then the problem of minimizing $\|b-Ax\|$ is simpler (since there are less possibilities for $x$).
+As an extreme example, if we say that $x = cy$ for some fixed vector $y$, then this is a scalar minimization problem.
 Of course, by restricting what values we choose for $x$ it is quite likely that we will not longer be able to exactly solve $Ax=b$.
 
-It then makes sense to try to balance the difficulty of the problems we have to solve at each step with the accuracy of the solutions they give.
-One way to do this is to start with an easy problem and get a very approximate solution, and then gradually increase the difficulty of the problem while refining the solution.
-If we do it in the right way, it's plausible that "increasing the difficulty" of the problem we are solving won't lead to extra work at each step, since we might be able to take advantage of having an approximate solution from a previous step.
+One thing we could try to do is balance the difficulty of the problems we have to solve at each step with the accuracy of the solutions they give.
+If we can obtain a very approximate solution by solving an easy problem, and then improve the solution by solving successively more difficult problems.
+If we do it in the right way, it seems plausible that "increasing the difficulty" of the problem we are solving won't lead to extra work at each step, if we are be able to take advantage of having an approximate solution from a previous step.
 
-Suppose we have a sequence of subspaces $V_0\subset V_1\subset V_2\subset \cdots V_m$.
-Then we can construct a sequence of iterates, $x_0\in V_0, x_1\in V_1,\ldots$.
+We can formalize this idea a little bit.
+Suppose we have a sequence of subspaces $V_0\subset V_1\subset V_2\subset \cdots$.
+Then we can construct a sequence of iterates, $x_0\in V_0, x_1\in V_1,x_2\in V_2, \ldots$.
 If, at each step, we ensure that $x_k$ minimizes $\|b-Ax\|$ over $V_k$, then the norm of the residuals will decrease (because $V_k \subset V_{k+1}$). 
 
 Ideally this sequences of subspaces would:
@@ -67,16 +73,17 @@ Ideally this sequences of subspaces would:
 1. be easy to optimize over (given the previous work done)
 1. eventually contain the true solution
 
-We now formally introduce Krylov subspaces, and show that they can satisfy these properties.
+We now formally introduce Krylov subspaces, and hint at the fact that they can satisfy these properties.
 
 The $k$-th Krylov subspace generated by a square matrix $A$ and a vector $v$ is defined to be,
 $$
 \mathcal{K}_k(A,v) = \operatorname{span}\{v,Av,\ldots,A^{k-1}v \}
 $$
 
-First, these subspaces are relatively easy to construct because we can get a basis by repeatedly applying $A$ to $v$.
+First, these subspaces are relatively easy to construct because by definition we can get a spanning set by repeatedly applying $A$ to $v$.
 In fact, we can fairly easily construct an orthonormal basis for these spaces with the [Arnoldi/Lanczos](./arnoldi_lanczos.html) algorithms.
 
+<!-- expand -->
 Therefore, if we can find a quantity which can be optimized over each direction of an orthonormal basis independently, then optimizing over these expanding subspaces will be easy because we only need to optimize in a single new direction at each step.
 
 We now show that $\mathcal{K}_k(A,b)$ will eventually contain our solution by the time $k=n$.
@@ -99,14 +106,15 @@ $$
 A^{-1} = -(c_1/c_0) I - (c_2/c_0) A - \cdots - (1/c_0) A^{n-1}
 $$
 
-This says that $A^{-1}$ can be written as a polynomial in $A$! (I think the coolest facts from linear algebra.) In particular,  
+This tells us that $A^{-1}$ can be written as a polynomial in $A$! (I think this is one of the coolest facts from linear algebra.) In particular,  
 $$
 x^* = A^{-1}b = -(c_1/c_0) b - (c_2/c_0) Ab - \cdots - (1/c_0) A^{n-1}b
 $$
 
 That is, the solution $x^*$ to the system $Ax = b$ is a linear combination of $b, Ab, A^2b, \ldots, A^{n-1}b$ (i.e. $x^*\in\mathcal{K}_n(A,b)$).
 This observation is the motivation behind Krylov subspace methods.
-I might be useful to think of Krylov subspace methods as building low degree polynomial approximations to $A^{-1}b$ using powers of $A$ times $b$ (in fact Krylov subspace methods can be used to approximate $f(A)b$ where $f$ is any [function](./current_research.html)).
+
+In fact, one way of viewing many Krylov subspace methods is as building low degree polynomial approximations to $A^{-1}b$ using powers of $A$ times $b$ (in fact Krylov subspace methods can be used to approximate $f(A)b$ where $f$ is any [function](./current_research.html)).
 
 
 <!--start_pdf_comment-->
@@ -115,53 +123,81 @@ I might be useful to think of Krylov subspace methods as building low degree pol
 # The Arnoldi and Lanczos algorithms
 
 The Arnoldi and Lanczos algorithms for computing an orthonormal basis for Krylov subspaces are, in one way or another, at the core of all Krylov subspace methods.
-Essentially, these algorithms are the Gram-Schmidt procedure applied to the vectors $v,Av,A^2v,A^3v,\ldots$ in a clever way.
+Essentially, these algorithms are the Gram-Schmidt procedure applied to the vectors $\{v,Av,A^2v,A^3v,\ldots\}$ in clever ways.
+The Arnoldi algorithm works for any matrix, and the Lanczos algorithm works for Hermitian matrices.
 
 ## The Arnoldi algorithm
 
-Recall that given a set of vectors $v_1,v_2,\ldots, v_k$ the Gram-Schmidt procedure computes an orthonormal basis $q_1,q_2,\ldots,q_k$ so that for all $j\leq k$,
+Recall that given a set of vectors $\{v_1,v_2,\ldots, v_k\}$ the Gram-Schmidt procedure computes an orthonormal basis $\{q_1,q_2,\ldots,q_k\}$ so that for all $j\leq k$,
 $$
 \operatorname{span}\{v_1,\ldots,v_j\} = \operatorname{span}\{q_1,\ldots,q_j\}
 $$
 
-The trick behind the Arnoldi algorithm is the fact that you do not need to construct the whole set $v,Av,A^2v,\ldots$ ahead of time (in practice, if you tried to do this, it wouldn't really work because eventually $A^jv$ and $A^{j+1}v$ will be nearly linearly dependent since this is essentially the [power method](https://en.wikipedia.org/wiki/Power_iteration)).
-Instead, you can compute $Aq_{k}$ in place of $A^{k+1}v$ once you have found an orthonormal basis $q_1,q_2,\ldots,q_k$ spanning $v,Av,\ldots, A^{k-1} v$. 
+In short, at step $j$, $v_{j+1}$ is orthogonalized against each of $\{q_1,q_2,\ldots, q_j\}$.
 
-If we assume that $\operatorname{span}\{v,Av,\ldots A^{k-1} v\}= \operatorname{span}\{q_1,\ldots, q_k\}$ then $q_{k+1}$ can be written as a linear combination of $v,Av,\ldots, A^k v$.
-Therefore, $Aq_k$ will be a linear combination of $Av,A^2v,\ldots,A^k v$.
-In particular, this means that $\operatorname{span}\{q_1,\ldots,q_k,Aq_k\} = \operatorname{span}\{v,Av,\ldots,A^k v\}$.
-Therefore, we will get exactly the same set of vectors by applying Gram-Schmidt to $\{v,Av,\ldots,A^kv\}$ as if we compute $Aq_k$ once we have computing $q_k$.
+If we tried to compute the set $\{v,Av,A^2v,\ldots\}$, it would become very close to linearly dependent (and with rounding errors essentially numerically linearly dependent).
+This is because this basis is essentially the [power method](https://en.wikipedia.org/wiki/Power_iteration).
+The trick behind the Arnoldi algorithm is the fact that you do not need to construct the whole set $\{v,Av,A^2v,\ldots\}$ ahead of time.
+This allows us to come up with a basis for $\{v,Av,A^2v,\ldots\}$ in a more "stable" way.
 
-Since we obtain $q_{k+1}$ by orthogonalizing $Aq_k$ against $\{q_1,q_2,\ldots,q_k\}$ then $q_{k+1}$ is in the span of these vectors, there exist some $c_i$ so that,
+Suppose at the beginning of step $k$ that we have already computed a basis $\{q_1,q_2,\ldots,q_{k-1}\}$ which has the same span as $\{v,Av,\ldots, A^{k-2}v\}$. 
+If we were doing Gram-Schmidt, then we would obtain $q_k$ by orthogonalizing $A^{k-1}v$ against each of the vectors in the basis $\{q_1,q_2, \ldots, q_{k-1}\}$.
+In the Arnoldi algorithm we instead orthogonalize $Aq_{k-1}$ against $\{q_1,q_2,\ldots, q_{k-1}\}$.
+
+Let's understand why these are the same. First, since the span of $\{q_1,q_2,\ldots, q_{k-1}\}$ is equal to the span of $\{v,Av,\ldots, A^{k-2}v\}$, then $q_{k-1}$ can be written as a linear combination of $\{v,Av,\ldots, A^{k-2}v\}$. 
+That is, there exists coefficients $c_i$ such that,
 $$
-q_{k+1} = c_1 q_1 + c_2 q_2 + \cdots + c_k q_k + c_{k+1}Aq_k
+q_{k-1} = c_1v + c_2Av + \cdots + c_{k-1} A^{k-2}v
 $$
 
-We can rearrange this (using new scalars $d_i$) to,
+Therefore, multiplying by $A$ we have,
 $$
-Aq_k = d_1q_1 + d_2q_2 + \cdots + d_{k+1} q_{k+1}
+Aq_{k-1} = c_1Av + c_2A^2v + \cdots c_{k-1}A^{k-1}v
 $$
 
-This can be written in matrix form as,
-$$
-AQ = QH
-$$
-where $H$ is "upper Hessenburg" (like upper triangular but the first subdiagonal also has nonzero entries).
-While I'm not going to derive them here, since the entries of $H$ come directly from the Arnoldi algorithm (just like how the entries of $R$ in a QR factorization can be obtained from Gram Schmidt) their explicit expressions can be easily written down.
+Now, since each of $\{Av,A^2v,\ldots, A^{k-2}v\}$ are in the span of $\{q_1,q_2,\ldots, q_{k-1}\}$, each of these components will disappear when we orthogonalize $Aq_{k-1}$ against $\{q_1,q_2,\ldots,q_{k-1}\}$. 
+This gives a vector in the same direction as the vector we get by orthogonalizing $A^{k-1}v$ against $\{q_1,q_2,\ldots,q_{k-1}\}$.
+Since we get $q_k$ by normalizing the resulting vector, using $Aq_{k-1}$ will give us the same value for $q_k$ as using $A^{k-1}v$.
 
-Since $Q$ is orthogonal then, $Q^*AQ = H$, so $H$ and $A$ are similar.
-This means that finding the eigenvalues and vectors of $H$ will give us the eigenvalues and vectors of $A$.
-However, since $H$ is upper Hessenburg, then solving the eigenproblem is easier than for a general matrix.
+The Arnoldi algorithm gives the relationship,
+$$
+AQ_k = Q_k H_k + h_{k+1,k} q_{k+1} \xi_k^T
+$$
+where $Q_k = [q_1,q_2,\ldots,q_k]$ is the $n\times k$ matrix whose columns are $\{q_1,q_2,\ldots,q_k\}$, $H_k$ is a $k\times k$ [*Upper Hessenburg*](https://en.wikipedia.org/wiki/Hessenberg_matrix) matrix, and $\xi_k = [0,\ldots,0,1]^T$ is the $k$-th unit vector.
+
+
+
+### Ritz vectors
+
+For instance, suppose that $H_nv = \lambda v$. Then,
+$$
+A(Q_nv) = (Q_nH_nQ_n^{\mathsf{H}})(Q_nv) = Q_nH_nv = Q_n(\lambda v) = \lambda (Q_nv)
+$$
+
+This proves that if $v$ is an eigenvector of $H_n$ with eigenvalue $\lambda$, then $Q_nv$ is an eigenvector of $A$ with eigenvalue $\lambda$.
+
+
+We have just seen that if $Q_n$ is unitary, then if $v$ is an eigenvector of $H_n$ then $Q_nv$ is an eigenvalue of $A$ when $v$. 
+
+When $k<n$ then $Q_k$ although $Q_k$ has orthonormal columns, it is not square. Even so, we can use $Q_kv$ as an "approximate" eigenvector of $Q$.
+
+More specifically, if $v$ is an eigenvector of $H_k$ with eigenvalue $\lambda$, then $Q_kv$ is called a *Ritz vector*, and $\lambda$ is called a *Ritz value*. 
 
 
 ## The Lancozs algorithm
-When $A$ is Hermetian, then $Q^*AQ = H$ is also Hermetian.
-Since $H$ is upper Hessenburg and Hermitian, it must be tridiagonal! This means that the $q_j$ satisfy a three term recurrence,
+When $A$ is Hermitian, then $Q_k^{\mathsf{H}}AQ_k = H_k$ is also Hermetian.
+This means that $H_k$ is upper Hessenburg and Hermitian, so it must be tridiagonal! 
+Thus, the $q_j$ satisfy a three term recurrence,
 $$
 Aq_j = \beta_{j-1} q_{j-1} + \alpha_j q_j + \beta_j q_{j+1}
 $$
-where $\alpha_1,\ldots,\alpha_n$ are the diagonal entries of $T$ and $\beta_1,\ldots,\beta_{n-1}$ are the off diagonal entries of $T$.
-The Lanczos algorithm is an efficient way of computing this decomposition.
+which we can write in matrix form as,
+$$
+AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^T
+$$
+
+
+The Lanczos algorithm is an efficient way of computing this decomposition which takes advantage of the three term recurrence.
 
 I will present a brief derivation for the method motivated by the three term recurrence above.
 Since we know that the $q_j$ satisfy the three term recurrence, we would like the method to store as few of the $q_j$ as possible (i.e. take advantage of the three term recurrence as opposed to the Arnoldi algorithm).
@@ -185,7 +221,7 @@ q_{j+1} = \tilde{q}_{j+1} / \beta_j
 
 Note that this is not the most "numerically stable" form of the algorithm, and care must be taken when implementing the Lanczos method in practice.
 We can improve stability slightly by using $Aq_j - \beta_{j-1} q_{j-1}$ instead of $Aq_j$ when finding a vector in the next Krylov subspace.
-This allows us to ensure that we have orthogonalized $q_{j+1}$ against $q_j$ and $q_{j-1}$ rather than just $q_j$.
+This allows us to explicitly orthogonalize $q_{j+1}$ against both $q_j$ and $q_{j-1}$ rather than just $q_j$.
 It also ensures that the tridiagonal matrix produces is symmetric in finite precision (since $\langle Aq_j,q_{j-1}\rangle$ may not be equal to $\beta_j$ in finite precision).
 
 **Algorithm.** (Lanczos)
@@ -229,33 +265,16 @@ Here we assume that we only want to output the diagonals of the tridiagonal matr
 # A Derivation of the Conjugate Gradient Algorithm
 
 There are many ways to view/derive the conjugate gradient algorithm. 
-I'll derive the algorithm by directly minimizing by minimizing the $A$-norm of the error over successive Krylov subspaces, $\mathcal{K}_k(A,b)$, which I think is the most natural way to view the algorithm.
-My hope is that the derivation here provides an intuitive introduction to CG.
+I'll derive the algorithm by directly minimizing by minimizing the $A$-norm of the error over successive Krylov subspaces, $\mathcal{K}_k(A,b)$.
+To me this is the most natural way of viewing the algorithm.
+My hope is that the derivation here provides some motivation for where the algorithm comes from.
 Of course, what I think is a good way to present the topic won't match up exactly with every reader's own preference, so I highly recommend looking through some other resources as well.
 To me, this is of those topics where you have to go through the explanations a few times before you start to understand what is going on. 
-
-## Linear algebra review
-Before we get into the details, let's define some notation and review a few key concepts from linear algebra which we will rely on when deriving the CG algorithm.
-
-- Any inner product $\langle \cdot,\cdot \rangle$ induces a norm $\|\cdot\|$ defined by $\|x\|^2 = \langle x,x\rangle$.
-- For the rest of this piece we will denote the standard (Euclidian) inner product by $\langle \cdot,\cdot\rangle$ and the (Euclidian) norm by $\|\cdot\|$ or $\|\cdot\|_2$.
-- A matrix $A$ is positive definite if $\langle x, Ax\rangle > 0$ for all $x$.
-- A symmetric positive definite matrix $A$ naturally induces the inner product $\langle \cdot,\cdot \rangle_A$ defined by $\langle x,y\rangle_A = \langle x,Ay\rangle = \langle Ax,y \rangle$.
-The associated norm, called the $A$-norm will be denoted by $\|langle \cdot \|_A$ and is defined by,
-$$
-\|x\|_A^2 = \langle x,x \rangle_A = \langle x,Ax \rangle = \| A^{1/2}x \|
-$$
-- The point in a subspace $V$ nearest to a point $x$ is the projection of $x$ onto $V$ (where projection is done with the inner product and distance is measured with the induced norm).
-Given an orthonormal basis for $V$, this amounts to summing the projection of $x$ onto each of the basis vectors.
-- The $k$-th Krylov subspace generated by $A$ and $b$ is,
-$$
-\mathcal{K}_k(A,b) = \operatorname{span}\{b,Ab,\ldots,A^{k-1}b\}
-$$
 
 
 ## Minimizing the error
 Now that we have that out of the way, let's begin our derivation.
-As stated above, we will minimize the $A$-norm of the error over successive Krylov subspaces generated by $A$ and $b$.
+As stated above, at each step we will minimize the $A$-norm of the error over successive Krylov subspaces generated by $A$ and $b$.
 That is to say $x_k$ will be the point so that,
 \begin{align*}
 \|e_k\|_A
@@ -267,8 +286,10 @@ x^* = A^{-1}b
 
 Since we are minimizing with respect to the $A$-norm, it will be useful to have an $A$-orthonormal basis for $\mathcal{K}_k(A,b)$.
 That is, a basis which is orthonormal in the $A$-inner product.
-For now, let's just say we have such a basis, $\{p_0,p_1,\ldots,p_{k-1}\}$, ahead of time.
-Since $x_k\in\mathcal{K}_k(A,b)$ we can write $x_k$ in terms of this basis,
+For now, let's just suppose we have such a basis, $\{p_0,p_1,\ldots,p_{k-1}\}$, ahead of time.
+Further on in the derivation we will explain a good way of coming up with this basis as we go.
+
+Since $x_k\in\mathcal{K}_k(A,b)$ we can write $x_k$ as a linear combination of these basis vectors,
 $$
 x_k = a_0 p_0 + a_1 p_1 + \cdots + a_{k-1} p_{k-1}
 $$
@@ -281,9 +302,11 @@ $$
 
 By definition, the coefficients for $x_k$ were chosen to minimize the $A$-norm of the error, $\|e_k\|_A$, over $\mathcal{K}_k(A,b)$.
 Therefore, $e_k$ has zero component in each of the directions $\{ p_0,p_1,\ldots,p_{k-1} \}$.
-In particular, that means that $a_jp_j$ cancels exactly with $e_0$ in the direction of $p_j$. 
+**explain why!!!!!!!!!!**
+In particular, that means that $a_jp_j$ cancels exactly with $e_0$ in the direction of $p_j$, for all $j$. 
 
-We now make an important observation. Namely, that the coefficients do not depend on $k$. Therefore, since the coefficients $a_0',a_1',\ldots,a_{k-2}'$ of $x_{k-1}$ were chosen in exactly the same way as the coefficients for $x_k$, then $a_0=a_0', a_1=a_1', \ldots, a_{k-2}=a_{k-2}'$.
+We now make the important observation that the coefficients depend only on $e_0$ and the $p_i$, but not on $k$. 
+This means that the coefficients $a_0',a_1',\ldots,a_{k-2}'$ of $x_{k-1}$ were chosen in exactly the same way as the coefficients for $x_k$, so $a_0=a_0', a_1=a_1', \ldots, a_{k-2}=a_{k-2}'$.
 
 We can then write,
 $$
@@ -297,68 +320,35 @@ $$
 Now that we have explicitly written $x_k$ in terms of an update to $x_{k-1}$ this is starting to look like an iterative method!
 
 Let's compute an explicit representation of the coefficient $a_{k-1}$.
-As previously noted, we have chosen $x_k$ to minimize $\|e_k\|_A$ over $\mathcal{K}_k(A,b)$.
-Therefore, the component of $e_k$ in each of the directions $p_0,p_1,\ldots,p_{k-1}$ must be zero.
-That is, $\langle e_k , p_j \rangle = 0$ for all $i=0,1,\ldots, k-1$. 
+As previously noted, since we have chosen $x_k$ to minimize $\|e_k\|_A$ over $\mathcal{K}_k(A,b)$, the component of $e_k$ in each of the directions $p_0,p_1,\ldots,p_{k-1}$ must be zero.
+That is, $\langle e_k , p_j \rangle = 0$ for all $i=0,1,\ldots, k-1$. Substituting our expression for $e_k$ we find,
 $$
 0 = \langle e_k , p_{k-1} \rangle_A
 = \langle e_{k-1}, p_{k-1} \rangle - a_{k-1} \langle p_{k-1} , p_{k-1} \rangle_A
 $$
 
-Thus
+Thus,
 $$
 a_{k-1} 
 = \frac{\langle e_{k-1}, p_{k-1} \rangle_A}{\langle p_{k-1},p_{k-1} \rangle_A} 
 $$
 
-This expression might look like a bit of a roadbock, since if we knew the initial error $e_0 = x^* - 0$ then we would know the solution to the original system! However, we have been working with the $A$-inner product so we can write,
+This expression might look like a bit of a roadbock, since if we knew the error $e_k = x^* - x_k$ then we would know how to obtain the solution from our guess! 
+However, we have been working with the $A$-inner product so we can write,
 $$
 Ae_{k-1} = A(x^* - x_{k-1}) = b - Ax_{k-1} = r_{k-1}
 $$
-Therefore, we can compute $a_{k-1}$ as,
+Therefore, $a_{k-1}$ can be written as,
 $$
 a_{k-1}
 = \frac{\langle r_{k-1}, p_{k-1} \rangle}{\langle p_{k-1},A p_{k-1} \rangle} 
 $$
 
-
-<!--
-Thus, minimizing the $A$-norm of the error, $\|e_k\|_A$ over $\mathcal{K}_k(A,b)$ amounts to projecting $e_k$ into the $A$-orthonormal basis $\{p_0, p_1, \ldots, p_{k-1} \}$.
-This means that $e_k$ has zero component in each of the directions $\{p_0,p_1,\ldots,p_{k-1}\}$.
-Since $\langle p_i,p_j\rangle_A = 0$ if $i\neq j$ we have,
-$$
-0 = \langle e_k,p_j \rangle_A 
-= \langle e_0, p_j \rangle_A - a_j \langle p_j ,p_j \rangle_A
-$$
-
-Therefore, $a_{j} = \langle e_0,p_j \rangle_A / \langle p_j,p_j \rangle_A$. 
-This might look like a bit of a roadbock because if we knew the initial error $e_0 = x^* - 0$ then we would have known the solution to the original system! This is where the fact that we have been working with the $A$-inner product comes in handy.
-Notice that,
-$$
-Ae_k = A(x^* - x_k) = b - Ax_k = r_k
-$$
-
-Thus, since $r_0 = b$, we can write $a_j = \langle b,p_j \rangle/\langle p_j,Ap_j\rangle$.
-
-This looks much more promising.
-Not only does it give us an easy way to compute $a_k$ at each step, but we can reuse all the coefficients we have computed at previous steps.
-In particular,
-$$
-x_k = x_{k-1} + a_{k-1}p_{k-1}
-$$
-and redoing our error computation,
-$$
-a_{k-1} = \frac{\langle r_{k-1}, p_{k-1} \rangle}{\langle p_{k-1}, Ap_{k-1} \rangle}
-$$
--->
-
 ## Finding the Search Directions
 At this point we are almost done.
-The last thing to do is understand how to update $p_k$.
-The first thing we might try would be to do something like Gram-Schmidt on $\{b,Ab,A^2b,\ldots \}$ to get the $p_k$, i.e.
-Arnoldi iteration in the inner product induced by $A$.
-This will work fine if you take some care with the exact implementation.
-However, since $A$ is symmetric we might hope to be able to use some short recurrence, which turns out to be the case.
+The last thing to do is understand how to construct the basis $\{p_0,p_1,\ldots,p_k\}$ as we go.
+Since $A$ is symmetric we know there is a three term recurrence which gives an orthonormal basis. However, the basis $\{p_0,p_1,\ldots,p_k\}$ is $A$-orthogonal.
+Even so, looking for a short recurrence sounds promising.
 
 Since $r_k = b-Ax_k$ and $x_k\in\mathcal{K}_k(A,b)$, then $r_k \in \mathcal{K}_{k+1}(A,b)$.
 Thus, we can obtain $p_k$ by $A$-orthogonalizing $r_k$ against $\{p_0,p_1,\ldots,p_{k-1}\}$. 
@@ -380,19 +370,20 @@ $$
 \langle r_k, p_j \rangle_A = 0
 $$
 
-That means that to obtain $p_k$ we really only need to $A$-orthogonalize $r_k$ against $p_{k-1}$! That is,
+That means that to obtain $p_k$ we really only need to $A$-orthogonalize $r_k$ against $p_{k-1}$ instead of all the previous $p_i$! That is,
 \begin{align*}
 p_k = r_k + b_k p_{k-1}
 ,&&
 b_k = - \frac{\langle r_k, p_{k-1} \rangle_A}{\langle p_{k-1}, p_{k-1} \rangle_A}
 \end{align*}
 
-The immediate consequence is that we do not need to save the entire basis $\{p_0,p_1,\ldots,p_{k-1}\}$, but instead can just keep $x_k$,$r_k$, and $p_{k-1}$. This is perhaps somewhat unsurprising give then we have seen that when $A$ is symmetric we have a three term [Lanczos recurrence](./arnoldi_lanczos.html#the-lanczos-algorithm). 
-
+The immediate consequence is that we do not need to save the entire basis $\{p_0,p_1,\ldots,p_{k-1}\}$, but instead can just keep $x_k$,$r_k$, and $p_{k-1}$.
+This is perhaps somewhat unsurprising give then we have seen that when $A$ is symmetric we have a three term [Lanczos recurrence](./arnoldi_lanczos.html#the-lanczos-algorithm). 
+In fact, it turns out that the relationship between CG and Lanczos is quite fundamental, and that [CG is essentially doing the Lanczos algorithm](./cg_lanczos.html).
 
 ## Putting it all together
 
-We are now essentially done! In practice, people generally use the following equivalent formulas for $a_{k-1}$ and $b_k$,
+We are now essentially done! In practice, people generally use the following equivalent (but more numerically stable) formulas for $a_{k-1}$ and $b_k$,
 \begin{align*}
 a_{k-1} = \frac{\langle r_{k-1},r_{k-1}\rangle}{\langle p_{k-1},Ap_{k-1}\rangle}
 ,&&
@@ -400,6 +391,7 @@ b_k = \frac{\langle r_k,r_k\rangle}{\langle r_{k-1},r_{k-1}\rangle}
 \end{align*}
 
 The first people to discover this algorithm Magnus Hestenes and Eduard Stiefel who independently developed it around 1952. As such, the standard implementation is attributed to them. 
+Pseudocode is presented below.
 
 **Algorithm.** (Hestenes and Stiefel conjugate gradient)
 \begin{align*}
@@ -448,12 +440,13 @@ Note that we use $f$ for the right hand side vector to avoid conflict with the c
 It's perhaps not so surprising that the conjugate gradient and Lanczos algorithms are closely related. After all, they are both Krylov subspace methods for symmetric matrices.
 
 More precisely, the Lanczos algorithm will produce an orthonormal basis for $\mathcal{K}_k(A,b)$, $k=0,1,\ldots$ if we initialize with initial vector $r_0 = b$. 
-We also know that the conjugate gradient residuals form an orthogonal basis for for these spaces, which means that the Lanczos vectors must be scaled versions of the conjugate gradient residuals.
+In our [derivation](./cg_derivation.html) of the conjugate gradient algorithm, we saw that the updated residuals form an orthogonal basis for for these spaces.
+This means the Lanczos vectors must be scaled versions of the conjugate gradient residuals.
 
-This relationship provides a way of transferring research about the Lanczos algorithm to be to CG, and visa versa.
+The relationship between the conjugate gradient and Lanczos algorithms provides a way of transferring results about one algorithm to the other. 
 In fact, the analysis of [finite precision CG](./finite_precision_cg.html) done by Greenbaum requires viewing CG in terms of the Lanczos recurrence.
 
-In case you're just looking for the punchline, the Lanczos coefficients and vectors can be obtained from the conjugate gradient algorithm by the following relationship,
+In case you're just looking for the punchline, the Lanczos vectors and coefficients can be obtained from the conjugate gradient algorithm by the following relationship,
 \begin{align*}
 q_{j+1} \equiv (-1)^j\dfrac{r_j}{\|r_j\|}
 ,&&
@@ -465,11 +458,11 @@ q_{j+1} \equiv (-1)^j\dfrac{r_j}{\|r_j\|}
 Note that the indices are offset, because the Lanczos algorithm is started with initial vector $q_1$.
 
 ## Derivation
-The derivation of the above result is so much difficult as it is tedious.
+The derivation of the above result is not particularly difficult although it is somewhat tedious.
 Before you read my derivation, I would highly recommend trying to derive it on your own, since it's a good chance to improve your familiarity with both algorithms.
 While I hope that my derivation is not too hard to follow, there are definitely other ways to arrive at the same result, and often to really start to understand something you have to work it out on your own.
 
-Recall that the three term Lanczos recurrence is,
+Recall that the Lanczos algorithm gives the three term recurrence,
 \begin{align*}
 Aq_j = \alpha_j q_j + \beta_{j-1}q_{j-1} + \beta_j q_{j+1}
 \end{align*}
@@ -487,12 +480,13 @@ r_j &= r_{j-1} - a_{j-1} A(r_{j-1} + b_{j-1} p_{j-2})
 \\&= r_{j-1} - a_{j-1} Ar_{j-1} - a_{j-1}b_{j-1} A p_{j-2}
 \end{align*}
 
-Now, rearranging our equation for $r_{j-1}$ we have that $Ap_{j-2} = (r_{j-2} - r_{j-1}) / a_{j-2}$. Therefore,
+Tearranging our equation for $r_{j-1}$ we have that $Ap_{j-2} = (r_{j-2} - r_{j-1}) / a_{j-2}$ so that,
 \begin{align*}
     r_j &= r_{j-1} - a_{j-1} Ar_{j-1} - \frac{a_{j-1}b_{j-1}}{a_{j-2}}(r_{j-2} - r_{j-1})
 \end{align*}
 
-At this point we've found a three term recurrence for $r_j$, which is a hopeful sign that we are on the right track. We know that the Lanczos vectors are orthonormal and that the recurrence is symmetric, so we'll keep massaging our CG relation to try to get it into that form.
+At this point we've found a three term recurrence for $r_j$, which is a hopeful sign that we are on the right track.
+We know that the Lanczos vectors are orthonormal and that the recurrence is symmetric, so we can keep massaging our CG relation to try to get it into that form.
 
 First, let's rearrange terms and regroup them so that the indices and matrix multiply match up with the Lanczos recurrence. This gives,
 \begin{align*}
@@ -505,13 +499,13 @@ Now, we normalize our residuals as $z_j = r_{j-1}/\|r_{j-1}\|$ so that $r_{j-1} 
     -\|r_{j-2}\|\frac{b_{j-1}}{a_{j-2}} z_{j} - \|r_j\| \frac{1}{a_{j-1}} z_{j+1}
 \end{align*}
 
-Thus, dividing through by $\|r_{j-1}\|$ we have,
+Dividing through by $\|r_{j-1}\|$ we have,
 \begin{align*}
     Az_{j} &= \left(\frac{1}{a_{j-1}}+\frac{b_{j-1}}{a_{j-2}}\right) z_{j} 
     - \frac{\|r_{j-2}\|}{\|r_{j-1}\|}\frac{b_{j-1}}{a_{j-2}} z_{j-1} - \frac{\|r_j\|}{\|r_{j-1}\|} \frac{1}{a_{j-1}} z_{j+1}
 \end{align*}
 
-This looks close, but the coefficients for the last two terms have the same formula in the Lanczos recurrence. However, recall that $b_{j} = \langle r_j,r_j \rangle / \langle r_{j-1},r_{j-1} \rangle = \|r_j\|^2 / \|r_{j-1}\|^2$. Thus,
+This looks close, but the coefficients for the last two terms should have the same formula. However, recall that $b_{j} = \langle r_j,r_j \rangle / \langle r_{j-1},r_{j-1} \rangle = \|r_j\|^2 / \|r_{j-1}\|^2$. Thus,
 \begin{align*}
     Az_{j} &= \left(\frac{1}{a_{j-1}}-\frac{b_{j-1}}{a_{j-2}}\right) z_{j} 
     - \frac{\|r_{j-1}\|}{\|r_{j-2}\|}\frac{1}{a_{j-2}} z_{j-1} - \frac{\|r_j\|}{\|r_{j-1}\|} \frac{1}{a_{j-1}} z_{j+1}
@@ -533,18 +527,10 @@ q_{j+1} \equiv (-1)^j\dfrac{r_j}{\|r_j\|}
 
 # Error Bounds for the Conjugate Gradient Algorithm
 
-This page is a work in progress.
-
 In our [derivation](./cg_derivation.html) of the conjugate gradient method, we minimized the $A$-norm of the error over sucessive Krylov subspaces.
 Ideally we would like to know how quickly this method converge.
 That is, how many iterations are needed to reach a specified level of accuracy.
 
-## Linear algebra review
-
-- The 2-norm of a symmetric positive definite matrix is the largest eigenvalue of the matrix
-- The 2-norm is submultiplicative.
-That is, $\|A\|\|B\|\leq \|AB\|$
-- A matrix $U$ is called unitary if $U^*U = UU^* = I$.
 
 ## Error bounds from minimax polynomials
 
@@ -579,16 +565,16 @@ $$
 = \|p(A)\| \|e_0\|_A
 $$
 
-Since $A$ is positive definite, it is diagonalizable as $U\Lambda U^*$ where $U$ is unitary and $\Lambda$ is the diagonal matrix of eigenvalues of $A$.
-Thus, since $U^*U = I$,
+Since $A$ is positive definite, it is diagonalizable as $U\Lambda U^{\mathsf{H}}$ where $U$ is unitary and $\Lambda$ is the diagonal matrix of eigenvalues of $A$.
+Thus, since $U^{\mathsf{H}}U = I$,
 $$
-A^k = (U\Lambda U^*)^k = U\Lambda^kU^*
+A^k = (U\Lambda U^{\mathsf{H}})^k = U\Lambda^kU^{\mathsf{H}}
 $$
 
 We can then write $p(A) = Up(\Lambda)U^*$ where $p(\Lambda)$ has diagonal entries $p(\lambda_i)$.
 Therefore, using the *unitary invariance* property of the 2-norm,
 $$
-\|p(A)\| = \|Up(\Lambda)U^*\| = \|p(\Lambda)\|
+\|p(A)\| = \|Up(\Lambda)U^{\mathsf{H}}\| = \|p(\Lambda)\|
 $$
 
 Now, since the 2-norm of a symmetric matrix is the magnitude of the largest eigenvalue,
@@ -601,11 +587,10 @@ $$
 \frac{\|e_k\|_A}{\|e_0\|_A} \leq \min_{p\in\mathcal{P}_k} \max_i |p(\lambda_i)|
 $$
 
-Since the inequality we obtained from the submultiplicativity of the 2-norm is tight, this bound is also tight in the sense that for a fixed $k$ there exists an initial error $e_0$ so that equality holds.
+Since the inequality we obtained from the submultiplicativity of the 2-norm is tight, this bound is also tight (in the sense that for a fixed $k$ there exists an initial error $e_0$ so that equality holds).
 
-Computing the optimal $p$ is not trivial, but an algorithm called the [Remez algorithm](./remez.html) can be used to compute it.
-
-Let $L\subset \mathbb{R}$ be some closed set.
+Polynomials of this form are called minimax polynomials. 
+More formally, let $L\subset \mathbb{R}$ be some closed set.
 The *minimax polynomial of degree $k$* on $L$ is the polynomial satisfying,
 \begin{align*}
 \min_{p\in\mathcal{P}_k} \max_{x\in L} | p(x) |
@@ -613,10 +598,12 @@ The *minimax polynomial of degree $k$* on $L$ is the polynomial satisfying,
 \mathcal{P}_k = \{p : p(0)=1, \deg p \leq k\}    
 \end{align*}
 
+Computing a minimax polynomial for a given set is not trivial, but an algorithm called the [Remez algorithm](./remez.html) can be used to compute it.
+
 ### Chebyshev bounds
 The minimax polynomial on the eigenvalues of $A$ is a bit tricky to work with.
 Although we can find it using the Remez algorithm, this is somewhat tedious, and requires knowledge of the whole spectrum of $A$.
-We would like to come up with a bound which depends on less information about $A$.
+To be useful in practice we would like a bound which depends only on information about $A$ that we might reasonably expect to have prior to solving the linear system.
 One way to obtain such a bound is to expand the set on which we are looking for the minimax polynomial. 
 
 To this end, let $\mathcal{I} =  [\lambda_{\text{min}},\lambda_{\text{max}}]$.
@@ -626,10 +613,11 @@ $$
 \leq \min_{p\in\mathcal{P}_k} \max_{x \in \mathcal{I}} |p(x)| 
 $$
 
-The right hand side requires that we know the largest and smallest eigenvalues of $A$, but doesn't require any of the ones between.
+The right hand side requires that we know the largest and smallest eigenvalues of $A$, but doesn't require knowledge of any of the ones between.
 This means it can be useful in practice, since we can easily compute the top and bottom eignevalues with the power method.
 
-The polynomials satisfying the right hand side are called the *Chebyshev Polynomials* and can be easily written down with a simple recurrence relation.
+The minimax polynomials on a single closed interval $\mathcal{I}$ are called the *Chebyshev Polynomials*, and can be easily written down with a simple recurrence relation.
+
 If $\mathcal{I} = [-1,1]$ then the relation is,
 \begin{align*}
 T_{k+1}(x) = 2xT_k(x) - T_{k-1}(x)
@@ -650,20 +638,57 @@ $$
 <!--start_pdf_comment-->
 
 
-# The Conjugate Gradient Algorithm in Finite Precision
-
-This page is a work in progress.
+# The Lanczos and Conjugate Gradient Algorithms in Finite Precision
 
 A key component of our derivations of the [Lanczos](./arnoldi_lanczos.html) and [conjugate gradient](./cg_derivation.html) methods was the orthogonality of certain vectors.
 In finite precision, we cannot have exact orthogonality, so our induction based arguments no longer hold.
+It's been known since their introductions, that these algorithms behave very differently in finite precision than exact arithmetic theory would predict.
 Even so, both methods are widely used in practice, which suggests that there are subtle forces at play allowing the algorithms to work.
 
-In exact arithmetic, CG will obtain the exact solution in at most $n$ steps, and the error at step $k$ can be bounded by the size of the degree $k$ minimax polynomial on the eigenvalues of $A$.
+## Finite Precision Lanczos
+
+We have already seen that the conjugate gradient and Lanczos algorithms are [intimately related](./cg_lanczos.html).
+This has allowed ideas and results derived about the Lanczos algorithm to be transfered to the conjugate gradient algorithm.
+
+Recall that, in exact arithmetic, the Lanczos algorithm generates an orthonormal set $\{q_1,q_2,\ldots,q_k\}$ which satisfies,
+$$
+AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^T
+$$
+where $Q_k^{\mathsf{H}}Q_k = I_k$, and $T_k$ is symmetric tridiagonal.
+
+In finite precision, orthogonality will be lost, and the algorithm can continue indefinitely.
+We can write this relationship as,
+$$
+AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^T + F_k
+$$
+where $F_k$ accounts for the rounding errors.
+
+The first significant advancement to the understanding of the Lanczos algorithm was done by Chris Paige in his 1971 PhD thesis where he showed that orthogonality of Lanczos vectors is lost once a Ritz vector has converged, and that orthogonality is lost in the direction of converged Ritz vectors [@paige_71].
+The analysis relies on the assumptions that:
+
+- the three term Lanczos recurrence is well satisfied: $\| F_k \|\approx 0$
+- the Lanczos vectors have norm close to one: $\|q_j\|\approx 1$
+- successive Lanczos vectors are nearly orthogonal: $\langle q_j,q_{j+1}\rangle \approx 0$
+
+Paige also proved that (what is now) the standard Lanczos implementation satisfies the three properties above.
+
+### Addressing convergence in finite precision
+
+On suggestion to dealing with the loss of orthogonality is to store and explicitly orthogonalize against all previous Lanczos vectors ["Lanczos himself"].
+Of course, this comes with additional storage and computation costs.
+
+Based on Paige's analysis, an alternative approach to complete orthogonalization is selective orthogonalization [parlett 13-8].
+
+Only orthogonalized against converged Ritz vectors.
+
+
+## Finite precision conjugate gradient
+
+In exact arithmetic, the conjugate gradient algorithm finds the exact solution in at most $n$ steps, and the error at step $k$ is bounded by the size of the degree $k$ minimax polynomial on the eigenvalues of $A$.
 In finite precision, the loss of orthogonality leads to two easily observable effects: delayed convergence, and reduced final accuracy.
 The following figure shows both of these phenomena for various precisions.
 
 ![Convergence of conjugate gradient in various precisions. Note that the computation would finish in at most 48 steps in exact arithmetic.](./multiple_precision.svg)
-
 
 ### Delay of convergence
 
@@ -673,9 +698,21 @@ As such, a conjugate gradient algorithm in finite precision will end up doing "r
 
 ### Loss of attainable accuracy
 
-Even if we knew the solution $x^*$ to the system $Ax=b$, it's unlikely that we could represent it in finite precision.  
+Even if we knew the true solution $x^*$ to the system $Ax=b$, it's unlikely that we could represent it in finite precision. 
+This means that any numerical method for solving linear systems will inherently have some loss of accuracy.
 
-$\epsilon \| A \|$
+An algorithm is *backwards stable* if the solution it returns is the exact to a "nearby" problem. For linear systems, this means the computed solution $\tilde{x}$ satisfies,
+$$
+(A+\delta A) \tilde{x} = b + \delta b
+$$
+where $\| \delta A \| \leq \epsilon \| A \|$ and $\| \delta b \| \leq \epsilon \| b \|$.
+
+
+
+In rounding error analysis, we generally assume that our real number $a$ can be represented in finite precision by $\tilde{a}$ satisfying, $(1-\epsilon) a \leq \tilde{a} \leq (1+\epsilon)a$, where $\epsilon$ is the machine precision.
+Thus, our numerical solution $\tilde{x}$ will have error something like $\tilde{a}$
+
+
 - different variants converge to worse levels
 
 ### Updated vs. true residual
@@ -685,44 +722,39 @@ In finite precision, this is not longer the case.
 Interestingly, even in finite precision, the updated residual (of many variants) keeps decreasing far below machine precision, until it eventually underflows.
 **Do we know why or have citations about this?**
 
-## The analysis of Greenbaum
-The first major progress in the analysis of the Lanczos algorithm was done by Chris Paige, who characterized the behavior of the method in finite precision in his 1971 PhD thesis. 
-An analysis of similar importance was done by Anne Greenbaum in her 1989 paper, ["Behavior of slightly perturbed Lanczos and conjugate-gradient recurrences"](https://www.sciencedirect.com/science/article/pii/0024379589902851).
+## Greenbaum's analysis
+An analysis of similar importance to that of Paige was done by Anne Greenbaum in her 1989 paper, ["Behavior of slightly perturbed Lanczos and conjugate-gradient recurrences"](https://www.sciencedirect.com/science/article/pii/0024379589902851).
 A big takeaway from Greenbaum's analysis is that the error bound from the Chevyshev polynomials still holds in finite precision (to a close approximation).
 
-The analysis from this paper is quite involved, and does not provides sufficient conditions for good convergence. However, necessary conditions of similar strength are not known, so it is not clear whether the conditions from the analysis can be relaxed significantly or not.
+The analysis from this paper is quite involved, and while it provides sufficient conditions for good convergence, necessary conditions of similar strength are not known.
+It is still an open question of whether the conditions from the analysis can be relaxed significantly or not.
 In essence, Greenbaum showed that, in finite precision, a "good" conjugate gradient algorithm applied to the matrix $A$ will behave like exact conjugate gradient applied to a larger matrix $\hat{T}$ with eigenvalues near those of $A$. 
 
 Thus, while the [error bounds](./cg_error.html) derived based on the minimax polynomial on the spectrum of $A$ no longer hold in exact arithmetic, bounds of a similar form can be obtained by finding the minimax polynomial on the union of small intervals about the eigenvalues of $A$. In particular, the bound from Chebyshev polynomials will not be significantly affect, as the condition number of the larger matrix will be nearly identical to that of $A$.
 
 As before, the [Remez algorithm](./remez.html) can be used to compute the minimax polynomial of a given degree on the union of intervals.
 
-### Finding the larger matrix
-A constructive algorithm for finding an extended matrix $\hat{T}$ where exact CG behaves like finite precision CG on $A$ was presented in [greenbaum_89]. 
-The algorithm is given the Lanczos vectors and coefficients from the finite precision computation, and extends the tridiagonal matrix $T$ by slightly perturbing a new, exact, Lanczos recurrence so that it terminates. The resulting larger tridiagonal matrix $\hat{T}$, which contains $T$ in the top left block, will have eigenvalues near those of $A$ (assuming $T$ came from a "good" implementation).
-
-An explanation of the algorithm is given in the appendix of [greenbaum_liu_chen_19], and an jupyter notebook is available [here](https://github.com/tchen01/Conjugate_Gradient/blob/master/experiments/extend_t.ipynb), and two Python implementations of the algorithm are available in the same Github repository. 
-
 ### Some conditions for the analysis
 I have brushed what a "good" conjugate gradient implementation means.
 In some sense this is still not known, since there has been no analysis providing both necessary and sufficient conditions for convergence to behave in a certain way.
-That said, the conditions given in [greenbaum_89] are sufficient, and should be discussed.
+That said, the conditions given in [@greenbaum_89] are sufficient, and should be discussed.
 
-We have already seen that [CG is doing the Lanczos algorithm in disguise](./cg_lanczos.html). In particular, normalizing the residuals from CG gives the vectors $q_j$ produced by the Lanczos algorithm, and combing the CG constants in the right way gives the coefficients $\alpha_j,\beta_j$ for the three term Lanczos recurrence.
+We have already seen that [CG is doing the Lanczos algorithm in disguise](./cg_lanczos.html). 
+In particular, normalizing the residuals from CG gives the vectors $q_j$ produced by the Lanczos algorithm, and combing the CG constants in the right way gives the coefficients $\alpha_j,\beta_j$ for the three term Lanczos recurrence.
+The analysis by Greenbaum requires that the finite precision conjugate gradient algorithm (viewed as the Lanczos algorithm) satisfy the same three properties as Paige's analysis.
 
-The analysis by Greenbaum requires that the finite precision conjugate gradient algorithm (viewed as the Lanczos algorithm) satisfy a few properties.
-Namely,
-
-- the three term Lanczos recurrence is well satisfied
-- the Lanczos vectors have norm close to one
-- successive Lanczos vectors are nearly orthogonal
-
-We know that in exact arithmetic, each of these properties is satisfied exactly. In fact, in exact arithmetic, all Lanczos vectors are orthogonal. However, in finite precision it is well known that the Lancozs vectors eventually lose orthogonality. Paige described the way in which this orthogonality is lost, and proved that (what is now) the standard Lanczos implementation satisfies the three properties above. Greenbaum extended Paige's analysis, which is why her results use the same conditions.
-
-As it turns out, nobody has actually ever proved that any of the Conjugate Variant methods used in practice actually satisfy these conditions. In our paper, ["On the Convergence of Conjugate Gradient Variants in Finite Precision Arithmetic"](./../publications/greenbaum_liu_chen_19.html) we analyze some variants in terms of these quantities, and try to provide rounding error analysis which will explain why these properties are or are not satisfied for each variant.
-
+As it turns out, nobody has actually ever proved that any of the Conjugate Variant methods used in practice actually satisfy these conditions. 
 Any proof that a given method satisfies these properties would constitute a significant theoretical advancement in the understanding of the conjugate gradient algorithm in finite precision. 
 Similarly, finding weaker conditions which provide some sort of convergence guarantees for a finite precision CG implementation would also be of significant importance.
+
+In our paper, ["On the Convergence of Conjugate Gradient Variants in Finite Precision Arithmetic"](./../publications/greenbaum_liu_chen_19.html) we analyze some variants in terms of these quantities, and try to provide rounding error analysis which will explain why these properties are or are not satisfied for each variant.
+
+### Finding the larger matrix
+A constructive algorithm for finding an extended matrix $\hat{T}$ where exact CG behaves like finite precision CG on $A$ was presented in [@greenbaum_89]. 
+The algorithm is given the Lanczos vectors and coefficients from the finite precision computation, and extends the tridiagonal matrix $T$ by slightly perturbing a new, exact, Lanczos recurrence so that it terminates. The resulting larger tridiagonal matrix $\hat{T}$, which contains $T$ in the top left block, will have eigenvalues near those of $A$ (assuming $T$ came from a "good" implementation).
+
+An explanation of the algorithm is given in the appendix of [@greenbaum_liu_chen_19], and an jupyter notebook is available [here](https://github.com/tchen01/Conjugate_Gradient/blob/master/experiments/extend_t.ipynb), and two Python implementations of the algorithm are available in the same Github repository. 
+
 
 <!--start_pdf_comment-->
 
@@ -730,8 +762,8 @@ Similarly, finding weaker conditions which provide some sort of convergence guar
 
 So far, all we have considered are error bounds in terms of the number of iterations. 
 However, in practice, what we really care about is how long a computation takes.
-A natural way to try and speed up an algorithm is through parallelization, and many variants of the conjugate gradient algorithm have been introduced to try and take advantage of high performance computers.
-However, while these variants are all equivalent in exact arithmetic, they perform operations in different orders.
+A natural way to try and speed up an algorithm is through parallelization, and many variants of the conjugate gradient algorithm have been introduced to try to reduce the runtime per iteration.
+However, while these variants are all equivalent in exact arithmetic, they perform operations in different orders meaning they are not equivalent in finite precision arithmetic.
 Based on our discussion about conjugate gradient in [finite precision](./finite_precision_cg.html), it should be too big of a surprise that the variants all behave differently.
 
 ![Convergence of different variants in finite precision. Note that the computation would finish in at most 112 steps in exact arithmetic.](./convergence.svg)
@@ -742,17 +774,17 @@ Unfortunately, on high performance machines, conjugate gradient often perform or
 
 The reason for this is *communication*. 
 
-Traditionally, analysis of algorithms has been done in terms of counting the number of operations computed, and the amount of storage used. However, an important factor in the real world performance is the time it takes to move data around. 
-Even on a single core computer, the cost of moving a big matrix off the hard drive into memory can be much more significant than the floating point operations done.
-There is naturally a lot of interest in reducing the communication costs of various algorithms, and conjugate gradient certainly has a lot of room for improvement.
+Traditionally, analysis of algorithm runtime has been done in terms the number of operations computed, and the amount of storage used. 
+However, an important factor in the real world performance is the time it takes to move data around. 
+Even on a single core computer, the cost of moving a big matrix from the hard drive to memory can be significant compared to the cost of the floating point operations done.
+Because of this, there is a lot of interest in reducing the communication costs of various algorithms, and conjugate gradient certainly has a lot of room for improvement.
 
 Parallel computers work by having different processors work on different parts of a computation at the same time.
-Naturally, many things can be sped up this way, but like in our example, doubling the computing power doesn't necessarily mean doubling the speed of the computation.
+Naturally, many algorithms can be sped up this way, but the speedups are not necessarily proportional to the increase in computation power.
 In many numerical algorithms, "global communication" is one of the main causes of latency.
 Loosely speaking, global communication means that all processors working on a larger task must finish with their subtask and report on the result before the computation can proceed.
 This means that even if we can distribute a computation to many processors, the time it takes to move the data required for those computations will eventually limit how effective adding more processors is. 
-So, a 1000x increase in processor power won't necessarily cut the computation time to 1/1000.
-
+So, a 1000x increase in processing power won't necessarily cut the computation time to 1/1000th of the original time.
 
 ## Communication bottlenecks in CG
 
@@ -781,12 +813,13 @@ A matrix vector product requires $\mathcal{O}(\text{nnz})$ (number of nonzero) f
 For many applications of CG, the number of nonzero entries is something like $kn$, where $k$ relatively small. 
 In these cases, the cost of floating point arithmetic for a matrix vector product and an inner product is roughly the same. 
 On the other hand, the communication costs for the inner products can be much higher.
+**explain more**
 
 There are multiply ways to address the communication bottleneck in CG. The two main approaches are "hiding" communication, and "avoiding" communication.
 Communication hiding algorithm such as as pipelined CG introduce auxiliary vectors so that the inner products can be computed at the same time, allowing the communication to be overlapped with other computations.
 On the other hand, communication avoiding algorithms such as $s$-step CG compute iterations in blocks of size $s$, reducing the synchronization costs by a factor around $s$.
 
-In this piece I will be talking about some common communicating hiding methods.
+This piece focuses on some common communicating hiding methods.
 If you're interested in communication avoiding methods, or want more information about communication hiding methods, Erin Carson has very useful [slides](https://math.nyu.edu/~erinc/ppt/Carson_PP18.pdf).
 
 
@@ -794,7 +827,7 @@ If you're interested in communication avoiding methods, or want more information
 
 We would like to be able to reduce the number of points in the algorithm a global communication is required.
 However, in the current form, we need to wait for each of the previous computations before we are able to do a matrix vector product or an inner product.
-This means there are two global communications per iteration.
+This means there are two global communications per iteration and that none of the heavy computations can be overlapped.
 
 Using our recurrences we can write,
 $$
@@ -814,8 +847,7 @@ We now note that,
 \\&= \langle r_k, w_k \rangle + b_k \langle p_{k-1}, w_k \rangle + b_k \langle r_k, s_{k-1} \rangle + b_k^2 \langle p_{k-1}, s_{k-1} \rangle
 \end{align*}
 
-
-Now, since $w_k = Ar_k$ and $s_{k-1} = Ap_{k-1}$, then $\langle p_{k-1},w_k \rangle = \langle r_{k}, s_{k-1} \rangle$. 
+Moreover, since $w_k = Ar_k$ and $s_{k-1} = Ap_{k-1}$, then $\langle p_{k-1},w_k \rangle = \langle r_{k}, s_{k-1} \rangle$. 
 Thus,
 $$
 \mu_k = \langle r_k,w_k\rangle + 2 b_k \langle r_k,s_k \rangle + b_k^2 \mu_{k-1}
@@ -825,9 +857,8 @@ Notice now that $\langle r_k,w_k \rangle$, and $\langle r_k,s_k \rangle$ can bot
 Thus, using this coefficient formula there is only a single global synchronization per iteration.
 However, this came at the cost of having to compute an additional inner product. 
 
-
-
-Now, using our recurrence for $r_k$,
+It turns out that we can eliminate one of the inner products.
+Indeed, using our recurrence for $r_k$,
 $$
 \langle r_k, s_{k-1} \rangle
 = \langle p_k - b_k p_{k-1}, s_{k-1} \rangle
@@ -878,7 +909,7 @@ u_{k} = As_k = A(w_k + b_k s_{k-1})
 $$
 
 That's it. For convenience we define $t_k = Aw_k$. 
-Then, the matrix vector product $Aw_k$ can occur as soon as we have computed $w_k$.
+Then, the matrix vector product $Aw_k$ can occur as soon as we have computed $w_k$ and can be overlapped with both inner products.
 This variant is known as either Ghysels and Vanroose conjugate gradient or pipelined conjugate gradient.
 
 **Algorithm.** (Ghysels and Vanroose (pipelined) conjugate gradient)
@@ -900,10 +931,7 @@ This variant is known as either Ghysels and Vanroose conjugate gradient or pipel
 \\[-.4em]&\textbf{end procedure}
 \end{align*}
 
-Recently, [cite ppl] have developed a "deep pipelined" conjugate gradient, which essentially introduces even more auxiliary vectors to allow for more overlapping. 
-
-As mentioned above, 
-
+Recently, Cornelis, Cools, and Van Roose have developed a ["deep pipelined"](https://arxiv.org/pdf/1801.04728.pdf) conjugate gradient, which essentially introduces even more auxiliary vectors to allow for more overlapping.
 
 <!--start_pdf_comment-->
 
@@ -911,13 +939,59 @@ As mentioned above,
 
 # Current research on Conjugate Gradient and related Krylov subspace methods
 
+Krylov subspace methods have remained an active area of research since they were first introduced. 
+In general, research focuses on understanding convergence properties in finite precision, and on speeding up the runtime of algorithms.
+I've included some topics below, but this should by no means be taken as a comprehensive list; I'm sure there are many important and interesting areas which don't show up here.
+
+
+**find some citations and links**
+
+## Preconditioners
+
+Preconditioning linear systems is perhaps one of the oldest methods for improving convergence of iterative methods. 
+The basic idea is to convert the system $Ax=b$ to one which is nicer to work with.
+If $M^{-1}$ is full rank, then solving $Ax=b$ gives the same solution as solving,
+$$
+M^{-1}Ax = M^{-1} b
+$$
+
+If $M^{-1} = A^{-1}$ then this system is trivial to solve.
+Of course, finding $A^{-1}$ is generally not easy, but if $M^{-1}$ "approximates" $A^{-1}$ in some way, then often $M^{-1}A$ will be much better conditioned than $A$, and so iterative methods will have better convergence properties.
+
+Unfortunately, $M^{-1}A$ will probably not be Hermitian.
+On the other hand, $R^{-1}AR^{-T}$ is Hermitian positive definite if $A$ is Herimitian positive definite (here $R^{-T} = (R^{-1})^T$). Thus, we can solve the system,
+$$
+(R^{-1}AR^{-T}) y = R^{-1}b
+$$
+for $y$, and then find $x$ by solving the system,
+$$
+R^Tx = y
+$$
+
+There is a lot of interest in developing new preconditioners, and understanding the theoretical properties of preconditioners.
+
+## Multiple/reduced precision
+
+Using lower precision (e.g. single, or float16 instead of doubles) means reduced storage, less communication, faster floating point arithmetic etc.
+Perhaps more importantly, GPUs have been highly optimized for single precision floating point computations.
+
+However, we have already seen that conjugate gradient can be significantly affected by [finite precision](./finite_precision_cg.html), so simply running the traditional algorithms in reduced precision will often lead to poor convergence.
 
 
 ## Avoiding communication 
 
-- CGCG, GVCG
-- $s$-step methods
+I've already talked about [communication hiding](./communication_hiding_variants.html) variants of the conjugate gradient algorithm.
+
+
+### Blocked methods
+
+If we have to solve multiple systems $Ax=b_1, Ax=b_2, \ldots$, then it makes sense to try to do these simultaneously so that we can reduce data movement.
+
+
+## Applications to machine learning
+
 
 ## Computing matrix functions
 
 - $f(A)b$ for functions other that $f(x) = x^{-1}$
+

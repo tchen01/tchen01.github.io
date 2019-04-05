@@ -32,3 +32,9 @@ with open(f'krylov.md','r') as old_md_file, open(f'krylov1.md','w+') as new_md_f
             
 os.system('mv krylov1.md krylov.md')
 os.system('pandoc --pdf-engine=xelatex -o krylov.pdf krylov.md')
+
+individual_files = ['remez','linear_algebra_review']
+for file in individual_files:
+    os.system(f'pandoc --pdf-engine=xelatex -o {file}.pdf {file}.md')
+
+#os.system('pandoc --pdf-engine=xelatex --filter pandoc-citeproc --bibliography=krylov.bib -o krylov.pdf krylov.md')
