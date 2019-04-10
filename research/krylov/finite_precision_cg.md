@@ -13,14 +13,14 @@ This has allowed ideas and results derived about the Lanczos algorithm to be tra
 
 Recall that, in exact arithmetic, the Lanczos algorithm generates an orthonormal set $\{q_1,q_2,\ldots,q_k\}$ which satisfies,
 $$
-AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^T
+AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^{\mathsf{T}}
 $$
-where $Q_k^{\mathsf{H}}Q_k = I_k$, and $T_k$ is symmetric tridiagonal.
+where $Q_k^{\mathsf{H}}Q_k = I_k$, and $T_k$ is symmetric tridiagonal, and $\xi_k^{\mathsf{T}} = [0,\ldots,0,1]^{\mathsf{T}}$ is the $k$-th standard unit vector.
 
 In finite precision, orthogonality will be lost, and the algorithm can continue indefinitely.
 We can write this relationship as,
 $$
-AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^T + F_k
+AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^{\mathsf{T}} + F_k
 $$
 where $F_k$ accounts for the rounding errors.
 

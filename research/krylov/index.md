@@ -46,7 +46,7 @@ As a result, applications such as weather forecasting, medical imaging, and trai
 When $A$ is symmetric and positive definite (if you don't remember what that means, don't worry, I have a refresher below), the conjugate gradient algorithm is a very popular choice for methods of solving $Ax=b$.
 
 This popularity of the conjugate gradient algorithm (CG) is due to a couple factors. First, like most Krylov subspace methods, CG is *matrix free*. 
-This means that you don't ever need to explicitly represent $A$ as a matrix, you only need to have some way of computing the product $v\mapsto Av$, for a given input vector $v$.
+This means that $A$ never has to be explicitly represented as a matrix, as long as there is some way of computing the product $v\mapsto Av$, for a given input vector $v$.
 For very large problems, this means a big reduction in storage, and if $A$ has some structure (eg. $A$ comes from a DFT, difference/integral operator, is very sparse, etc.), it allows the algorithm to take advantage of fast matrix vector products.
 Second, CG only requires $\mathcal{O}(n)$ storage to run, as compared to $\mathcal{O}(n^2)$ that many other algorithms require (we use $n$ to denote the size of $A$, i.e. $A$ has shape $n\times n$). 
 When the size of $A$ is very large, this becomes increasingly important.
@@ -56,7 +56,7 @@ Understanding what leads to these vastly different behaviors has been an active 
 The intent of this document is to provide an overview of the conjugate gradient algorithm in exact precision, then introduce some of what is know about it in finite precision, and finally, present some modern research interests into the algorithm.
 
 ## Measuring the accuracy of solutions
-Perhaps the first question that should be asked about any numerical method is, *does it solve the intended problem?* In the case of solving linear systems, this means asking *does the output approximate the true solution?* 
+One of the first question we should ask about any numerical method is, *does it solve the intended problem?* In the case of solving linear systems, this means asking *does the output approximate the true solution?* 
 If not, then there isn't much point using the method. 
 
 Let's quickly introduce the idea of the *error* and the *residual*.
@@ -66,7 +66,7 @@ The *error* is simply the difference between $x^*$ and $\tilde{x}$.
 Taking the norm of this quantity gives us a scalar value which measures the distance between $x^*$ and $\tilde{x}$.
 In some sense, this is perhaps the most natural way of measuring how close our approximate solution is to the true solution.
 In fact, when we say that a sequence $x_0,x_1,x_2,\ldots$ of vectors converges to $x_*$, we mean that the sequence of scalars, $\|x^*-x_0\|,\|x^*-x_1\|,\|x^*-x_2\|,\ldots$ converges to zero.
-Thus, finding $x$ which solves $Ax=b$ could be written as finding $x$ which minimizes $\|x - x^*\| = \|x-A^{-1}b\|$.
+Thus, finding $x$ which solves $Ax=b$ could be written as finding the value of $x$ which minimizes $\|x - x^*\| = \|x-A^{-1}b\|$.
 
 Of course, since we are trying to compute $x^*$, it doesn't make sense for an algorithm to explicitly depend on $x^*$.
 The *residual* of $\tilde{x}$ is defined as $b-A\tilde{x}$.

@@ -53,11 +53,15 @@ The most expensive computations each iteration are the matrix vector product, an
 A matrix vector product requires $\mathcal{O}(\text{nnz})$ (number of nonzero) floating point operations, while an inner product of dense vectors requires $\mathcal{O}(n)$ operations. 
 For many applications of CG, the number of nonzero entries is something like $kn$, where $k$ relatively small. 
 In these cases, the cost of floating point arithmetic for a matrix vector product and an inner product is roughly the same. 
-On the other hand, the communication costs for the inner products can be much higher.
-**explain more**
+
+While the number of floating point operations for a sparse matrix vector product and an inner product are often similar, the communication costs for the inner products can be much higher.
+In a matrix vector product, each entry of the output can be computed independently of the other entires. Moreover, each entry will generally depend on only a few entries of the matrix and a few entries of the vector.
+On the other hand, an inner product requires all of the entries of both vectors. 
+This means that even if parts of the computation are sent to different processors, the outputs will have be be put together in a *global reduction* (also called *global synchronization* or *all-reduce*_.
+This communication ends up becomining the performance bottleneck each iteration on sufficintly high performance machines.
 
 There are multiply ways to address the communication bottleneck in CG. The two main approaches are "hiding" communication, and "avoiding" communication.
-Communication hiding algorithm such as as pipelined CG introduce auxiliary vectors so that the inner products can be computed at the same time, allowing the communication to be overlapped with other computations.
+Communication hiding algorithm such as as pipelined CG introduce auxiliary vectors so that the inner products can be computed at the same time, allowing all global communcation to happen at the same time.
 On the other hand, communication avoiding algorithms such as $s$-step CG compute iterations in blocks of size $s$, reducing the synchronization costs by a factor around $s$.
 
 This piece focuses on some common communicating hiding methods.
@@ -66,8 +70,8 @@ If you're interested in communication avoiding methods, or want more information
 
 ## Overlapping inner products
 
-We would like to be able to reduce the number of points in the algorithm a global communication is required.
-However, in the current form, we need to wait for each of the previous computations before we are able to do a matrix vector product or an inner product.
+Suppose that we would like to be able to reduce the number of points in the algorithm a global communication is required (i.e. be able to compute all inner products simultaneously).
+In the standard presentation of the conjugate gradient algorithm, we need to wait for each of the previous computations before we are able to do a matrix vector product or an inner product.
 This means there are two global communications per iteration and that none of the heavy computations can be overlapped.
 
 Using our recurrences we can write,

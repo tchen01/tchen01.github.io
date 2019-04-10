@@ -47,13 +47,13 @@ M^{-1}Ax = M^{-1} b
 
 <p>If <span class="math inline">\(M^{-1} = A^{-1}\)</span> then this system is trivial to solve. Of course, finding <span class="math inline">\(A^{-1}\)</span> is generally not easy, but if <span class="math inline">\(M^{-1}\)</span> “approximates” <span class="math inline">\(A^{-1}\)</span> in some way, then often <span class="math inline">\(M^{-1}A\)</span> will be much better conditioned than <span class="math inline">\(A\)</span>, and so iterative methods will have better convergence properties.</p>
 
-<p>Unfortunately, <span class="math inline">\(M^{-1}A\)</span> will probably not be Hermitian. On the other hand, <span class="math inline">\(R^{-1}AR^{-T}\)</span> is Hermitian positive definite if <span class="math inline">\(A\)</span> is Herimitian positive definite (here <span class="math inline">\(R^{-T} = (R^{-1})^T\)</span>). Thus, we can solve the system, <span class="math display">\[
+<p>Unfortunately, <span class="math inline">\(M^{-1}A\)</span> will probably not be Hermitian. On the other hand, <span class="math inline">\(R^{-1}AR^{-{\mathsf{H}}}\)</span> is Hermitian positive definite if <span class="math inline">\(A\)</span> is Herimitian positive definite (here <span class="math inline">\(R^{-{\mathsf{H}}} = (R^{-1})^{\mathsf{H}}\)</span>). Thus, we can solve the system, <span class="math display">\[
 
-(R^{-1}AR^{-T}) y = R^{-1}b
+(R^{-1}AR^{-{\mathsf{H}}}) y = R^{-1}b
 
 \]</span> for <span class="math inline">\(y\)</span>, and then find <span class="math inline">\(x\)</span> by solving the system, <span class="math display">\[
 
-R^Tx = y
+R^{\mathsf{H}}x = y
 
 \]</span></p>
 

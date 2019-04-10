@@ -15,6 +15,13 @@ I also have some short introductory pieces on some interesting topics.
 ## Publications
 
 <div class="paper">
+<div class="title"><a href="./publications/404.html">New Communication Hiding Conjugate Gradient Varaints.</a></div>
+<div class="authors"><strong>Tyler Chen</strong>, et. al.</div>
+<div class="details">In preparation.</div>
+</div>
+
+
+<div class="paper">
 <div class="title"><a href="./publications/greenbaum_liu_chen_19.html">On the Convergence of Conjugate Gradient Varients in Finite Precision Arithmetic.</a></div>
 <div class="authors">Anne Greenbaum, Hexuan Liu, and <strong>Tyler Chen</strong>.</div>
 <div class="details">In preparation.</div>

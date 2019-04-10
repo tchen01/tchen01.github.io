@@ -41,13 +41,13 @@
 
 <p>Recall that, in exact arithmetic, the Lanczos algorithm generates an orthonormal set <span class="math inline">\(\{q_1,q_2,\ldots,q_k\}\)</span> which satisfies, <span class="math display">\[
 
-AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^T
+AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^{\mathsf{T}}
 
-\]</span> where <span class="math inline">\(Q_k^{\mathsf{H}}Q_k = I_k\)</span>, and <span class="math inline">\(T_k\)</span> is symmetric tridiagonal.</p>
+\]</span> where <span class="math inline">\(Q_k^{\mathsf{H}}Q_k = I_k\)</span>, and <span class="math inline">\(T_k\)</span> is symmetric tridiagonal, and <span class="math inline">\(\xi_k^{\mathsf{T}} = [0,\ldots,0,1]^{\mathsf{T}}\)</span> is the <span class="math inline">\(k\)</span>-th standard unit vector.</p>
 
 <p>In finite precision, orthogonality will be lost, and the algorithm can continue indefinitely. We can write this relationship as, <span class="math display">\[
 
-AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^T + F_k
+AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^{\mathsf{T}} + F_k
 
 \]</span> where <span class="math inline">\(F_k\)</span> accounts for the rounding errors.</p>
 

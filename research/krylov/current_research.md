@@ -21,13 +21,13 @@ If $M^{-1} = A^{-1}$ then this system is trivial to solve.
 Of course, finding $A^{-1}$ is generally not easy, but if $M^{-1}$ "approximates" $A^{-1}$ in some way, then often $M^{-1}A$ will be much better conditioned than $A$, and so iterative methods will have better convergence properties.
 
 Unfortunately, $M^{-1}A$ will probably not be Hermitian.
-On the other hand, $R^{-1}AR^{-T}$ is Hermitian positive definite if $A$ is Herimitian positive definite (here $R^{-T} = (R^{-1})^T$). Thus, we can solve the system,
+On the other hand, $R^{-1}AR^{-{\mathsf{H}}}$ is Hermitian positive definite if $A$ is Herimitian positive definite (here $R^{-{\mathsf{H}}} = (R^{-1})^{\mathsf{H}}$). Thus, we can solve the system,
 $$
-(R^{-1}AR^{-T}) y = R^{-1}b
+(R^{-1}AR^{-{\mathsf{H}}}) y = R^{-1}b
 $$
 for $y$, and then find $x$ by solving the system,
 $$
-R^Tx = y
+R^{\mathsf{H}}x = y
 $$
 
 There is a lot of interest in developing new preconditioners, and understanding the theoretical properties of preconditioners.

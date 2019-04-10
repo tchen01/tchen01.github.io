@@ -19,7 +19,7 @@ As a result, applications such as weather forecasting, medical imaging, and trai
 When $A$ is symmetric and positive definite (if you don't remember what that means, don't worry, I have a refresher below), the conjugate gradient algorithm is a very popular choice for methods of solving $Ax=b$.
 
 This popularity of the conjugate gradient algorithm (CG) is due to a couple factors. First, like most Krylov subspace methods, CG is *matrix free*. 
-This means that you don't ever need to explicitly represent $A$ as a matrix, you only need to have some way of computing the product $v\mapsto Av$, for a given input vector $v$.
+This means that $A$ never has to be explicitly represented as a matrix, as long as there is some way of computing the product $v\mapsto Av$, for a given input vector $v$.
 For very large problems, this means a big reduction in storage, and if $A$ has some structure (eg. $A$ comes from a DFT, difference/integral operator, is very sparse, etc.), it allows the algorithm to take advantage of fast matrix vector products.
 Second, CG only requires $\mathcal{O}(n)$ storage to run, as compared to $\mathcal{O}(n^2)$ that many other algorithms require (we use $n$ to denote the size of $A$, i.e. $A$ has shape $n\times n$). 
 When the size of $A$ is very large, this becomes increasingly important.
@@ -29,7 +29,7 @@ Understanding what leads to these vastly different behaviors has been an active 
 The intent of this document is to provide an overview of the conjugate gradient algorithm in exact precision, then introduce some of what is know about it in finite precision, and finally, present some modern research interests into the algorithm.
 
 ## Measuring the accuracy of solutions
-Perhaps the first question that should be asked about any numerical method is, *does it solve the intended problem?* In the case of solving linear systems, this means asking *does the output approximate the true solution?* 
+One of the first question we should ask about any numerical method is, *does it solve the intended problem?* In the case of solving linear systems, this means asking *does the output approximate the true solution?* 
 If not, then there isn't much point using the method. 
 
 Let's quickly introduce the idea of the *error* and the *residual*.
@@ -39,7 +39,7 @@ The *error* is simply the difference between $x^*$ and $\tilde{x}$.
 Taking the norm of this quantity gives us a scalar value which measures the distance between $x^*$ and $\tilde{x}$.
 In some sense, this is perhaps the most natural way of measuring how close our approximate solution is to the true solution.
 In fact, when we say that a sequence $x_0,x_1,x_2,\ldots$ of vectors converges to $x_*$, we mean that the sequence of scalars, $\|x^*-x_0\|,\|x^*-x_1\|,\|x^*-x_2\|,\ldots$ converges to zero.
-Thus, finding $x$ which solves $Ax=b$ could be written as finding $x$ which minimizes $\|x - x^*\| = \|x-A^{-1}b\|$.
+Thus, finding $x$ which solves $Ax=b$ could be written as finding the value of $x$ which minimizes $\|x - x^*\| = \|x-A^{-1}b\|$.
 
 Of course, since we are trying to compute $x^*$, it doesn't make sense for an algorithm to explicitly depend on $x^*$.
 The *residual* of $\tilde{x}$ is defined as $b-A\tilde{x}$.
@@ -161,9 +161,9 @@ Since we get $q_k$ by normalizing the resulting vector, using $Aq_{k-1}$ will gi
 
 The Arnoldi algorithm gives the relationship,
 $$
-AQ_k = Q_k H_k + h_{k+1,k} q_{k+1} \xi_k^T
+AQ_k = Q_k H_k + h_{k+1,k} q_{k+1} \xi_k^{\mathsf{T}}
 $$
-where $Q_k = [q_1,q_2,\ldots,q_k]$ is the $n\times k$ matrix whose columns are $\{q_1,q_2,\ldots,q_k\}$, $H_k$ is a $k\times k$ [*Upper Hessenburg*](https://en.wikipedia.org/wiki/Hessenberg_matrix) matrix, and $\xi_k = [0,\ldots,0,1]^T$ is the $k$-th unit vector.
+where $Q_k = [q_1,q_2,\ldots,q_k]$ is the $n\times k$ matrix whose columns are $\{q_1,q_2,\ldots,q_k\}$, $H_k$ is a $k\times k$ [*Upper Hessenburg*](https://en.wikipedia.org/wiki/Hessenberg_matrix) matrix, and $\xi_k^{\mathsf{T}} = [0,\ldots,0,1]^{\mathsf{T}}$ is the $k$-th unit vector.
 
 
 
@@ -193,7 +193,7 @@ Aq_j = \beta_{j-1} q_{j-1} + \alpha_j q_j + \beta_j q_{j+1}
 $$
 which we can write in matrix form as,
 $$
-AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^T
+AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^{\mathsf{T}}
 $$
 
 
@@ -301,8 +301,7 @@ e_k = e_0 - a_0p_0 - a_1 p_1 - \cdots - a_{k-1} p_{k-1}
 $$
 
 By definition, the coefficients for $x_k$ were chosen to minimize the $A$-norm of the error, $\|e_k\|_A$, over $\mathcal{K}_k(A,b)$.
-Therefore, $e_k$ has zero component in each of the directions $\{ p_0,p_1,\ldots,p_{k-1} \}$.
-**explain why!!!!!!!!!!**
+Therefore, $e_k$ must have zero component in each of the directions $\{ p_0,p_1,\ldots,p_{k-1} \}$, which is an $A$-orthonormal basis for $\mathcal{K}_k(A,b)$.
 In particular, that means that $a_jp_j$ cancels exactly with $e_0$ in the direction of $p_j$, for all $j$. 
 
 We now make the important observation that the coefficients depend only on $e_0$ and the $p_i$, but not on $k$. 
@@ -652,14 +651,14 @@ This has allowed ideas and results derived about the Lanczos algorithm to be tra
 
 Recall that, in exact arithmetic, the Lanczos algorithm generates an orthonormal set $\{q_1,q_2,\ldots,q_k\}$ which satisfies,
 $$
-AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^T
+AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^{\mathsf{T}}
 $$
-where $Q_k^{\mathsf{H}}Q_k = I_k$, and $T_k$ is symmetric tridiagonal.
+where $Q_k^{\mathsf{H}}Q_k = I_k$, and $T_k$ is symmetric tridiagonal, and $\xi_k^{\mathsf{T}} = [0,\ldots,0,1]^{\mathsf{T}}$ is the $k$-th standard unit vector.
 
 In finite precision, orthogonality will be lost, and the algorithm can continue indefinitely.
 We can write this relationship as,
 $$
-AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^T + F_k
+AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^{\mathsf{T}} + F_k
 $$
 where $F_k$ accounts for the rounding errors.
 
@@ -812,11 +811,15 @@ The most expensive computations each iteration are the matrix vector product, an
 A matrix vector product requires $\mathcal{O}(\text{nnz})$ (number of nonzero) floating point operations, while an inner product of dense vectors requires $\mathcal{O}(n)$ operations. 
 For many applications of CG, the number of nonzero entries is something like $kn$, where $k$ relatively small. 
 In these cases, the cost of floating point arithmetic for a matrix vector product and an inner product is roughly the same. 
-On the other hand, the communication costs for the inner products can be much higher.
-**explain more**
+
+While the number of floating point operations for a sparse matrix vector product and an inner product are often similar, the communication costs for the inner products can be much higher.
+In a matrix vector product, each entry of the output can be computed independently of the other entires. Moreover, each entry will generally depend on only a few entries of the matrix and a few entries of the vector.
+On the other hand, an inner product requires all of the entries of both vectors. 
+This means that even if parts of the computation are sent to different processors, the outputs will have be be put together in a *global reduction* (also called *global synchronization* or *all-reduce*_.
+This communication ends up becomining the performance bottleneck each iteration on sufficintly high performance machines.
 
 There are multiply ways to address the communication bottleneck in CG. The two main approaches are "hiding" communication, and "avoiding" communication.
-Communication hiding algorithm such as as pipelined CG introduce auxiliary vectors so that the inner products can be computed at the same time, allowing the communication to be overlapped with other computations.
+Communication hiding algorithm such as as pipelined CG introduce auxiliary vectors so that the inner products can be computed at the same time, allowing all global communcation to happen at the same time.
 On the other hand, communication avoiding algorithms such as $s$-step CG compute iterations in blocks of size $s$, reducing the synchronization costs by a factor around $s$.
 
 This piece focuses on some common communicating hiding methods.
@@ -825,8 +828,8 @@ If you're interested in communication avoiding methods, or want more information
 
 ## Overlapping inner products
 
-We would like to be able to reduce the number of points in the algorithm a global communication is required.
-However, in the current form, we need to wait for each of the previous computations before we are able to do a matrix vector product or an inner product.
+Suppose that we would like to be able to reduce the number of points in the algorithm a global communication is required (i.e. be able to compute all inner products simultaneously).
+In the standard presentation of the conjugate gradient algorithm, we need to wait for each of the previous computations before we are able to do a matrix vector product or an inner product.
 This means there are two global communications per iteration and that none of the heavy computations can be overlapped.
 
 Using our recurrences we can write,
@@ -959,13 +962,13 @@ If $M^{-1} = A^{-1}$ then this system is trivial to solve.
 Of course, finding $A^{-1}$ is generally not easy, but if $M^{-1}$ "approximates" $A^{-1}$ in some way, then often $M^{-1}A$ will be much better conditioned than $A$, and so iterative methods will have better convergence properties.
 
 Unfortunately, $M^{-1}A$ will probably not be Hermitian.
-On the other hand, $R^{-1}AR^{-T}$ is Hermitian positive definite if $A$ is Herimitian positive definite (here $R^{-T} = (R^{-1})^T$). Thus, we can solve the system,
+On the other hand, $R^{-1}AR^{-{\mathsf{H}}}$ is Hermitian positive definite if $A$ is Herimitian positive definite (here $R^{-{\mathsf{H}}} = (R^{-1})^{\mathsf{H}}$). Thus, we can solve the system,
 $$
-(R^{-1}AR^{-T}) y = R^{-1}b
+(R^{-1}AR^{-{\mathsf{H}}}) y = R^{-1}b
 $$
 for $y$, and then find $x$ by solving the system,
 $$
-R^Tx = y
+R^{\mathsf{H}}x = y
 $$
 
 There is a lot of interest in developing new preconditioners, and understanding the theoretical properties of preconditioners.

@@ -40,9 +40,9 @@ Since we get $q_k$ by normalizing the resulting vector, using $Aq_{k-1}$ will gi
 
 The Arnoldi algorithm gives the relationship,
 $$
-AQ_k = Q_k H_k + h_{k+1,k} q_{k+1} \xi_k^T
+AQ_k = Q_k H_k + h_{k+1,k} q_{k+1} \xi_k^{\mathsf{T}}
 $$
-where $Q_k = [q_1,q_2,\ldots,q_k]$ is the $n\times k$ matrix whose columns are $\{q_1,q_2,\ldots,q_k\}$, $H_k$ is a $k\times k$ [*Upper Hessenburg*](https://en.wikipedia.org/wiki/Hessenberg_matrix) matrix, and $\xi_k = [0,\ldots,0,1]^T$ is the $k$-th unit vector.
+where $Q_k = [q_1,q_2,\ldots,q_k]$ is the $n\times k$ matrix whose columns are $\{q_1,q_2,\ldots,q_k\}$, $H_k$ is a $k\times k$ [*Upper Hessenburg*](https://en.wikipedia.org/wiki/Hessenberg_matrix) matrix, and $\xi_k^{\mathsf{T}} = [0,\ldots,0,1]^{\mathsf{T}}$ is the $k$-th unit vector.
 
 
 
@@ -72,7 +72,7 @@ Aq_j = \beta_{j-1} q_{j-1} + \alpha_j q_j + \beta_j q_{j+1}
 $$
 which we can write in matrix form as,
 $$
-AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^T
+AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^{\mathsf{T}}
 $$
 
 

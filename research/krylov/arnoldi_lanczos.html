@@ -65,9 +65,9 @@ Aq_{k-1} = c_1Av + c_2A^2v + \cdots c_{k-1}A^{k-1}v
 
 <p>The Arnoldi algorithm gives the relationship, <span class="math display">\[
 
-AQ_k = Q_k H_k + h_{k+1,k} q_{k+1} \xi_k^T
+AQ_k = Q_k H_k + h_{k+1,k} q_{k+1} \xi_k^{\mathsf{T}}
 
-\]</span> where <span class="math inline">\(Q_k = [q_1,q_2,\ldots,q_k]\)</span> is the <span class="math inline">\(n\times k\)</span> matrix whose columns are <span class="math inline">\(\{q_1,q_2,\ldots,q_k\}\)</span>, <span class="math inline">\(H_k\)</span> is a <span class="math inline">\(k\times k\)</span> <a href="https://en.wikipedia.org/wiki/Hessenberg_matrix"><em>Upper Hessenburg</em></a> matrix, and <span class="math inline">\(\xi_k = [0,\ldots,0,1]^T\)</span> is the <span class="math inline">\(k\)</span>-th unit vector.</p>
+\]</span> where <span class="math inline">\(Q_k = [q_1,q_2,\ldots,q_k]\)</span> is the <span class="math inline">\(n\times k\)</span> matrix whose columns are <span class="math inline">\(\{q_1,q_2,\ldots,q_k\}\)</span>, <span class="math inline">\(H_k\)</span> is a <span class="math inline">\(k\times k\)</span> <a href="https://en.wikipedia.org/wiki/Hessenberg_matrix"><em>Upper Hessenburg</em></a> matrix, and <span class="math inline">\(\xi_k^{\mathsf{T}} = [0,\ldots,0,1]^{\mathsf{T}}\)</span> is the <span class="math inline">\(k\)</span>-th unit vector.</p>
 
 <h3 id="ritz-vectors">Ritz vectors</h3>
 
@@ -93,7 +93,7 @@ Aq_j = \beta_{j-1} q_{j-1} + \alpha_j q_j + \beta_j q_{j+1}
 
 \]</span> which we can write in matrix form as, <span class="math display">\[
 
-AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^T
+AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^{\mathsf{T}}
 
 \]</span></p>
 

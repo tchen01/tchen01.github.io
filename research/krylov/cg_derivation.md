@@ -38,8 +38,7 @@ e_k = e_0 - a_0p_0 - a_1 p_1 - \cdots - a_{k-1} p_{k-1}
 $$
 
 By definition, the coefficients for $x_k$ were chosen to minimize the $A$-norm of the error, $\|e_k\|_A$, over $\mathcal{K}_k(A,b)$.
-Therefore, $e_k$ has zero component in each of the directions $\{ p_0,p_1,\ldots,p_{k-1} \}$.
-**explain why!!!!!!!!!!**
+Therefore, $e_k$ must have zero component in each of the directions $\{ p_0,p_1,\ldots,p_{k-1} \}$, which is an $A$-orthonormal basis for $\mathcal{K}_k(A,b)$.
 In particular, that means that $a_jp_j$ cancels exactly with $e_0$ in the direction of $p_j$, for all $j$. 
 
 We now make the important observation that the coefficients depend only on $e_0$ and the $p_i$, but not on $k$. 
