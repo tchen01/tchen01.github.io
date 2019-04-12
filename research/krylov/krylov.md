@@ -898,18 +898,18 @@ This variant is known as Chronopoulos and Gear conjugate gradient.
 However, while we have only a single global communication per iteration, the matrix vector product must still be computed before we are able to compute the inner products. 
 To allow the matrix vector product to be overlapped with the inner products, we again introduce auxiliary vectors.
 Observe that,
-$$
-w_k = Ar_k = A(r_{k-1} - a_{k-1}s_{k-1}) 
-= A r_{k-1} - a_{k-1} As_{k-1}
-= w_{l-1} - a_{k-1} As_{k-1}
-$$
+\begin{align*}
+w_k = Ar_k &= A(r_{k-1} - a_{k-1}s_{k-1}) 
+\\&= A r_{k-1} - a_{k-1} As_{k-1}
+\\&= w_{k-1} - a_{k-1} As_{k-1}
+\end{align*}
 
 Now, define $u_{k} = As_{k}$ and note that,
-$$
-u_{k} = As_k = A(w_k + b_k s_{k-1}) 
-= Aw_k + b_k As_{k-1} 
-= Aw_k + b_k u_{k-1}
-$$
+\begin{align*}
+u_{k} = As_k &= A(w_k + b_k s_{k-1}) 
+\\&= Aw_k + b_k As_{k-1} 
+\\&= Aw_k + b_k u_{k-1}
+\end{align*}
 
 That's it. For convenience we define $t_k = Aw_k$. 
 Then, the matrix vector product $Aw_k$ can occur as soon as we have computed $w_k$ and can be overlapped with both inner products.

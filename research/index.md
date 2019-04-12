@@ -15,8 +15,8 @@ I also have some short introductory pieces on some interesting topics.
 ## Publications
 
 <div class="paper">
-<div class="title"><a href="./publications/404.html">New Communication Hiding Conjugate Gradient Varaints.</a></div>
-<div class="authors"><strong>Tyler Chen</strong>, et. al.</div>
+<div class="title"><a href="./publications/chen_19.html">New Communication Hiding Conjugate Gradient Varaints.</a></div>
+<div class="authors"><strong>Tyler Chen</strong></div>
 <div class="details">In preparation.</div>
 </div>
 

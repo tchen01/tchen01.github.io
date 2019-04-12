@@ -173,25 +173,25 @@ s_k = Ap_k = A(r_k + b_k p_{k-1})
 
 \end{align*}\]</span></p>
 
-<p>However, while we have only a single global communication per iteration, the matrix vector product must still be computed before we are able to compute the inner products. To allow the matrix vector product to be overlapped with the inner products, we again introduce auxiliary vectors. Observe that, <span class="math display">\[
+<p>However, while we have only a single global communication per iteration, the matrix vector product must still be computed before we are able to compute the inner products. To allow the matrix vector product to be overlapped with the inner products, we again introduce auxiliary vectors. Observe that, <span class="math display">\[\begin{align*}
 
-w_k = Ar_k = A(r_{k-1} - a_{k-1}s_{k-1}) 
+w_k = Ar_k &amp;= A(r_{k-1} - a_{k-1}s_{k-1}) 
 
-= A r_{k-1} - a_{k-1} As_{k-1}
+\\&amp;= A r_{k-1} - a_{k-1} As_{k-1}
 
-= w_{l-1} - a_{k-1} As_{k-1}
+\\&amp;= w_{k-1} - a_{k-1} As_{k-1}
 
-\]</span></p>
+\end{align*}\]</span></p>
 
-<p>Now, define <span class="math inline">\(u_{k} = As_{k}\)</span> and note that, <span class="math display">\[
+<p>Now, define <span class="math inline">\(u_{k} = As_{k}\)</span> and note that, <span class="math display">\[\begin{align*}
 
-u_{k} = As_k = A(w_k + b_k s_{k-1}) 
+u_{k} = As_k &amp;= A(w_k + b_k s_{k-1}) 
 
-= Aw_k + b_k As_{k-1} 
+\\&amp;= Aw_k + b_k As_{k-1} 
 
-= Aw_k + b_k u_{k-1}
+\\&amp;= Aw_k + b_k u_{k-1}
 
-\]</span></p>
+\end{align*}\]</span></p>
 
 <p>That’s it. For convenience we define <span class="math inline">\(t_k = Aw_k\)</span>. Then, the matrix vector product <span class="math inline">\(Aw_k\)</span> can occur as soon as we have computed <span class="math inline">\(w_k\)</span> and can be overlapped with both inner products. This variant is known as either Ghysels and Vanroose conjugate gradient or pipelined conjugate gradient.</p>
 
