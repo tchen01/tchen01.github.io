@@ -1,15 +1,17 @@
 %Research
 
-I work in the field of Numerical Linear Algebra, specifically on [Krylov subspace methods](./krylov). 
 I'm interested in incorporating probabilistic techniques into classical algorithms to develop methods which are fast and reliable, both in theory and in practice.
-I'm committed to making my research accessible and to facilitating the [reproducibility](../thoughts/reproducibility.html) of my work.
+Right now I in the field of Numerical Linear Algebra on [Krylov subspace methods](./krylov).
+I hope that my work will help to bridge the gap between theoretical computer science and applied computational science.
+
+I am committed to making my research accessible and to facilitating the [reproducibility](../thoughts/reproducibility.html) of my work.
 Please feel free to contact me with any questions or concerns about my research.
 
-I am advised by [Anne Greenbaum](http://faculty.washington.edu/greenbau/).
+I'm advised by [Anne Greenbaum](http://faculty.washington.edu/greenbau/).
     
 This page contains a collection of the things I've been working on recently.
 In general, I try to include a description of papers which are readable by a broader audience interested in learning about or keeping up with recent advancements in the field.
-I also have some short introductory pieces on some interesting topics.
+I also have some short introductory pieces on topics I think are interesting.
 
     
 ## Publications
@@ -22,7 +24,6 @@ I also have some short introductory pieces on some interesting topics.
 <div class="authors"><strong>Tyler Chen</strong>.</div>
 <div class="details">In preparation.</div>
 </div>
-
 
 <div class="paper">
 <div class="title"><a href="./publications/greenbaum_liu_chen_19.html">On the Convergence of Conjugate Gradient Varients in Finite Precision Arithmetic.</a></div>
@@ -45,6 +46,7 @@ I also have some short introductory pieces on some interesting topics.
 
 - [The Remez Algorithm](./krylov/remez.html)
 - [Broadcasting in numpy](./inprog.html)
+- [Communiction costs in matrix vector and inner products](./inprog.html)
   
 ## Collaboration
 

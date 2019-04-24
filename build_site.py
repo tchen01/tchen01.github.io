@@ -2,15 +2,16 @@
 # -*- coding: utf-8 -*-
 
 import os
+os.environ['PATH'] += os.pathsep + '/home/tyler/anaconda3/bin/'
 
 start_delimiter = '<body>\n'
 end_delimiter = '</body>\n'
 
 def build_html(folder,file_name):
-    print(f'now building {folder}/{file[:-3]}')
+    print(f'now building {folder}/{file_name}')
 
     # convert md to html
-    os.system(f'pandoc --from markdown+markdown_in_html_blocks --mathjax -o {folder}/{file_name}1.html {folder}/{file}')
+    os.system(f'pandoc --from markdown+markdown_in_html_blocks --mathjax -o {folder}/{file_name}1.html {folder}/{file_name}.md')
     
     # generate updated pdf
     opts = ''
@@ -19,10 +20,10 @@ def build_html(folder,file_name):
     
     #
     if (folder not in ['research/krylov'] or file_name in ['remez']) and file_name not in ['index']:
-        os.system(f'pandoc {opts} -o {folder}/{file_name}.pdf {folder}/{file}')
+        os.system(f'pandoc {opts} -o {folder}/{file_name}.pdf {folder}/{file_name}.md')
     
     # open old html file, pandoc converted html file, and temp new file
-    with open(f'{folder}/{file_name}.html','r') as old_html_file, open(f'{folder}/{file[:-3]}1.html','r') as new_html_content, open(f'{folder}/{file_name}2.html','w+') as new_html_file:
+    with open(f'{folder}/{file_name}.html','r') as old_html_file, open(f'{folder}/{file_name}1.html','r') as new_html_content, open(f'{folder}/{file_name}2.html','w+') as new_html_file:
         
         while True:
             
@@ -44,7 +45,7 @@ def build_html(folder,file_name):
                 css_class = 'class="article"' if is_article(folder,file_name) else '' 
                 new_html_file.write(f'<div id="contentContainer" {css_class} >\n')
                 
-                with open(f'{folder}/{file}','r') as md_file:
+                with open(f'{folder}/{file_name}.md','r') as md_file:
 
                     title = ''
                     authors = ''
@@ -76,13 +77,13 @@ def build_html(folder,file_name):
                 new_html_file.write(f'<p class="authors">{authors}</p>\n')
                 
                 # idk if we want this..
-                if file[:-3] != 'index' and folder not in ['research/krylov']:
-                     new_html_file.write(f'<p>A pdf version of this page can be found <a href="./{file[:-3]}.pdf">here</a>.</p>\n')
+                if file_name != 'index' and folder not in ['research/krylov']:
+                     new_html_file.write(f'<p>A pdf version of this page can be found <a href="./{file_name}.pdf">here</a>.</p>\n')
                 
                 for new_line in new_html_content:
                     new_html_file.write(new_line+'\n')
 
-                if file[:-3] != 'index':
+                if file_name != 'index':
                     new_html_file.write(f'{footers[folder]}\n')
                 elif folder in ['research','thoughts']:
                     new_html_file.write(f'{index_footer}\n')
@@ -116,6 +117,7 @@ footers = {'.':'',
            'thoughts':'<p class="footer">More writing about my opinions on academia can be found <a href="./">here</a>.</p>'}
 index_footer = '<p class="footer">Return to my <a href="../">homepage</a>.</p>'
 
+#%%
 print('building krylov')
 os.chdir('research/krylov')
 os.system('python build_krylov.py')

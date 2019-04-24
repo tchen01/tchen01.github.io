@@ -3,20 +3,25 @@ title: '\sffamily \textbf{On the Convergence of Conjugate Gradient Variants in F
 author: '[Tyler Chen](https://chen.pw)'
 mainfont: Georgia
 sansfont: Lato
-linkcolor: blue
 header-includes: |
     \usepackage{sectsty}
     \allsectionsfont{\normalfont\sffamily\bfseries}
+    \usepackage{xcolor}
+    \definecolor{Base02}{HTML}{073662}
+    \hypersetup{
+      colorlinks,
+      linkcolor=Base02,
+      citecolor=Base02,
+      urlcolor=Base02
+    }
 ---
-
-This page is under construction.
 
 This is a companion piece to the publication:
 
     @article{greenbaum_liu_chen_19,
         Author = {Anne Greenbaum, Hexuan Liu, and Tyler Chen},
         Title = {On the Convergence of Conjugate Gradient Variants in Finite Precision Arithmetic.},
-        Howpublished = {In progress.},
+        Howpublished = {In progress},
         Year = {2019}
     }
 
@@ -46,7 +51,6 @@ The Conjugate Gradient algorithm is a widely used method for solving $Ax=b$ when
 ## Avoiding Communication
 
 - give example with inner product vs sparse matrix product
-- derive CGCG and GVCG by replacing recurrences
 
 
 ## Concusion
