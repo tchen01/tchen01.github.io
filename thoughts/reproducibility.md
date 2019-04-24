@@ -3,10 +3,17 @@ title: '\sffamily Reproducibility, Inclusivity, and Open Science'
 author: '[Tyler Chen](https://chen.pw)'
 mainfont: Georgia
 sansfont: Lato
-linkcolor: blue
 header-includes: |
     \usepackage{sectsty}
     \allsectionsfont{\normalfont\sffamily\bfseries}
+    \usepackage{xcolor}
+    \definecolor{Base02}{HTML}{073662}
+    \hypersetup{
+      colorlinks,
+      linkcolor=Base02,
+      citecolor=Base02,
+      urlcolor=Base02
+    }
 ---
 
 Preface: This page is intended as a brief explanation of why I think scientists should care about open source projects.

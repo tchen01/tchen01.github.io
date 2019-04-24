@@ -3,10 +3,18 @@ title: '\sffamily \textbf{An Introduction to Modern Analysis of the Conjugate Gr
 author: '[Tyler Chen](https://chen.pw)'
 mainfont: Georgia
 sansfont: Lato
-linkcolor: blue
 header-includes: |
     \usepackage{sectsty}
     \allsectionsfont{\normalfont\sffamily\bfseries}
+    \usepackage{xcolor}
+    \definecolor{Base02}{HTML}{073662}
+    \hypersetup{
+      colorlinks,
+      linkcolor=Base02,
+      citecolor=Base02,
+      urlcolor=Base02
+    }
+
 ---
 
 

@@ -132,6 +132,23 @@ Pseudocode is presented below.
 **Algorithm.** (Hestenes and Stiefel conjugate gradient)
 \begin{align*}
 &\textbf{procedure}\text{ HSCG}( A,b,x_0 ) 
+\\[-.4em]&~~~~r_0 = b-Ax_0, \nu_0 = \langle r_0,r_0 \rangle, p_0 = r_0, s_0 = Ar_0, 
+\\[-.4em]&~~~~a_0 = \nu_0 / \langle p_0,s_0 \rangle
+\\[-.4em]&~~~~\textbf{for } k=1,2,\ldots \textbf{:} 
+\\[-.4em]&~~~~~~~~x_k = x_{k-1} + a_{k-1} p_{k-1} 
+\\[-.4em]&~~~~~~~~r_k = r_{k-1} - a_{k-1} p_{k-1} 
+\\[-.4em]&~~~~~~~~\nu_{k} = \langle r_k,r_k \rangle, \textbf{ and } b_k = \nu_k / \nu_{k-1}
+\\[-.4em]&~~~~~~~~p_k = r_k + b_k p_{k-1}
+\\[-.4em]&~~~~~~~~s_k = A p_k
+\\[-.4em]&~~~~~~~~\mu_k = \langle p_k,s_k \rangle, \textbf{ and } a_k = \nu_k / \mu_k
+\\[-.4em]&~~~~~\textbf{end for}
+\\[-.4em]&\textbf{end procedure}
+\end{align*}
+
+
+<!--
+\begin{align*}
+&\textbf{procedure}\text{ HSCG}( A,b,x_0 ) 
 \\[-.4em]&~~~~\textbf{set } r_0 = b-Ax_0, \nu_0 = \langle r_0,r_0 \rangle, p_0 = r_0, s_0 = Ar_0, 
 \\[-.4em]&~~~~\phantom{\textbf{set }}a_0 = \nu_0 / \langle p_0,s_0 \rangle
 \\[-.4em]&~~~~\textbf{for } k=1,2,\ldots \textbf{:} 
@@ -144,6 +161,7 @@ Pseudocode is presented below.
 \\[-.4em]&~~~~~\textbf{end for}
 \\[-.4em]&\textbf{end procedure}
 \end{align*}
+-->
 
 <!--
 This can be easily [implemented](./cg.py) in numpy.

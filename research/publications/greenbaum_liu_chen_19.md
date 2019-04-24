@@ -13,11 +13,10 @@ This page is under construction.
 
 This is a companion piece to the publication:
 
-    @article{greenbaum_liu_chen_19
-        Author = {Anne Greenbaum, Hexuan Liu, and Tyler Chen}
-        Title = {On the Convergence of Conjugate Gradient Variants 
-                 in Finite Precision Arithmetic.}
-        Howpublished = {In progress.}
+    @article{greenbaum_liu_chen_19,
+        Author = {Anne Greenbaum, Hexuan Liu, and Tyler Chen},
+        Title = {On the Convergence of Conjugate Gradient Variants in Finite Precision Arithmetic.},
+        Howpublished = {In progress.},
         Year = {2019}
     }
 

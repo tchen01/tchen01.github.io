@@ -13,10 +13,10 @@ This page is under construction.
 
 This is a companion piece to the publication:
 
-    @article{chen_19
-        Author = {Tyler Chen}
-        Title = {New communication hiding conjugate gradient variants}
-        Howpublished = {In progress.}
+    @article{chen_19,
+        Author = {Tyler Chen},
+        Title = {New communication hiding conjugate gradient variants},
+        Howpublished = {In progress.},
         Year = {2019}
     }
 

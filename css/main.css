@@ -52,9 +52,10 @@ h2 > a, h3 > a{
 }
 
 pre{
-    line-height: .7em;
+    line-height: 1em;
     border-left: 2px solid black;
     padding: 0.5em 1em;
+    white-space: pre-wrap;
 }
 
 div {
@@ -64,14 +65,14 @@ div {
 
 a {
     text-decoration: underline;
-    color: #2d2f92;
+    color: #073662;
     font-weight: 400;
     cursor: pointer
 }
 
 a:hover {
     color: #fff;
-    background-color: #2d2f92
+    background-color: #073662
 }
 
 strong {

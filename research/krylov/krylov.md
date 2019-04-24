@@ -3,10 +3,18 @@ title: '\sffamily \textbf{An Introduction to Modern Analysis of the Conjugate Gr
 author: '[Tyler Chen](https://chen.pw)'
 mainfont: Georgia
 sansfont: Lato
-linkcolor: blue
 header-includes: |
     \usepackage{sectsty}
     \allsectionsfont{\normalfont\sffamily\bfseries}
+    \usepackage{xcolor}
+    \definecolor{Base02}{HTML}{073662}
+    \hypersetup{
+      colorlinks,
+      linkcolor=Base02,
+      citecolor=Base02,
+      urlcolor=Base02
+    }
+
 ---
 
 
@@ -395,6 +403,23 @@ Pseudocode is presented below.
 **Algorithm.** (Hestenes and Stiefel conjugate gradient)
 \begin{align*}
 &\textbf{procedure}\text{ HSCG}( A,b,x_0 ) 
+\\[-.4em]&~~~~r_0 = b-Ax_0, \nu_0 = \langle r_0,r_0 \rangle, p_0 = r_0, s_0 = Ar_0, 
+\\[-.4em]&~~~~a_0 = \nu_0 / \langle p_0,s_0 \rangle
+\\[-.4em]&~~~~\textbf{for } k=1,2,\ldots \textbf{:} 
+\\[-.4em]&~~~~~~~~x_k = x_{k-1} + a_{k-1} p_{k-1} 
+\\[-.4em]&~~~~~~~~r_k = r_{k-1} - a_{k-1} p_{k-1} 
+\\[-.4em]&~~~~~~~~\nu_{k} = \langle r_k,r_k \rangle, \textbf{ and } b_k = \nu_k / \nu_{k-1}
+\\[-.4em]&~~~~~~~~p_k = r_k + b_k p_{k-1}
+\\[-.4em]&~~~~~~~~s_k = A p_k
+\\[-.4em]&~~~~~~~~\mu_k = \langle p_k,s_k \rangle, \textbf{ and } a_k = \nu_k / \mu_k
+\\[-.4em]&~~~~~\textbf{end for}
+\\[-.4em]&\textbf{end procedure}
+\end{align*}
+
+
+<!--
+\begin{align*}
+&\textbf{procedure}\text{ HSCG}( A,b,x_0 ) 
 \\[-.4em]&~~~~\textbf{set } r_0 = b-Ax_0, \nu_0 = \langle r_0,r_0 \rangle, p_0 = r_0, s_0 = Ar_0, 
 \\[-.4em]&~~~~\phantom{\textbf{set }}a_0 = \nu_0 / \langle p_0,s_0 \rangle
 \\[-.4em]&~~~~\textbf{for } k=1,2,\ldots \textbf{:} 
@@ -407,6 +432,7 @@ Pseudocode is presented below.
 \\[-.4em]&~~~~~\textbf{end for}
 \\[-.4em]&\textbf{end procedure}
 \end{align*}
+-->
 
 <!--
 This can be easily [implemented](./cg.py) in numpy.
@@ -795,12 +821,12 @@ The most expensive computations each iteration are the matrix vector product, an
 **Algorithm.** (Hestenes and Stiefel conjugate gradient)
 \begin{align*}
 &\textbf{procedure}\text{ HSCG}( A,b,x_0 ) 
-\\[-.4em]&~~~~\textbf{set } r_0 = b-Ax_0, \nu_0 = \langle r_0,r_0 \rangle, p_0 = r_0, s_0 = Ar_0, 
-\\[-.4em]&~~~~\phantom{\textbf{set }}a_0 = \nu_0 / \langle p_0,s_0 \rangle
+\\[-.4em]&~~~~r_0 = b-Ax_0, \nu_0 = \langle r_0,r_0 \rangle, p_0 = r_0, s_0 = Ar_0, 
+\\[-.4em]&~~~~a_0 = \nu_0 / \langle p_0,s_0 \rangle
 \\[-.4em]&~~~~\textbf{for } k=1,2,\ldots \textbf{:} 
-\\[-.4em]&~~~~~~~~\textbf{set } x_k = x_{k-1} + a_{k-1} p_{k-1} 
-\\[-.4em]&~~~~~~~~\phantom{\textbf{set }} r_k = r_{k-1} - a_{k-1} s_{k-1} 
-\\[-.4em]&~~~~~~~~\textbf{set } \nu_{k} = \langle r_k,r_k \rangle, \textbf{ and } b_k = \nu_k / \nu_{k-1}
+\\[-.4em]&~~~~~~~~x_k = x_{k-1} + a_{k-1} p_{k-1} 
+\\[-.4em]&~~~~~~~~r_k = r_{k-1} - a_{k-1} s_{k-1} 
+\\[-.4em]&~~~~~~~~\nu_{k} = \langle r_k,r_k \rangle, \textbf{ and } b_k = \nu_k / \nu_{k-1}
 \\[-.4em]&~~~~~~~~\textbf{set }p_k = r_k + b_k p_{k-1}
 \\[-.4em]&~~~~~~~~\textbf{set }s_k = A p_k
 \\[-.4em]&~~~~~~~~\textbf{set }\mu_k = \langle p_k,s_k \rangle, \textbf{ and } a_k = \nu_k / \mu_k
@@ -880,16 +906,16 @@ This variant is known as Chronopoulos and Gear conjugate gradient.
 **Algorithm.** (Chronopoulos and Gear conjugate gradient)
 \begin{align*}
 &\textbf{procedure}\text{ CGCG}( A,b,x_0 ) 
-\\[-.4em]&~~~~\textbf{set } r_0 = b-Ax_0, \nu_0 = \langle r_0,r_0 \rangle, p_0 = r_0, s_0 = Ar_0, 
-\\[-.4em]&~~~~\phantom{\textbf{set }}a_0 = \nu_0 / \langle p_0,s_0 \rangle
+\\[-.4em]&~~~~r_0 = b-Ax_0, \nu_0 = \langle r_0,r_0 \rangle, p_0 = r_0, s_0 = Ar_0, 
+\\[-.4em]&~~~~a_0 = \nu_0 / \langle p_0,s_0 \rangle
 \\[-.4em]&~~~~\textbf{for } k=1,2,\ldots \textbf{:} 
-\\[-.4em]&~~~~~~~~\textbf{set } x_k = x_{k-1} + a_{k-1} p_{k-1} 
-\\[-.4em]&~~~~~~~~\phantom{\textbf{set }} r_k = r_{k-1} - a_{k-1} s_{k-1} 
-\\[-.4em]&~~~~~~~~\textbf{set } w_k = Ar_k 
-\\[-.4em]&~~~~~~~~\textbf{set } \nu_{k} = \langle r_k,r_k \rangle, \textbf{ and } b_k = \nu_k / \nu_{k-1}
-\\[-.4em]&~~~~~~~~\phantom{\textbf{set }}\eta_k = \langle r_k, w_k \rangle, \textbf{ and } a_k = \nu_k / (\eta_k - (b_k/a_{k-1})\nu_k)
-\\[-.4em]&~~~~~~~~\phantom{\textbf{set }} p_k = r_k + b_k p_{k-1}
-\\[-.4em]&~~~~~~~~\phantom{\textbf{set }} s_k = w_k + b_k s_{k-1}
+\\[-.4em]&~~~~~~~~x_k = x_{k-1} + a_{k-1} p_{k-1} 
+\\[-.4em]&~~~~~~~~r_k = r_{k-1} - a_{k-1} s_{k-1} 
+\\[-.4em]&~~~~~~~~w_k = Ar_k 
+\\[-.4em]&~~~~~~~~\nu_{k} = \langle r_k,r_k \rangle, \textbf{ and } b_k = \nu_k / \nu_{k-1}
+\\[-.4em]&~~~~~~~~\eta_k = \langle r_k, w_k \rangle, \textbf{ and } a_k = \nu_k / (\eta_k - (b_k/a_{k-1})\nu_k)
+\\[-.4em]&~~~~~~~~p_k = r_k + b_k p_{k-1}
+\\[-.4em]&~~~~~~~~s_k = w_k + b_k s_{k-1}
 \\[-.4em]&~~~~~\textbf{end for}
 \\[-.4em]&\textbf{end procedure}
 \end{align*}
@@ -918,18 +944,18 @@ This variant is known as either Ghysels and Vanroose conjugate gradient or pipel
 **Algorithm.** (Ghysels and Vanroose (pipelined) conjugate gradient)
 \begin{align*}
 &\textbf{procedure}\text{ GVCG}( A,b,x_0 ) 
-\\[-.4em]&~~~~\textbf{set } r_0 = b-Ax_0, \nu_0 = \langle r_0,r_0 \rangle, p_0 = r_0, s_0 = Ar_0, 
-\\[-.4em]&~~~~\phantom{\textbf{set }}w_0 = s_0, u_0 = Aw_0, a_0 = \nu_0 / \langle p_0,s_0 \rangle
+\\[-.4em]&~~~~r_0 = b-Ax_0, \nu_0 = \langle r_0,r_0 \rangle, p_0 = r_0, s_0 = Ar_0, 
+\\[-.4em]&~~~~w_0 = s_0, u_0 = Aw_0, a_0 = \nu_0 / \langle p_0,s_0 \rangle
 \\[-.4em]&~~~~\textbf{for } k=1,2,\ldots \textbf{:} 
-\\[-.4em]&~~~~~~~~\textbf{set } x_k = x_{k-1} + a_{k-1} p_{k-1} 
-\\[-.4em]&~~~~~~~~\phantom{\textbf{set }} r_k = r_{k-1} - a_{k-1} s_{k-1} 
-\\[-.4em]&~~~~~~~~\phantom{\textbf{set }} w_k = w_{k-1} - a_{k-1} u_{k-1}
-\\[-.4em]&~~~~~~~~\textbf{set } \nu_k = \langle r_k,r_k\rangle, \textbf{ and } b_k = \nu_k/\nu_{k-1}
-\\[-.4em]&~~~~~~~~\phantom{\textbf{set }} \eta_{k} = \langle r_k,w_k \rangle, \textbf{ and } a_k = \nu_k / (\eta_k - (b_k/a_{k-1})\nu_k)
-\\[-.4em]&~~~~~~~~\phantom{\textbf{set }} t_k = Aw_k
-\\[-.4em]&~~~~~~~~\textbf{set } p_k = r_k + b_k p_{k-1}
-\\[-.4em]&~~~~~~~~\phantom{\textbf{set }} s_k = w_k + b_k s_{k-1}
-\\[-.4em]&~~~~~~~~\phantom{\textbf{set }} u_k = t_k + b_k u_{k-1}
+\\[-.4em]&~~~~~~~~x_k = x_{k-1} + a_{k-1} p_{k-1} 
+\\[-.4em]&~~~~~~~~r_k = r_{k-1} - a_{k-1} s_{k-1} 
+\\[-.4em]&~~~~~~~~w_k = w_{k-1} - a_{k-1} u_{k-1}
+\\[-.4em]&~~~~~~~~\nu_k = \langle r_k,r_k\rangle, \textbf{ and } b_k = \nu_k/\nu_{k-1}
+\\[-.4em]&~~~~~~~~\eta_{k} = \langle r_k,w_k \rangle, \textbf{ and } a_k = \nu_k / (\eta_k - (b_k/a_{k-1})\nu_k)
+\\[-.4em]&~~~~~~~~t_k = Aw_k
+\\[-.4em]&~~~~~~~~p_k = r_k + b_k p_{k-1}
+\\[-.4em]&~~~~~~~~s_k = w_k + b_k s_{k-1}
+\\[-.4em]&~~~~~~~~u_k = t_k + b_k u_{k-1}
 \\[-.4em]&~~~~~\textbf{end for}
 \\[-.4em]&\textbf{end procedure}
 \end{align*}

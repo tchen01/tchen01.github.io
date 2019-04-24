@@ -14,9 +14,12 @@ I also have some short introductory pieces on some interesting topics.
     
 ## Publications
 
+<!-- Here is my [Google Scholar profile] and [ORCID: 0000-0002-1187-1026](https://orcid.org/0000-0002-1187-1026). -->
+
+
 <div class="paper">
 <div class="title"><a href="./publications/chen_19.html">New Communication Hiding Conjugate Gradient Varaints.</a></div>
-<div class="authors"><strong>Tyler Chen</strong></div>
+<div class="authors"><strong>Tyler Chen</strong>.</div>
 <div class="details">In preparation.</div>
 </div>
 
@@ -31,7 +34,7 @@ I also have some short introductory pieces on some interesting topics.
 ## Introductions to some topics I think are interesting
 
 - The Conjugate Gradient Algorithm [(pdf with everything below)](./krylov.pdf)
-	- [Introduction to Linear Systems/Krylov subspaces](./krylov) 
+    - [Introduction to Linear Systems/Krylov subspaces](./krylov) 
     - [Arnoldi and Lanczos methods](./krylov/arnoldi_lanczos.html)
     - [Derivation of CG](./krylov/cg_derivation.html)
     - [CG is Lanczos in disguise](./krylov/cg_lanczos.html)
@@ -41,7 +44,7 @@ I also have some short introductory pieces on some interesting topics.
     - [Current Research](./krylov/current_research.html)
 
 - [The Remez Algorithm](./krylov/remez.html)
-- Broadcasting in numpy
+- [Broadcasting in numpy](./inprog.html)
   
 ## Collaboration
 
