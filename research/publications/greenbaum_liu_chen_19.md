@@ -33,7 +33,7 @@ Need new algorithms to deal with modern HPC architecture. But can't sacrifice ac
 Take advantage of lower precision for ML type applications.
  
 ## Introduction
-If you are not familiar with the Conjugate Gradient method, it may be worth reading [this page](../krylov/index.html) first.
+If you are not familiar with the Conjugate Gradient method, it may be worth reading [this page](../cg/index.html) first.
 
 The Conjugate Gradient algorithm is a widely used method for solving $Ax=b$ when $A$ is positive definite (all eigenvalues are positive). 
 

@@ -34,17 +34,17 @@ I also have some short introductory pieces on topics I think are interesting.
 
 ## Introductions to some topics I think are interesting
 
-- The Conjugate Gradient Algorithm [(pdf with everything below)](./krylov.pdf)
-    - [Introduction to Linear Systems/Krylov subspaces](./krylov) 
-    - [Arnoldi and Lanczos methods](./krylov/arnoldi_lanczos.html)
-    - [Derivation of CG](./krylov/cg_derivation.html)
-    - [CG is Lanczos in disguise](./krylov/cg_lanczos.html)
-    - [Error bounds for CG](./krylov/cg_error.html)
-    - [Finite precision CG](./krylov/finite_precision_cg.html)
-    - [Communication Hiding CG variants](./krylov/communication_hiding_variants.html)
-    - [Current Research](./krylov/current_research.html)
+- The Conjugate Gradient Algorithm [(pdf with everything below)](./cg.pdf)
+    - [Introduction to Linear Systems/Krylov subspaces](./cg) 
+    - [Arnoldi and Lanczos methods](./cg/arnoldi_lanczos.html)
+    - [Derivation of CG](./cg/cg_derivation.html)
+    - [CG is Lanczos in disguise](./cg/cg_lanczos.html)
+    - [Error bounds for CG](./cg/cg_error.html)
+    - [Finite precision CG](./cg/finite_precision_cg.html)
+    - [Communication Hiding CG variants](./cg/communication_hiding_variants.html)
+    - [Current Research](./cg/current_research.html)
 
-- [The Remez Algorithm](./krylov/remez.html)
+- [The Remez Algorithm](./cg/remez.html)
 - [Broadcasting in numpy](./inprog.html)
 - [Communiction costs in matrix vector and inner products](./inprog.html)
   

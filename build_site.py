@@ -19,7 +19,7 @@ def build_html(folder,file_name):
         opts+='--pdf-engine=xelatex'
     
     #
-    if (folder not in ['research/krylov'] or file_name in ['remez']) and file_name not in ['index']:
+    if (folder not in ['research/cg'] or file_name in ['remez']) and file_name not in ['index']:
         os.system(f'pandoc {opts} -o {folder}/{file_name}.pdf {folder}/{file_name}.md')
     
     # open old html file, pandoc converted html file, and temp new file
@@ -77,7 +77,7 @@ def build_html(folder,file_name):
                 new_html_file.write(f'<p class="authors">{authors}</p>\n')
                 
                 # idk if we want this..
-                if file_name != 'index' and folder not in ['research/krylov']:
+                if file_name != 'index' and folder not in ['research/cg','research/krylov']:
                      new_html_file.write(f'<p>A pdf version of this page can be found <a href="./{file_name}.pdf">here</a>.</p>\n')
                 
                 for new_line in new_html_content:
@@ -101,7 +101,7 @@ def is_article(folder,file_name):
     if folder == 'thoughts':
         if file_name != 'index':
             return True
-    elif folder in ['research/krylov','research/publications']:
+    elif folder in ['research/cg','research/publications']:
         return True
 
     return False
@@ -109,18 +109,19 @@ def is_article(folder,file_name):
 YAML_clean = ['title', 'author',':', r'\sffamily ',r'\textbf',"'",'https','//','chen.pw','(',')','[',']','{','}']
 
 # folders
-folders = ['.', 'research','research/krylov','research/publications', 'thoughts']
+folders = ['.', 'research','research/cg','research/publications','research/krylov','thoughts']
 footers = {'.':'', 
            'research':'<p class="footer">The rest of my research can be found <a href="./">here</a>.</p>',
-           'research/krylov':'<p class="footer">More about Krylov methods can be found <a href="./">here</a>.</p>',
+           'research/cg':'<p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>',
            'research/publications':'<p class="footer">The rest of my publications can be found <a href="./../">here</a>.</p>',
+           'research/krylov':'<p class="footer">The rest of my research can be found <a href="../">here</a>.</p>',
            'thoughts':'<p class="footer">More writing about my opinions on academia can be found <a href="./">here</a>.</p>'}
 index_footer = '<p class="footer">Return to my <a href="../">homepage</a>.</p>'
 
 #%%
-print('building krylov')
-os.chdir('research/krylov')
-os.system('python build_krylov.py')
+print('building CG')
+os.chdir('research/cg')
+os.system('python build_cg.py')
 os.chdir('../..')
 
 # search through files

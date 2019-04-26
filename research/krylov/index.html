@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Conjugate Gradient</title>
-<meta name="description" content="The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. This website provides an introduction to the algorithm in theorey and in practice.">
+<title>Krylov Subspace Methods</title>
+<meta name="description" content="Krylov subspace methods are a class of popular methods for solving linear systems and eigenvalue problems.">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width user-scalable=no">
 
@@ -28,140 +28,12 @@
 
 <body>
 
-<div id="contentContainer" class="article" >
-<h1> An Introduction to Modern Analysis of the Conjugate Gradient Algorithm in Exact and Finite Precision
+<div id="contentContainer"  >
+<h1> Krylov Subspace Methods
 </h1>
 <p class="authors"> Tyler Chen
 </p>
-<!--start_pdf_comment-->
-
-<p>This is the first piece from a series on the conjugate gradient algorithm. It is still very much a work in progress, so please bear with me while it’s under construction. I have split up the content into the following pages:</p>
-
-<ul>
-
-<li><a href="./">Introduction to Krylov subspaces</a></li>
-
-<li><a href="./arnoldi_lanczos.html">Arnoldi and Lanczos methods</a></li>
-
-<li><a href="./cg_derivation.html">Derivation of CG</a></li>
-
-<li><a href="./cg_lanczos.html">CG is Lanczos in disguise</a></li>
-
-<li><a href="./cg_error.html">Error bounds for CG</a></li>
-
-<li><a href="./finite_precision_cg.html">Finite precision CG</a></li>
-
-<li><a href="./communication_hiding_variants.html">Communication Hiding CG variants</a></li>
-
-<li><a href="./current_research.html">Current Research</a></li>
-
-</ul>
-
-<p>All of the pages have been compiled into a single <a href="./krylov.pdf">pdf document</a> to facilitate offline reading. At the moment the PDF document is nearly identical to the web version, so some links are not working. I will eventually turn the PDF into a more self contained document with proper references to external sources.</p>
-
-<p>The following are some supplementary pages which are not directly related to conjugate gradient, but somewhat related:</p>
-
-<ul>
-
-<li><a href="./remez.html">The Remez Algorithm</a></li>
-
-</ul>
-
-<p>The intention of this website is not to provide a rigorous explanation of the topic, but rather, to provide some (hopefully useful) intuition about where this method comes from, how it works in theory and in practice, and what people are currently interested in learning about it. I do assume some linear algebra background (roughly at the level of a first undergrad course in linear algebra), but I try to add some refreshers along the way. My hope is that it can be a useful resources for undergraduates, engineers, tech workers, etc. who want to learn about some of the most recent developments in the study of conjugate gradient (i.e. communication avoiding methods work).</p>
-
-<p>If you are a bit rusty on your linear algebra I put together a <a href="./linear_algebra_review.html">refresher</a> on some of the important concepts for understanding this site. For a more rigorous and much broader treatment of iterative methods, I suggest Anne Greenbaum’s <a href="https://epubs.siam.org/doi/book/10.1137/1.9781611970937?mobileUi=0u">book</a> on the topic. A popular introduction to conjugate gradient in exact arithmetic written by Jonathan Shewchuk can be found <a href="./https://www.cs.cmu.edu/~quake-papers/painless-conjugate-gradient.pdf">here</a>. Finally, for a much more detailed overview of modern analysis of the Lanczos and conjugate gradient methods in exact arithmetic and finite precision, I suggest Gerard Meurant and Zdenek Strakos’s <a href="https://www.karlin.mff.cuni.cz/~strakos/download/2006_MeSt.pdf">report</a>.</p>
-
-<!--end_pdf_comment-->
-
-<h2 id="motivation">Motivation</h2>
-
-<p>Solving a linear system of equations <span class="math inline">\(Ax=b\)</span> is one of the most important tasks in modern science. A huge number of techniques and algorithms for dealing with more complex equations end up, in one way or another, requiring repeatedly solving linear systems. As a result, applications such as weather forecasting, medical imaging, and training neural nets all rely on methods for efficiently solving linear systems to achieve the real world impact that we often take for granted. When <span class="math inline">\(A\)</span> is symmetric and positive definite (if you don’t remember what that means, don’t worry, I have a refresher below), the conjugate gradient algorithm is a very popular choice for methods of solving <span class="math inline">\(Ax=b\)</span>.</p>
-
-<p>This popularity of the conjugate gradient algorithm (CG) is due to a couple factors. First, like most Krylov subspace methods, CG is <em>matrix free</em>. This means that <span class="math inline">\(A\)</span> never has to be explicitly represented as a matrix, as long as there is some way of computing the product <span class="math inline">\(v\mapsto Av\)</span>, for a given input vector <span class="math inline">\(v\)</span>. For very large problems, this means a big reduction in storage, and if <span class="math inline">\(A\)</span> has some structure (eg. <span class="math inline">\(A\)</span> comes from a DFT, difference/integral operator, is very sparse, etc.), it allows the algorithm to take advantage of fast matrix vector products. Second, CG only requires <span class="math inline">\(\mathcal{O}(n)\)</span> storage to run, as compared to <span class="math inline">\(\mathcal{O}(n^2)\)</span> that many other algorithms require (we use <span class="math inline">\(n\)</span> to denote the size of <span class="math inline">\(A\)</span>, i.e. <span class="math inline">\(A\)</span> has shape <span class="math inline">\(n\times n\)</span>). When the size of <span class="math inline">\(A\)</span> is very large, this becomes increasingly important.</p>
-
-<p>While the conjugate gradient algorithm has many nice theoretical properties, its behavior in finite precision can be <em>extremely</em> different than the behavior predicted by assuming exact arithmetic. Understanding what leads to these vastly different behaviors has been an active area of research since the introduction of the algorithm in the 50s. The intent of this document is to provide an overview of the conjugate gradient algorithm in exact precision, then introduce some of what is know about it in finite precision, and finally, present some modern research interests into the algorithm.</p>
-
-<h2 id="measuring-the-accuracy-of-solutions">Measuring the accuracy of solutions</h2>
-
-<p>One of the first question we should ask about any numerical method is, <em>does it solve the intended problem?</em> In the case of solving linear systems, this means asking <em>does the output approximate the true solution?</em> If not, then there isn’t much point using the method.</p>
-
-<p>Let’s quickly introduce the idea of the <em>error</em> and the <em>residual</em>. These quantities are both useful (in different ways) for measuring how close the approximate solution <span class="math inline">\(\tilde{x}\)</span> is to the true solution <span class="math inline">\(x^* = A^{-1}b\)</span>.</p>
-
-<p>The <em>error</em> is simply the difference between <span class="math inline">\(x^*\)</span> and <span class="math inline">\(\tilde{x}\)</span>. Taking the norm of this quantity gives us a scalar value which measures the distance between <span class="math inline">\(x^*\)</span> and <span class="math inline">\(\tilde{x}\)</span>. In some sense, this is perhaps the most natural way of measuring how close our approximate solution is to the true solution. In fact, when we say that a sequence <span class="math inline">\(x_0,x_1,x_2,\ldots\)</span> of vectors converges to <span class="math inline">\(x_*\)</span>, we mean that the sequence of scalars, <span class="math inline">\(\|x^*-x_0\|,\|x^*-x_1\|,\|x^*-x_2\|,\ldots\)</span> converges to zero. Thus, finding <span class="math inline">\(x\)</span> which solves <span class="math inline">\(Ax=b\)</span> could be written as finding the value of <span class="math inline">\(x\)</span> which minimizes <span class="math inline">\(\|x - x^*\| = \|x-A^{-1}b\|\)</span>.</p>
-
-<p>Of course, since we are trying to compute <span class="math inline">\(x^*\)</span>, it doesn’t make sense for an algorithm to explicitly depend on <span class="math inline">\(x^*\)</span>. The <em>residual</em> of <span class="math inline">\(\tilde{x}\)</span> is defined as <span class="math inline">\(b-A\tilde{x}\)</span>. Again, <span class="math inline">\(\|b-Ax^*\| = 0\)</span>, and since <span class="math inline">\(x^*\)</span> is the only point where this is true, finding <span class="math inline">\(x\)</span> to minimize <span class="math inline">\(\|b-Ax\|\)</span> gives the true solution. The advantage is that we can easily compute the residual <span class="math inline">\(b-A\tilde{x}\)</span> once we have our numerical solution <span class="math inline">\(\tilde{x}\)</span>, while there is not necessarily a good way to compute the error <span class="math inline">\(x^*-\tilde{x}\)</span>. This means that the residual gives us a way of inspecting convergence of a method.</p>
-
-<h2 id="krylov-subspaces">Krylov subspaces</h2>
-
-<p>From the previous section, we know that minimizing <span class="math inline">\(\|b-Ax\|\)</span> will give the solution <span class="math inline">\(x^*\)</span>. Unfortunately, this problem is “just as hard” as solving <span class="math inline">\(Ax=b\)</span>.</p>
-
-<p>We would like to find a related “easier” problem. One way to do this is to restrict the choice of values which <span class="math inline">\(x\)</span> can take. For instance, if we enforce that <span class="math inline">\(x\)</span> must be come from a smaller set of values, then the problem of minimizing <span class="math inline">\(\|b-Ax\|\)</span> is simpler (since there are less possibilities for <span class="math inline">\(x\)</span>). As an extreme example, if we say that <span class="math inline">\(x = cy\)</span> for some fixed vector <span class="math inline">\(y\)</span>, then this is a scalar minimization problem. Of course, by restricting what values we choose for <span class="math inline">\(x\)</span> it is quite likely that we will not longer be able to exactly solve <span class="math inline">\(Ax=b\)</span>.</p>
-
-<p>One thing we could try to do is balance the difficulty of the problems we have to solve at each step with the accuracy of the solutions they give. If we can obtain a very approximate solution by solving an easy problem, and then improve the solution by solving successively more difficult problems. If we do it in the right way, it seems plausible that “increasing the difficulty” of the problem we are solving won’t lead to extra work at each step, if we are be able to take advantage of having an approximate solution from a previous step.</p>
-
-<p>We can formalize this idea a little bit. Suppose we have a sequence of subspaces <span class="math inline">\(V_0\subset V_1\subset V_2\subset \cdots\)</span>. Then we can construct a sequence of iterates, <span class="math inline">\(x_0\in V_0, x_1\in V_1,x_2\in V_2, \ldots\)</span>. If, at each step, we ensure that <span class="math inline">\(x_k\)</span> minimizes <span class="math inline">\(\|b-Ax\|\)</span> over <span class="math inline">\(V_k\)</span>, then the norm of the residuals will decrease (because <span class="math inline">\(V_k \subset V_{k+1}\)</span>).</p>
-
-<p>Ideally this sequences of subspaces would:</p>
-
-<ol type="1">
-
-<li>be easy to construct</li>
-
-<li>be easy to optimize over (given the previous work done)</li>
-
-<li>eventually contain the true solution</li>
-
-</ol>
-
-<p>We now formally introduce Krylov subspaces, and hint at the fact that they can satisfy these properties.</p>
-
-<p>The <span class="math inline">\(k\)</span>-th Krylov subspace generated by a square matrix <span class="math inline">\(A\)</span> and a vector <span class="math inline">\(v\)</span> is defined to be, <span class="math display">\[
-
-\mathcal{K}_k(A,v) = \operatorname{span}\{v,Av,\ldots,A^{k-1}v \}
-
-\]</span></p>
-
-<p>First, these subspaces are relatively easy to construct because by definition we can get a spanning set by repeatedly applying <span class="math inline">\(A\)</span> to <span class="math inline">\(v\)</span>. In fact, we can fairly easily construct an orthonormal basis for these spaces with the <a href="./arnoldi_lanczos.html">Arnoldi/Lanczos</a> algorithms.</p>
-
-<!-- expand -->
-
-<p>Therefore, if we can find a quantity which can be optimized over each direction of an orthonormal basis independently, then optimizing over these expanding subspaces will be easy because we only need to optimize in a single new direction at each step.</p>
-
-<p>We now show that <span class="math inline">\(\mathcal{K}_k(A,b)\)</span> will eventually contain our solution by the time <span class="math inline">\(k=n\)</span>. While this result comes about naturally from our derivation of CG, I think it is useful to relate polynomials with Krylov subspace methods early on, as the two are intimately related.</p>
-
-<p>Suppose <span class="math inline">\(A\)</span> has <a href="https://en.wikipedia.org/wiki/Characteristic_polynomial#Characteristic_equation">characteristic polynomial</a>, <span class="math display">\[
-
-p_A(t) = \det(tI-A) = c_0 + c_1t + \cdots + c_{n-1}t^{n-1} + t^n
-
-\]</span> It turns out that <span class="math inline">\(c_0 = (-1)^n\det(A)\)</span> so that <span class="math inline">\(c_0\)</span> is nonzero if <span class="math inline">\(A\)</span> is invertible.</p>
-
-<p>The <a href="https://en.wikipedia.org/wiki/Cayley%E2%80%93Hamilton_theorem">Cayley-Hamilton Theorem</a> states that a matrix satisfies its own characteristic polynomial. This means, <span class="math display">\[
-
-0 = p_A(A) = c_0 I + c_1 A + \cdots c_{n+1} A^{n-1} + A^n
-
-\]</span></p>
-
-<p>Moving the identity term to the left and dividing by <span class="math inline">\(-c_0\)</span> (which won’t be zero since <span class="math inline">\(A\)</span> is invertible) we can write, <span class="math display">\[
-
-A^{-1} = -(c_1/c_0) I - (c_2/c_0) A - \cdots - (1/c_0) A^{n-1}
-
-\]</span></p>
-
-<p>This tells us that <span class="math inline">\(A^{-1}\)</span> can be written as a polynomial in <span class="math inline">\(A\)</span>! (I think this is one of the coolest facts from linear algebra.) In particular,<br />
-
-<span class="math display">\[
-
-x^* = A^{-1}b = -(c_1/c_0) b - (c_2/c_0) Ab - \cdots - (1/c_0) A^{n-1}b
-
-\]</span></p>
-
-<p>That is, the solution <span class="math inline">\(x^*\)</span> to the system <span class="math inline">\(Ax = b\)</span> is a linear combination of <span class="math inline">\(b, Ab, A^2b, \ldots, A^{n-1}b\)</span> (i.e. <span class="math inline">\(x^*\in\mathcal{K}_n(A,b)\)</span>). This observation is the motivation behind Krylov subspace methods.</p>
-
-<p>In fact, one way of viewing many Krylov subspace methods is as building low degree polynomial approximations to <span class="math inline">\(A^{-1}b\)</span> using powers of <span class="math inline">\(A\)</span> times <span class="math inline">\(b\)</span> (in fact Krylov subspace methods can be used to approximate <span class="math inline">\(f(A)b\)</span> where <span class="math inline">\(f\)</span> is any <a href="./current_research.html">function</a>).</p>
-
-<!--start_pdf_comment-->
-
-<p>Next: <a href="./arnoldi_lanczos.html">Arnoldi and Lanczos methods</a> <!--end_pdf_comment--></p>
+<p>You may be looking for my pieces on the <a href="../cg">Conjugate Gradient Algorithm</a>. More on Krylov subspace methods to appear in the future..</p>
 
 </div>
 </body>

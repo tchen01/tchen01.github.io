@@ -50,7 +50,7 @@ Communication (moving data between places on a computer) takes time, and on supe
 
 It's well known that CG behaves *very* differently in finite precision than it does in exact arithmetic.
 Understanding why this happens is a hard problem, and only a few results have been proved about it.
-I've written an introduction to the effects of finite precision on CG [here](../krylov/finite_precision_cg.html), but to summarize, the main effects are (i) the loss of ultimately attainable accuracy and (ii) the increase in number of iterations to reach a given level of accuracy (delay of convergence).
+I've written an introduction to the effects of finite precision on CG [here](../cg/finite_precision_cg.html), but to summarize, the main effects are (i) the loss of ultimately attainable accuracy and (ii) the increase in number of iterations to reach a given level of accuracy (delay of convergence).
 
 Thus, we would like to develop variants which reduce communication (and therefore the time per iteration), while simultaneously ensuring that their numerical stability is not too severely impacted (so that the number of iterations required is not increased too much).
 
