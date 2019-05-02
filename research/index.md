@@ -1,5 +1,8 @@
 %Research
 
+The less time scientists have to wait for code to run, the more time they can spend thinking about the problems they are tackling.
+My research aims to develop methods to support the scientists taking on the problems of today.
+
 I'm interested in incorporating probabilistic techniques into classical algorithms to develop methods which are fast and reliable, both in theory and in practice.
 Right now I in the field of Numerical Linear Algebra on [Krylov subspace methods](./krylov).
 I hope that my work will help to bridge the gap between theoretical computer science and applied computational science.
