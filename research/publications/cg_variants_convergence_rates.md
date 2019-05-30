@@ -18,42 +18,22 @@ header-includes: |
 
 This is a companion piece to the publication:
 
-    @article{greenbaum_liu_chen_19,
-        Author = {Anne Greenbaum, Hexuan Liu, and Tyler Chen},
-        Title = {On the Convergence of Conjugate Gradient Variants in Finite Precision Arithmetic.},
-        Howpublished = {In progress},
-        Year = {2019}
-    }
+[bibtex]
 
-A preprint will be on ArXiV in the near future.
+A preprint is available on arXiv: [https://arxiv.org/pdf/1905.05874.pdf](https://arxiv.org/pdf/1905.05874.pdf).
 
 ## Why should I care?
-Need new algorithms to deal with modern HPC architecture. But can't sacrifice accuracy. 
 
-Take advantage of lower precision for ML type applications.
- 
+The behaviour of the conjugate gradient algorithm in [finite precision](../cg/finite_precision_cg.html) is very different than what is predicted by exact arithmetic theory.
+In this sense, the algorithm could be considered unstable.
+However, the conjugate gradient algorithm is widely used in practice, so it is important to understand its behaviour in finite precision.
+
 ## Introduction
 If you are not familiar with the Conjugate Gradient method, it may be worth reading [this page](../cg/index.html) first.
 
-The Conjugate Gradient algorithm is a widely used method for solving $Ax=b$ when $A$ is positive definite (all eigenvalues are positive). 
-
-## Conjugate Gradient In Finite Precision
-
- - The CG algorithm can be derived by minimizing the $A$-norm of the error at each step.
-
-## Numerical Problems
-
-- introduction to floating points failing to be associative
-- even worse in low precision
-- give an example of error analysis for HSCG
- - full results in paper
-
-## Avoiding Communication
-
-- give example with inner product vs sparse matrix product
-
-
-## Concusion
 
 
 
+## Contributions of this paper
+
+In this paper we show (numerically) why on some problems certain variants of the conjugate gradient algorithm converge more slowly. 

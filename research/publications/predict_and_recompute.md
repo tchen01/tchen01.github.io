@@ -18,14 +18,9 @@ header-includes: |
 
 This is a companion piece to the publication:
 
-    @article{chen_19,
-        Author = {Tyler Chen},
-        Title = {New communication hiding conjugate gradient variants},
-        Howpublished = {In progress},
-        Year = {2019}
-    }
+[bibtex]
 
-A preprint is available on ArXiV: [https://arxiv.org/pdf/1905.01549.pdf](https://arxiv.org/pdf/1905.01549.pdf).
+A preprint is available on arXiv: [https://arxiv.org/pdf/1905.01549.pdf](https://arxiv.org/pdf/1905.01549.pdf).
 
 ## Why should I care?
 
@@ -61,3 +56,6 @@ A general framework for constructing these methods is presented.
 
 More importantly, the idea to use predictions of quantities to allow a computation to begin, and then recomputing these quantities at a later point (an idea originally due to Meurant) is applied to the ``pipelined'' versions of these variants.
 
+![Convergence of conjugate gradient variants on some sample problems.](./predict-and-recompute_convergence.svg)
+
+![Strong scaling of variants on Laplace's equation with 4 million unknowns.](./strong_scale.svg)

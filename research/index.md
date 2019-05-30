@@ -4,7 +4,7 @@ The less time scientists have to wait for code to run, the more time they can sp
 My research aims to develop methods to support the scientists taking on the problems of today.
 
 I'm interested in incorporating probabilistic techniques into classical algorithms to develop methods which are fast and reliable, both in theory and in practice.
-Right now I in the field of Numerical Linear Algebra on [Krylov subspace methods](./krylov).
+Right now, I in the field of Numerical Linear Algebra on [Krylov subspace methods](./krylov), specifically the [conjugate gradient algorithm](./cg).
 I hope that my work will help to bridge the gap between theoretical computer science and applied computational science.
 
 I am committed to making my research accessible and to facilitating the [reproducibility](../thoughts/reproducibility.html) of my work.
@@ -19,20 +19,11 @@ I also have some short introductory pieces on topics I think are interesting.
     
 ## Publications
 
-<!-- Here is my [Google Scholar profile] and [ORCID: 0000-0002-1187-1026](https://orcid.org/0000-0002-1187-1026). -->
+Here are links to my [Google Scholar profile](https://scholar.google.com/citations?hl=en&user=FD4TjnYAAAAJ) and [ORCID](https://orcid.org/0000-0002-1187-1026): 0000-0002-1187-1026.
 
+[pub:predict_and_recompute]
 
-<div class="paper">
-<div class="title"><a href="./publications/chen_19.html">New Communication Hiding Conjugate Gradient Varaints.</a></div>
-<div class="authors"><strong>Tyler Chen</strong>.</div>
-<div class="details">In preparation.</div>
-</div>
-
-<div class="paper">
-<div class="title"><a href="./publications/greenbaum_liu_chen_19.html">On the Convergence of Conjugate Gradient Varients in Finite Precision Arithmetic.</a></div>
-<div class="authors">Anne Greenbaum, Hexuan Liu, and <strong>Tyler Chen</strong>.</div>
-<div class="details">In preparation.</div>
-</div>
+[pub:cg_variants_convergence_rates]
 
 
 ## Introductions to some topics I think are interesting

@@ -52,7 +52,7 @@ h2 > a, h3 > a{
 }
 
 pre{
-    line-height: 1em;
+    line-height: 1.5em;
     border-left: 2px solid black;
     padding: 0.5em 1em;
     white-space: pre-wrap;
@@ -82,14 +82,22 @@ strong {
 img {
     display: block;
     margin: auto;
+    width: 100%;
 }
 
-.code {
-    font-family: monospace;
+figure {
+    margin: 0;
+    text-align: center;
 }
 
 .paper {
-    padding: 1em 0;
+    border-left: 2px solid black;
+    margin: 1em 0 0 0;
+    padding: 0 0 0 1em;
+}
+
+.paper > div {
+    padding: 0;
 }
 
 .title,.authors,.details {

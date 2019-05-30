@@ -28,72 +28,28 @@
 
 <body>
 
-<div id="contentContainer" class="article" >
+<div id="contentContainer"  >
 <h1> On the Convergence of Conjugate Gradient Variants in Finite Precision Arithmetic
 </h1>
 <p class="authors"> Tyler Chen
 </p>
-<p>A pdf version of this page can be found <a href="./greenbaum_liu_chen_19.pdf">here</a>.</p>
 <p>This is a companion piece to the publication:</p>
-
 <pre><code>@article{greenbaum_liu_chen_19,
-
-    Author = {Anne Greenbaum, Hexuan Liu, and Tyler Chen},
-
-    Title = {On the Convergence of Conjugate Gradient Variants in Finite Precision Arithmetic.},
-
-    Howpublished = {In progress},
-
-    Year = {2019}
-
-}</code></pre>
-
-<p>A preprint will be on ArXiV in the near future.</p>
-
+    title = {On the Convergence Rate of Variants of the Conjugate Gradient Algorithm in Finite Precision Arithmetic},
+    author = {Anne Greenbaum and Hexuan Liu and Tyler Chen},
+    year = {2019},
+    eprint = {1905.05874},
+    archivePrefix = {arXiv},
+    primaryClass = {cs.NA},
+    note = {arXiv preprint: 1905.05874},
+}
+</code></pre><p>A preprint is available on arXiv: <a href="https://arxiv.org/pdf/1905.05874.pdf" class="uri">https://arxiv.org/pdf/1905.05874.pdf</a>.</p>
 <h2 id="why-should-i-care">Why should I care?</h2>
-
-<p>Need new algorithms to deal with modern HPC architecture. But can’t sacrifice accuracy.</p>
-
-<p>Take advantage of lower precision for ML type applications.</p>
-
+<p>The behaviour of the conjugate gradient algorithm in <a href="../cg/finite_precision_cg.html">finite precision</a> is very different than what is predicted by exact arithmetic theory. In this sense, the algorithm could be considered unstable. However, the conjugate gradient algorithm is widely used in practice, so it is important to understand its behaviour in finite precision.</p>
 <h2 id="introduction">Introduction</h2>
-
 <p>If you are not familiar with the Conjugate Gradient method, it may be worth reading <a href="../cg/index.html">this page</a> first.</p>
-
-<p>The Conjugate Gradient algorithm is a widely used method for solving <span class="math inline">\(Ax=b\)</span> when <span class="math inline">\(A\)</span> is positive definite (all eigenvalues are positive).</p>
-
-<h2 id="conjugate-gradient-in-finite-precision">Conjugate Gradient In Finite Precision</h2>
-
-<ul>
-
-<li>The CG algorithm can be derived by minimizing the <span class="math inline">\(A\)</span>-norm of the error at each step.</li>
-
-</ul>
-
-<h2 id="numerical-problems">Numerical Problems</h2>
-
-<ul>
-
-<li>introduction to floating points failing to be associative</li>
-
-<li>even worse in low precision</li>
-
-<li>give an example of error analysis for HSCG</li>
-
-<li>full results in paper</li>
-
-</ul>
-
-<h2 id="avoiding-communication">Avoiding Communication</h2>
-
-<ul>
-
-<li>give example with inner product vs sparse matrix product</li>
-
-</ul>
-
-<h2 id="concusion">Concusion</h2>
-
+<h2 id="contributions-of-this-paper">Contributions of this paper</h2>
+<p>In this paper we show (numerically) why on some problems certain variants of the conjugate gradient algorithm converge more slowly.</p>
 <p class="footer">The rest of my publications can be found <a href="./../">here</a>.</p>
 </div>
 </body>

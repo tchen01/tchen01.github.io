@@ -7,21 +7,42 @@ os.environ['PATH'] += os.pathsep + '/home/tyler/anaconda3/bin/'
 start_delimiter = '<body>\n'
 end_delimiter = '</body>\n'
 
+
+def bib_to_html(bib_file_loc,bib_file_name):
+    """
+    given bibtex file location, output html string.
+    """
+    
+    bib_info = {}
+
+    with open(bib_file_loc+bib_file_name+'.bib','r') as bib_file:
+        for raw_line in bib_file:
+            line = raw_line.strip()
+            eq_loc = line.find('=')
+            l_loc = line.find('{')
+            r_loc = line.find('}')
+
+            bib_info[line[:eq_loc].strip()] = line[l_loc+1:r_loc].replace(' and', ',')
+
+    html = '<div class="paper">\n'\
+           +f'<div class="title"><a href="./publications/{bib_file_name}.html">{bib_info["title"]}</a>.</div>\n'\
+           +f'<div class="authors">{bib_info["author"].replace("Tyler Chen","<strong>Tyler Chen</strong>")}.</div>\n'\
+           +(f'<div class="eprint">arXiv:<a href="https://arxiv.org/abs/{bib_info["eprint"]}">{bib_info["eprint"]}</a>.</div>\n' if True else '')\
+           +'</div>\n'
+    
+    return html
+
 def build_html(folder,file_name):
     print(f'now building {folder}/{file_name}')
 
+    # only generate pdf for articles (still may be better to just render print css well for text articles).
+    if is_article(folder,file_name): 
+        opts = '--pdf-engine=xelatex'
+        os.system(f'pandoc {opts} -o {folder}/{file_name}.pdf {folder}/{file_name}.md')
+
     # convert md to html
     os.system(f'pandoc --from markdown+markdown_in_html_blocks --mathjax -o {folder}/{file_name}1.html {folder}/{file_name}.md')
-    
-    # generate updated pdf
-    opts = ''
-    if is_article(folder,file_name): 
-        opts+='--pdf-engine=xelatex'
-    
-    #
-    if (folder not in ['research/cg'] or file_name in ['remez']) and file_name not in ['index']:
-        os.system(f'pandoc {opts} -o {folder}/{file_name}.pdf {folder}/{file_name}.md')
-    
+
     # open old html file, pandoc converted html file, and temp new file
     with open(f'{folder}/{file_name}.html','r') as old_html_file, open(f'{folder}/{file_name}1.html','r') as new_html_content, open(f'{folder}/{file_name}2.html','w+') as new_html_file:
         
@@ -76,12 +97,34 @@ def build_html(folder,file_name):
                 new_html_file.write(f'<h1>{title}</h1>\n')
                 new_html_file.write(f'<p class="authors">{authors}</p>\n')
                 
-                # idk if we want this..
-                if file_name != 'index' and folder not in ['research/cg','research/krylov']:
+
+                if file_name != 'index' and folder in ['thoughts']:
                      new_html_file.write(f'<p>A pdf version of this page can be found <a href="./{file_name}.pdf">here</a>.</p>\n')
                 
                 for new_line in new_html_content:
-                    new_html_file.write(new_line+'\n')
+
+                    # if reach a citation point
+                    if new_line == '<p>[bibtex]</p>\n':
+                        with open(f'{folder}/{file_name}.bib','r') as bib_file:
+                            new_html_file.write('<pre><code>')
+                            for bib_line in bib_file:
+                                new_html_file.write(bib_line)
+                            new_html_file.write('</code></pre>')
+                        new_line = ''
+
+                    # if want to getnerate publication list
+                    elif new_line[:8] == '<p>[pub:':
+
+                        # get publication (short) name
+                        pub_name = new_line[8:].split(']')[0]
+                        
+                        # loop over bibfiles
+                        html_bib = bib_to_html(f'{folder}/publications/',pub_name)
+
+                        new_html_file.write(html_bib)
+                        new_line = ''
+
+                    new_html_file.write(new_line)
 
                 if file_name != 'index':
                     new_html_file.write(f'{footers[folder]}\n')
@@ -101,8 +144,6 @@ def is_article(folder,file_name):
     if folder == 'thoughts':
         if file_name != 'index':
             return True
-    elif folder in ['research/cg','research/publications']:
-        return True
 
     return False
 
@@ -110,6 +151,7 @@ YAML_clean = ['title', 'author',':', r'\sffamily ',r'\textbf',"'",'https','//','
 
 # folders
 folders = ['.', 'research','research/cg','research/publications','research/krylov','thoughts']
+folders = ['research','research/publications']
 footers = {'.':'', 
            'research':'<p class="footer">The rest of my research can be found <a href="./">here</a>.</p>',
            'research/cg':'<p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>',
@@ -119,10 +161,13 @@ footers = {'.':'',
 index_footer = '<p class="footer">Return to my <a href="../">homepage</a>.</p>'
 
 #%%
-print('building CG')
-os.chdir('research/cg')
-os.system('python build_cg.py')
-os.chdir('../..')
+def build_cg():
+    print('building CG')
+    os.chdir('research/cg')
+    os.system('python build_cg.py')
+    os.chdir('../..')
+
+#build_cg()
 
 # search through files
 for folder in folders:
