@@ -58,4 +58,4 @@ More importantly, the idea to use predictions of quantities to allow a computati
 
 ![Convergence of conjugate gradient variants on some sample problems.](./predict-and-recompute_convergence.svg)
 
-![Strong scaling of variants on Laplace's equation with 4 million unknowns.](./strong_scale.svg)
+![Strong scaling of variants on sample problem.](./strong_scale.svg)

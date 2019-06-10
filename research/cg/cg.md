@@ -1,7 +1,7 @@
 ---
 title: '\sffamily \textbf{An Introduction to Modern Analysis of the Conjugate Gradient Algorithm in Exact and Finite Precision}'
 author: '[Tyler Chen](https://chen.pw)'
-mainfont: Georgia
+mainfont: Vollkorn
 sansfont: Lato
 header-includes: |
     \usepackage{sectsty}

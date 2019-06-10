@@ -28,137 +28,74 @@
 
 <body>
 
-<div id="contentContainer" class="article" >
+<div id="contentContainer"  >
 <h1> Error Bounds for the Conjugate Gradient Algorithm
 </h1>
 <p class="authors"> Tyler Chen
 </p>
 <p>In our <a href="./cg_derivation.html">derivation</a> of the conjugate gradient method, we minimized the <span class="math inline">\(A\)</span>-norm of the error over sucessive Krylov subspaces. Ideally we would like to know how quickly this method converge. That is, how many iterations are needed to reach a specified level of accuracy.</p>
-
 <h2 id="error-bounds-from-minimax-polynomials">Error bounds from minimax polynomials</h2>
-
 <p>Previously we have show that, <span class="math display">\[
-
 e_k \in e_0 + \operatorname{span}\{p_0,p_1,\ldots,p_{k-1}\} = e_0 + \mathcal{K}_k(A,b)
-
 \]</span></p>
-
 <p>Observing that <span class="math inline">\(r_0 = Ae_0\)</span> we find that, <span class="math display">\[
-
 e_k \in e_0 +  \operatorname{span}\{Ae_0,A^2e_0,\ldots,A^{k}e_0\}
-
 \]</span></p>
-
 <p>Thus, we can write, <span class="math display">\[\begin{align*}
-
 \| e_k \|_A =  \min_{p\in\mathcal{P}_k}\|p(A)e_0\|_A
-
 ,&amp;&amp;
-
 \mathcal{P}_k = \{p : p(0) = 1, \operatorname{deg} p \leq k\}    
-
 \end{align*}\]</span></p>
-
 <p>Since <span class="math inline">\(A^{1/2} p(A) = p(A)A^{1/2}\)</span> we can write, <span class="math display">\[
-
 \| p(A)e_0 \|_A
-
 = \|A^{1/2} p(A)e_0 \|
-
 = \|p(A) A^{1/2}e_0 \|
-
 \]</span></p>
-
 <p>Now, using the submultiplicative property of the 2-norm, <span class="math display">\[
-
 \|p(A) A^{1/2}e_0 \|
-
 \leq \|p(A)\| \|A^{1/2} e_0 \|
-
 = \|p(A)\| \|e_0\|_A
-
 \]</span></p>
-
 <p>Since <span class="math inline">\(A\)</span> is positive definite, it is diagonalizable as <span class="math inline">\(U\Lambda U^{\mathsf{H}}\)</span> where <span class="math inline">\(U\)</span> is unitary and <span class="math inline">\(\Lambda\)</span> is the diagonal matrix of eigenvalues of <span class="math inline">\(A\)</span>. Thus, since <span class="math inline">\(U^{\mathsf{H}}U = I\)</span>, <span class="math display">\[
-
 A^k = (U\Lambda U^{\mathsf{H}})^k = U\Lambda^kU^{\mathsf{H}}
-
 \]</span></p>
-
 <p>We can then write <span class="math inline">\(p(A) = Up(\Lambda)U^*\)</span> where <span class="math inline">\(p(\Lambda)\)</span> has diagonal entries <span class="math inline">\(p(\lambda_i)\)</span>. Therefore, using the <em>unitary invariance</em> property of the 2-norm, <span class="math display">\[
-
 \|p(A)\| = \|Up(\Lambda)U^{\mathsf{H}}\| = \|p(\Lambda)\|
-
 \]</span></p>
-
 <p>Now, since the 2-norm of a symmetric matrix is the magnitude of the largest eigenvalue, <span class="math display">\[
-
 \| p(\Lambda) \| = \max_i |p(\lambda_i)|
-
 \]</span></p>
-
 <p>Finally, putting everything together we have, <span class="math display">\[
-
 \frac{\|e_k\|_A}{\|e_0\|_A} \leq \min_{p\in\mathcal{P}_k} \max_i |p(\lambda_i)|
-
 \]</span></p>
-
 <p>Since the inequality we obtained from the submultiplicativity of the 2-norm is tight, this bound is also tight (in the sense that for a fixed <span class="math inline">\(k\)</span> there exists an initial error <span class="math inline">\(e_0\)</span> so that equality holds).</p>
-
 <p>Polynomials of this form are called minimax polynomials. More formally, let <span class="math inline">\(L\subset \mathbb{R}\)</span> be some closed set. The <em>minimax polynomial of degree <span class="math inline">\(k\)</span></em> on <span class="math inline">\(L\)</span> is the polynomial satisfying, <span class="math display">\[\begin{align*}
-
 \min_{p\in\mathcal{P}_k} \max_{x\in L} | p(x) |
-
 ,&amp;&amp;
-
 \mathcal{P}_k = \{p : p(0)=1, \deg p \leq k\}    
-
 \end{align*}\]</span></p>
-
 <p>Computing a minimax polynomial for a given set is not trivial, but an algorithm called the <a href="./remez.html">Remez algorithm</a> can be used to compute it.</p>
-
 <h3 id="chebyshev-bounds">Chebyshev bounds</h3>
-
 <p>The minimax polynomial on the eigenvalues of <span class="math inline">\(A\)</span> is a bit tricky to work with. Although we can find it using the Remez algorithm, this is somewhat tedious, and requires knowledge of the whole spectrum of <span class="math inline">\(A\)</span>. To be useful in practice we would like a bound which depends only on information about <span class="math inline">\(A\)</span> that we might reasonably expect to have prior to solving the linear system. One way to obtain such a bound is to expand the set on which we are looking for the minimax polynomial.</p>
-
 <p>To this end, let <span class="math inline">\(\mathcal{I} = [\lambda_{\text{min}},\lambda_{\text{max}}]\)</span>. Then, since <span class="math inline">\(\lambda_i\in\mathcal{I}\)</span>, <span class="math display">\[
-
 \min_{p\in\mathcal{P}_k} \max_i |p(\lambda_i)| 
-
 \leq \min_{p\in\mathcal{P}_k} \max_{x \in \mathcal{I}} |p(x)| 
-
 \]</span></p>
-
 <p>The right hand side requires that we know the largest and smallest eigenvalues of <span class="math inline">\(A\)</span>, but doesn’t require knowledge of any of the ones between. This means it can be useful in practice, since we can easily compute the top and bottom eignevalues with the power method.</p>
-
 <p>The minimax polynomials on a single closed interval <span class="math inline">\(\mathcal{I}\)</span> are called the <em>Chebyshev Polynomials</em>, and can be easily written down with a simple recurrence relation.</p>
-
 <p>If <span class="math inline">\(\mathcal{I} = [-1,1]\)</span> then the relation is, <span class="math display">\[\begin{align*}
-
 T_{k+1}(x) = 2xT_k(x) - T_{k-1}(x)
-
 ,&amp;&amp;
-
 T_0=1
-
 ,&amp;&amp;
-
 T_1=x    
-
 \end{align*}\]</span></p>
-
 <p>For <span class="math inline">\(\mathcal{I} \neq [-1,1]\)</span>, the above polynomials are simply stretched and shifted to the interval in question.</p>
-
 <p>Let <span class="math inline">\(\kappa = \lambda_{\text{max}} / \lambda_{\text{min}}\)</span> (this is called the condition number). Then, from properties of these polynomials, <span class="math display">\[
-
 \frac{\|e_k\|_A}{\|e_0\|_A} \leq 2 \left( \frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1} \right)^k
-
 \]</span></p>
-
 <!--start_pdf_comment-->
-
 <p>Next: <a href="./finite_precision_cg.html">The conjugate gradient Algorithm in Finite Precision</a> <!--end_pdf_comment--></p>
-
 <p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
 </div>
 </body>

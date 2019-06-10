@@ -28,61 +28,36 @@
 
 <body>
 
-<div id="contentContainer" class="article" >
+<div id="contentContainer"  >
 <h1> Current research on Conjugate Gradient and related Krylov subspace methods
 </h1>
 <p class="authors"> Tyler Chen
 </p>
 <p>Krylov subspace methods have remained an active area of research since they were first introduced. In general, research focuses on understanding convergence properties in finite precision, and on speeding up the runtime of algorithms. I’ve included some topics below, but this should by no means be taken as a comprehensive list; I’m sure there are many important and interesting areas which don’t show up here.</p>
-
 <p><strong>find some citations and links</strong></p>
-
 <h2 id="preconditioners">Preconditioners</h2>
-
 <p>Preconditioning linear systems is perhaps one of the oldest methods for improving convergence of iterative methods. The basic idea is to convert the system <span class="math inline">\(Ax=b\)</span> to one which is nicer to work with. If <span class="math inline">\(M^{-1}\)</span> is full rank, then solving <span class="math inline">\(Ax=b\)</span> gives the same solution as solving, <span class="math display">\[
-
 M^{-1}Ax = M^{-1} b
-
 \]</span></p>
-
 <p>If <span class="math inline">\(M^{-1} = A^{-1}\)</span> then this system is trivial to solve. Of course, finding <span class="math inline">\(A^{-1}\)</span> is generally not easy, but if <span class="math inline">\(M^{-1}\)</span> “approximates” <span class="math inline">\(A^{-1}\)</span> in some way, then often <span class="math inline">\(M^{-1}A\)</span> will be much better conditioned than <span class="math inline">\(A\)</span>, and so iterative methods will have better convergence properties.</p>
-
 <p>Unfortunately, <span class="math inline">\(M^{-1}A\)</span> will probably not be Hermitian. On the other hand, <span class="math inline">\(R^{-1}AR^{-{\mathsf{H}}}\)</span> is Hermitian positive definite if <span class="math inline">\(A\)</span> is Herimitian positive definite (here <span class="math inline">\(R^{-{\mathsf{H}}} = (R^{-1})^{\mathsf{H}}\)</span>). Thus, we can solve the system, <span class="math display">\[
-
 (R^{-1}AR^{-{\mathsf{H}}}) y = R^{-1}b
-
 \]</span> for <span class="math inline">\(y\)</span>, and then find <span class="math inline">\(x\)</span> by solving the system, <span class="math display">\[
-
 R^{\mathsf{H}}x = y
-
 \]</span></p>
-
 <p>There is a lot of interest in developing new preconditioners, and understanding the theoretical properties of preconditioners.</p>
-
 <h2 id="multiplereduced-precision">Multiple/reduced precision</h2>
-
 <p>Using lower precision (e.g. single, or float16 instead of doubles) means reduced storage, less communication, faster floating point arithmetic etc. Perhaps more importantly, GPUs have been highly optimized for single precision floating point computations.</p>
-
 <p>However, we have already seen that conjugate gradient can be significantly affected by <a href="./finite_precision_cg.html">finite precision</a>, so simply running the traditional algorithms in reduced precision will often lead to poor convergence.</p>
-
 <h2 id="avoiding-communication">Avoiding communication</h2>
-
 <p>I’ve already talked about <a href="./communication_hiding_variants.html">communication hiding</a> variants of the conjugate gradient algorithm.</p>
-
 <h3 id="blocked-methods">Blocked methods</h3>
-
 <p>If we have to solve multiple systems <span class="math inline">\(Ax=b_1, Ax=b_2, \ldots\)</span>, then it makes sense to try to do these simultaneously so that we can reduce data movement.</p>
-
 <h2 id="applications-to-machine-learning">Applications to machine learning</h2>
-
 <h2 id="computing-matrix-functions">Computing matrix functions</h2>
-
 <ul>
-
 <li><span class="math inline">\(f(A)b\)</span> for functions other that <span class="math inline">\(f(x) = x^{-1}\)</span></li>
-
 </ul>
-
 <p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
 </div>
 </body>

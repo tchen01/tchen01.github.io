@@ -5,15 +5,19 @@ body,html {
     height: 100%;
     margin: 0;
     padding: 0;
-    font-family: 'Lato','Trebuchet MS';
-    font-weight: 300;
-    font-size: 100%
+    font-family: 'Vollkorn','Times','Times New Roman','serif'; 
+    font-weight: 400;
+    font-size: 100%;
+}
+
+h1, h2, h3 {
+    font-family: 'Lato','Trebuchet MS','Sans-Serif';
 }
 
 #contentContainer {
     margin: 0 auto;
-    width: 76%;
-    padding: 13%;
+    width: 90%;
+    padding: 5%;
     overflow: hidden
 }
 
@@ -29,43 +33,27 @@ section {
 }
 
 h1 {
+    margin: 0 0 .5em;
+    padding-top: .2em;
     font-weight: 700;
     font-size: 150%;
-    border-bottom: 1px solid #000;
-    padding-top: .2em;
-    margin: 0 0 .5em
+    border-bottom: 2px solid #000;
+}
+
+h2 {
+    font-size: 115%;
+    margin: 1.5em 0 -.5em 0;
 }
 
 h3 {
     font-size: 100%;
-	margin: 1.5em 0 -.5em 0;
-}
-
-h3 > a{
-    font-weight: inherit;
-}
-
-div {
-    line-height: 1.3em
+    margin: 1.5em 0 -.5em 0;
 }
 
 a {
     text-decoration: none;
     color: inherit;
     font-weight: 400
-}
-
-.clickable,a {
-    cursor: pointer
-}
-
-a.clickable {
-    text-decoration: underline
-}
-
-.clickable:hover {
-    color: #fff;
-    background-color: #000
 }
 
 .code {

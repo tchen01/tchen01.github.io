@@ -1,7 +1,7 @@
 ---
 title: '\sffamily Reproducibility, Inclusivity, and Open Science'
 author: '[Tyler Chen](https://chen.pw)'
-mainfont: Georgia
+mainfont: Vollkorn
 sansfont: Lato
 header-includes: |
     \usepackage{sectsty}

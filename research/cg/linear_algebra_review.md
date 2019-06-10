@@ -1,7 +1,7 @@
 ---
 title: '\sffamily \textbf{Linear algebra review}'
 author: '[Tyler Chen](https://chen.pw)'
-mainfont: Georgia
+mainfont: Vollkorn
 sansfont: Lato
 header-includes: |
     \usepackage{sectsty}

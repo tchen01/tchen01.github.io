@@ -151,7 +151,7 @@ YAML_clean = ['title', 'author',':', r'\sffamily ',r'\textbf',"'",'https','//','
 
 # folders
 folders = ['.', 'research','research/cg','research/publications','research/krylov','thoughts']
-folders = ['research','research/publications']
+#folders = ['research','research/publications']
 footers = {'.':'', 
            'research':'<p class="footer">The rest of my research can be found <a href="./">here</a>.</p>',
            'research/cg':'<p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>',
@@ -167,7 +167,7 @@ def build_cg():
     os.system('python build_cg.py')
     os.chdir('../..')
 
-#build_cg()
+build_cg()
 
 # search through files
 for folder in folders:
