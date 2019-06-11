@@ -36,4 +36,4 @@ If you are not familiar with the Conjugate Gradient method, it may be worth read
 
 ## Contributions of this paper
 
-In this paper we show (numerically) why on some problems certain variants of the conjugate gradient algorithm converge more slowly. 
+In this paper we show (numerically) why on some problems certain variants of the conjugate gradient algorithm converge more slowly.
