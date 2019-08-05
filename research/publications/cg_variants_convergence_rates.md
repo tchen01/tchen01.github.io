@@ -44,6 +44,7 @@ Unforunately, nobody has been able to prove this for any of the high performance
 
 ## Contributions of this paper
 
+<<<<<<< HEAD
 In this paper we show (numerically) why on some problems certain variants of the conjugate gradient algorithm converge more slowly than others, but on some problems all variants behave the same.
 To do this we first analyze how closely different variants satisfy the three term Lanczos recurrence.
 It turns out that the standard implementation, and one due to Chronopoulos and Gear satisfy the three term recurrence to within local rounding errors.
@@ -51,3 +52,6 @@ However, the pipelined variant due to Ghysels and Vanroose, which is more parall
 While the paper does not prove that this leads to worse convergence, it does suggest that 
 
 
+=======
+In this paper we show (numerically) why on some problems certain variants of the conjugate gradient algorithm converge more slowly.
+>>>>>>> dbe2c394921d1c40db8ba9b2c7379aa5b8648198
