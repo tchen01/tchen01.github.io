@@ -42,7 +42,10 @@ However, we have already seen that conjugate gradient can be significantly affec
 
 ## Avoiding communication 
 
-I've already talked about [communication hiding](./communication_hiding_variants.html) variants of the conjugate gradient algorithm.
+I've already talked about some classic [communication hiding](./communication_hiding_variants.html) variants of the conjugate gradient algorithm.
+
+Recently, I have introduced ["predict-and-recompute"](../publications/predict_and_recompute.html) conjugate gradient varaints.
+These variants have similar parallelism to the standard communication hiding varaints, but better numerical properties.
 
 
 ### Blocked methods

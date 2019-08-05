@@ -8,7 +8,7 @@ start_delimiter = '<body>\n'
 end_delimiter = '</body>\n'
 
 
-def bib_to_html(bib_file_loc,bib_file_name):
+def pub_to_html(bib_file_loc,bib_file_name):
     """
     given bibtex file location, output html string.
     """
@@ -27,10 +27,37 @@ def bib_to_html(bib_file_loc,bib_file_name):
     html = '<div class="paper">\n'\
            +f'<div class="title"><a href="./publications/{bib_file_name}.html">{bib_info["title"]}</a>.</div>\n'\
            +f'<div class="authors">{bib_info["author"].replace("Tyler Chen","<strong>Tyler Chen</strong>")}.</div>\n'\
-           +(f'<div class="eprint">arXiv:<a href="https://arxiv.org/abs/{bib_info["eprint"]}">{bib_info["eprint"]}</a>.</div>\n' if True else '')\
+           +(f'<div class="eprint">arXiv:<a href="https://arxiv.org/abs/{bib_info["eprint"]}">{bib_info["eprint"]}</a>.</div>\n' if "eprint" in bib_info.keys() else '')\
            +'</div>\n'
     
     return html
+
+def talk_to_html(bib_file_loc,bib_file_name):
+    """
+    given bibtex file location, output html string.
+    """
+    
+    bib_info = {}
+
+    with open(bib_file_loc+bib_file_name+'.bib','r') as bib_file:
+        for raw_line in bib_file:
+            line = raw_line.strip()
+            eq_loc = line.find('=')
+            l_loc = line.find('{')
+            r_loc = line.find('}')
+
+            bib_info[line[:eq_loc].strip()] = line[l_loc+1:r_loc].replace(' and', ',')
+
+    html = '<div class="paper">\n'\
+           +f'<div class="title">{bib_info["title"]}</a>.</div>\n'\
+           +f'<div class="authors">{bib_info["author"].replace("Tyler Chen","<strong>Tyler Chen</strong>")}.</div>\n'\
+           +f'<div class="notes">{bib_info["note"]}.</div>\n'\
+           +f'<div class="eprint"><a href="./talks/{bib_file_name}.pdf">[pdf]</a></div>\n'\
+           +'</div>\n'
+    
+    return html
+
+
 
 def build_html(folder,file_name):
     print(f'now building {folder}/{file_name}')
@@ -112,14 +139,26 @@ def build_html(folder,file_name):
                             new_html_file.write('</code></pre>')
                         new_line = ''
 
-                    # if want to getnerate publication list
+                    # if want to generate publication list
                     elif new_line[:8] == '<p>[pub:':
 
                         # get publication (short) name
                         pub_name = new_line[8:].split(']')[0]
                         
                         # loop over bibfiles
-                        html_bib = bib_to_html(f'{folder}/publications/',pub_name)
+                        html_bib = pub_to_html(f'{folder}/publications/',pub_name)
+
+                        new_html_file.write(html_bib)
+                        new_line = ''
+
+                    # if want to generate publication list
+                    elif new_line[:9] == '<p>[talk:':
+
+                        # get publication (short) name
+                        pub_name = new_line[9:].split(']')[0]
+                        
+                        # loop over bibfiles
+                        html_bib = talk_to_html(f'{folder}/talks/',pub_name)
 
                         new_html_file.write(html_bib)
                         new_line = ''
@@ -151,7 +190,7 @@ YAML_clean = ['title', 'author',':', r'\sffamily ',r'\textbf',"'",'https','//','
 
 # folders
 folders = ['.', 'research','research/cg','research/publications','research/krylov','thoughts']
-#folders = ['research','research/publications']
+folders = ['research','research/publications']
 footers = {'.':'', 
            'research':'<p class="footer">The rest of my research can be found <a href="./">here</a>.</p>',
            'research/cg':'<p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>',
@@ -167,7 +206,7 @@ def build_cg():
     os.system('python build_cg.py')
     os.chdir('../..')
 
-build_cg()
+#build_cg()
 
 # search through files
 for folder in folders:

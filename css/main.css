@@ -100,7 +100,7 @@ figure {
     padding: 0;
 }
 
-.title,.authors,.details {
+.title,.authors,.eprint,.notes {
     display: inline;
 }
 
@@ -115,6 +115,22 @@ figure {
 .footer {
     padding-top: 4em;
     font-size: 80%;
+}
+
+table {
+    width: 100%;
+    border-top: 3px solid black;
+    border-bottom: 2px solid black;
+    border-collapse: collapse;
+}
+
+thead > tr {
+    border-bottom: 2px solid black;
+}
+
+caption {
+    text-align: left;
+    padding: 0 0 1em 0;
 }
 
 @media (max-width:360px) {

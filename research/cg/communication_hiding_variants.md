@@ -30,7 +30,6 @@ So, a 1000x increase in processing power won't necessarily cut the computation t
 ## Communication bottlenecks in CG
 
 Recall the standard Hestenes and Stifel CG implementation.
-In the below description, every block of code after a "**set**" must wait for the output from the previous block.
 Much of the algorithm is scalar and vector updates which are relatively cheap (in terms of floating point operations and communication).
 The most expensive computations each iteration are the matrix vector product, and the two inner products.
 
@@ -43,9 +42,9 @@ The most expensive computations each iteration are the matrix vector product, an
 \\[-.4em]&~~~~~~~~x_k = x_{k-1} + a_{k-1} p_{k-1} 
 \\[-.4em]&~~~~~~~~r_k = r_{k-1} - a_{k-1} s_{k-1} 
 \\[-.4em]&~~~~~~~~\nu_{k} = \langle r_k,r_k \rangle, \textbf{ and } b_k = \nu_k / \nu_{k-1}
-\\[-.4em]&~~~~~~~~\textbf{set }p_k = r_k + b_k p_{k-1}
-\\[-.4em]&~~~~~~~~\textbf{set }s_k = A p_k
-\\[-.4em]&~~~~~~~~\textbf{set }\mu_k = \langle p_k,s_k \rangle, \textbf{ and } a_k = \nu_k / \mu_k
+\\[-.4em]&~~~~~~~~p_k = r_k + b_k p_{k-1}
+\\[-.4em]&~~~~~~~~s_k = A p_k
+\\[-.4em]&~~~~~~~~\mu_k = \langle p_k,s_k \rangle, \textbf{ and } a_k = \nu_k / \mu_k
 \\[-.4em]&~~~~~\textbf{end for}
 \\[-.4em]&\textbf{end procedure}
 \end{align*}
@@ -57,7 +56,7 @@ In these cases, the cost of floating point arithmetic for a matrix vector produc
 While the number of floating point operations for a sparse matrix vector product and an inner product are often similar, the communication costs for the inner products can be much higher.
 In a matrix vector product, each entry of the output can be computed independently of the other entires. Moreover, each entry will generally depend on only a few entries of the matrix and a few entries of the vector.
 On the other hand, an inner product requires all of the entries of both vectors. 
-This means that even if parts of the computation are sent to different processors, the outputs will have be be put together in a *global reduction* (also called *global synchronization* or *all-reduce*_.
+This means that even if parts of the computation are sent to different processors, the outputs will have be be put together in a *global reduction* (also called *global synchronization* or *all-reduce*).
 This communication ends up becomining the performance bottleneck each iteration on sufficintly high performance machines.
 
 There are multiply ways to address the communication bottleneck in CG. The two main approaches are "hiding" communication, and "avoiding" communication.
@@ -73,6 +72,7 @@ If you're interested in communication avoiding methods, or want more information
 Suppose that we would like to be able to reduce the number of points in the algorithm a global communication is required (i.e. be able to compute all inner products simultaneously).
 In the standard presentation of the conjugate gradient algorithm, we need to wait for each of the previous computations before we are able to do a matrix vector product or an inner product.
 This means there are two global communications per iteration and that none of the heavy computations can be overlapped.
+
 
 Using our recurrences we can write,
 $$
@@ -176,7 +176,11 @@ This variant is known as either Ghysels and Vanroose conjugate gradient or pipel
 \\[-.4em]&\textbf{end procedure}
 \end{align*}
 
+In a derivation similar those of the "classic" communication hiding varaints on this page, I have developed ["predict-and-recompute"](../publications/predict_and_recompute.html) variants.
+These variants have the same parallelism as the pipelined conjugate gradient shown here, but better numerical properties.
+
 Recently, Cornelis, Cools, and Van Roose have developed a ["deep pipelined"](https://arxiv.org/pdf/1801.04728.pdf) conjugate gradient, which essentially introduces even more auxiliary vectors to allow for more overlapping.
+
 
 <!--start_pdf_comment-->
 Next: [Current research on CG and related Krylov subspace methods](./current_research.html)

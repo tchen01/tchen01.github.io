@@ -25,6 +25,9 @@ Here are links to my [Google Scholar profile](https://scholar.google.com/citatio
 
 [pub:cg_variants_convergence_rates]
 
+## Talks and Posters
+
+[talk:symmetric_preconditioner_baidu]
 
 ## Introductions to some topics I think are interesting
 
