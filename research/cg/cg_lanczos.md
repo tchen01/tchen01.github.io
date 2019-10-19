@@ -1,5 +1,10 @@
-% Conjugate Gradient is Lanczos in Disguise
-% Tyler Chen
+---
+title: Conjugate Gradient is Lanczos in Disguise
+author: '[Tyler Chen](https://chen.pw)'
+keywords: ['applied','math']
+description: The Conjugate Gradient and Lanczos algorithms are both widely used Krylov subspace methods for positive definite matrices. In fact, the CG algorithm generates a three term Lanczos recurrence.
+footer: <p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
+...
 
 It's perhaps not so surprising that the conjugate gradient and Lanczos algorithms are closely related. After all, they are both Krylov subspace methods for symmetric matrices.
 

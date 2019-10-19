@@ -1,5 +1,10 @@
-% Communication Hiding Conjugate Gradient Algorithms
-% Tyler Chen
+---
+title: Communication Hiding Conjugate Gradient Algorithms
+author: '[Tyler Chen](https://chen.pw)'
+keywords: ['applied','math']
+description: The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. Mathematically equivalent variants have been developed to reduce global communication.
+footer: <p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
+...
 
 So far, all we have considered are error bounds in terms of the number of iterations. 
 However, in practice, what we really care about is how long a computation takes.

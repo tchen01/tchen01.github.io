@@ -1,6 +1,8 @@
 ---
-title: '\sffamily Reproducibility, Inclusivity, and Open Science'
+title: Reproducibility, Inclusivity, and Open Science
 author: '[Tyler Chen](https://chen.pw)'
+description: Science is built on the idea of reproducibility. Computational science is in the unqiue position of having access to open source projects which can help make science accessible to a greater audience.
+footer: <p class="footer">More writing about my opinions on academia can be found <a href="./">here</a>.</p>
 mainfont: Vollkorn
 sansfont: Lato
 header-includes: |
@@ -15,6 +17,7 @@ header-includes: |
       urlcolor=Base02
     }
 ---
+
 
 Preface: This page is intended as a brief explanation of why I think scientists should care about open source projects.
 It's fairly short, so I only touch on some things very briefly.

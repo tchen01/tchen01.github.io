@@ -1,19 +1,8 @@
 ---
-title: '\sffamily \textbf{New communication hiding conjugate gradient variants.}'
+title: New communication hiding conjugate gradient variants
 author: '[Tyler Chen](https://chen.pw)'
-mainfont: Georgia
-sansfont: Lato
-header-includes: |
-    \usepackage{sectsty}
-    \allsectionsfont{\normalfont\sffamily\bfseries}
-    \usepackage{xcolor}
-    \definecolor{Base02}{HTML}{073662}
-    \hypersetup{
-      colorlinks,
-      linkcolor=Base02,
-      citecolor=Base02,
-      urlcolor=Base02
-    }
+description: We introduce a new class of communication hiding conjugate gradient variants.
+footer: <p class="footer">The rest of my publications can be found <a href="./../">here</a>.</p>
 ---
 
 This is a companion piece to the publication:

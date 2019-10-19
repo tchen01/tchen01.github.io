@@ -1,6 +1,9 @@
 ---
-title: '\sffamily \textbf{Linear algebra review}'
+title: Linear Algebra Review
 author: '[Tyler Chen](https://chen.pw)'
+keywords: ['applied','math']
+description: A breif linear algebra review.
+footer: <p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
 mainfont: Vollkorn
 sansfont: Lato
 header-includes: |

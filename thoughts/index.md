@@ -1,4 +1,8 @@
-% Thoughts
+---
+title:  Thoughts
+keywords: ['applied','math']
+description: I'm Tyler Chen, applied math PhD student at the University of Washington. Find out more about my research, teaching, and educational beliefs, and then get in contact with me.
+...
 
 This is a collection of some thoughts from my experience in academia. A lot of what's written here has probably been said before in one way or another.
 

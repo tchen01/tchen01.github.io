@@ -1,5 +1,10 @@
-% Error Bounds for the Conjugate Gradient Algorithm
-% Tyler Chen
+---
+title: Error Bounds for the Conjugate Gradient Algorithm
+author: '[Tyler Chen](https://chen.pw)'
+keywords: ['applied','math']
+description: The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. Characterizing the convergence of CG is important for understanding the rescources the algorithm will require.
+footer: <p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
+...
 
 In our [derivation](./cg_derivation.html) of the conjugate gradient method, we minimized the $A$-norm of the error over sucessive Krylov subspaces.
 Ideally we would like to know how quickly this method converge.

@@ -1,6 +1,9 @@
 ---
-title: '\sffamily \textbf{The Remez Algorithm}'
+title: The Remez Algorithm
 author: '[Tyler Chen](https://chen.pw)'
+keywords: ['applied','math']
+description: A breif introduction to the Remez algorithm for computing the minimax polynomial.
+footer: <p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
 mainfont: Vollkorn
 sansfont: Lato
 header-includes: |

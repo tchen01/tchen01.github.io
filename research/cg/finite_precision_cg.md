@@ -1,5 +1,10 @@
-% The Lanczos and Conjugate Gradient Algorithms in Finite Precision
-% Tyler Chen
+---
+title: Error Bounds for the Conjugate Gradient Algorithm
+author: '[Tyler Chen](https://chen.pw)'
+keywords: ['applied','math']
+description: The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. CG behaves very differently in finite precision due to rounding errors which cause a loss of orthogonality.
+footer: <p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
+...
 
 A key component of our derivations of the [Lanczos](./arnoldi_lanczos.html) and [conjugate gradient](./cg_derivation.html) methods was the orthogonality of certain vectors.
 In finite precision, we cannot have exact orthogonality, so our induction based arguments no longer hold.

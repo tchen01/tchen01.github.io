@@ -17,7 +17,6 @@ header-includes: |
 
 ---
 
-
 <!--start_pdf_comment-->
 
 ## Motivation

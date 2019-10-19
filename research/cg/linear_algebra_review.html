@@ -1,20 +1,22 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
-<title>Linear Algebra Review</title>
-<meta name="description" content="A breif linear algebra review.">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width user-scalable=no">
+  <meta charset="utf-8" />
+  <title>Linear Algebra Review</title>
+  <meta name="description" content="A breif linear algebra review.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="author" content="Tyler Chen" />
+  <meta name="keywords" content="applied, math" />
 
-<link href="../../tc.ico" rel="shortcut icon" >
-<link href="../../css/main.css" rel="stylesheet" type="text/css" media="screen" />
-<link href="../../css/print.css" rel="stylesheet" type="text/css" media="print"/>
-<link rel="stylesheet" href="../../font/lato/stylesheet.css" type="text/css" charset="utf-8" />
-<link rel="stylesheet" href="../../font/vollkorn/stylesheet.css" type="text/css" charset="utf-8" />
-
-<script type="text/javascript" async
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <link href="../../tc.ico" rel="shortcut icon" >
+  <link href="../../css/main.css" rel="stylesheet" type="text/css" media="screen" />
+  <link href="../../css/print.css" rel="stylesheet" type="text/css" media="print"/>
+  <link rel="stylesheet" href="../../font/lato/stylesheet.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../../font/vollkorn/stylesheet.css" type="text/css" charset="utf-8" />
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-50592837-1"></script>
@@ -25,106 +27,143 @@
 
   gtag('config', 'UA-50592837-1');
 </script>
+
 </head>
-
 <body>
-
-<div id="contentContainer"  >
-<h1> Linear algebra review
-</h1>
-<p class="authors"> Tyler Chen
-</p>
+<div id="contentContainer">
+<h1>Linear Algebra Review</h1>
+<p class="author"><a href="https://chen.pw">Tyler Chen</a></p>
 <p>If you’re feeling a bit rusty, these are the linear algebra highlights that you will need to get started with some of the pages on this site.</p>
-<p>This is by no means a comprehensive introduction to linear algebra, but hopefully can provide a refresher on the topics necessary to understand the conjugate gradient algorithm. I do assume that you have seen linear algebra before, so if everything here looks foreign, I suggest taking a look at <a href="https://www.khanacademy.org/math/linear-algebra">Khan Academy</a> videos first.</p>
-<h2 id="some-notation">Some notation</h2>
+<p>This is by no means a comprehensive introduction to linear algebra, but hopefully can provide a refresher on the topics necessary to understand the conjugate gradient algorithm.
+I do assume that you have seen linear algebra before, so if everything here looks foreign, I suggest taking a look at <a href="https://www.khanacademy.org/math/linear-algebra">Khan Academy</a> videos first.</p>
+<h2>Some notation</h2>
 <p>I’ll generally use capital letters to denote matrices, and lower case letters to denote vectors.</p>
-<p>When I am talking about the entries of a matrix (or vector), I will use brackets to indicate this. For instance, <span class="math inline">\([A]_{4,2}\)</span> is the <span class="math inline">\(4,2\)</span> entry of the matrix <span class="math inline">\(A\)</span>. If I want to take an etire row or column I will indicate this with a colon. So <span class="math inline">\([A]_{2,:}\)</span> is the 2nd row of <span class="math inline">\(A\)</span> (think of this as taking the <span class="math inline">\((2,i)\)</span>-entries for all <span class="math inline">\(i\)</span>) while <span class="math inline">\([A]_{:,1}\)</span> is the first column of <span class="math inline">\(A\)</span>. If <span class="math inline">\(v\)</span> is a vector, then I will often only write one index. Thus, <span class="math inline">\([v]_3\)</span> denotes the 3-rd element of <span class="math inline">\(v\)</span> regardless of if <span class="math inline">\(v\)</span> is a row or column vector.</p>
-<h2 id="some-definitions">Some definitions</h2>
+<p>When I am talking about the entries of a matrix (or vector), I will use brackets to indicate this.
+For instance, <span class="math inline">\([A]_{4,2}\)</span> is the <span class="math inline">\(4,2\)</span> entry of the matrix <span class="math inline">\(A\)</span>.
+If I want to take an etire row or column I will indicate this with a colon.
+So <span class="math inline">\([A]_{2,:}\)</span> is the 2nd row of <span class="math inline">\(A\)</span> (think of this as taking the <span class="math inline">\((2,i)\)</span>-entries for all <span class="math inline">\(i\)</span>) while <span class="math inline">\([A]_{:,1}\)</span> is the first column of <span class="math inline">\(A\)</span>.
+If <span class="math inline">\(v\)</span> is a vector, then I will often only write one index. Thus, <span class="math inline">\([v]_3\)</span> denotes the 3-rd element of <span class="math inline">\(v\)</span> regardless of if <span class="math inline">\(v\)</span> is a row or column vector.</p>
+<h2>Some definitions</h2>
 <p>We will denote the <em>transpose</em> of a matrix by <span class="math inline">\({\mathsf{T}}\)</span>, and the <em>conjugate transpose</em> (also known as <em>Hermitian transpose</em>) by <span class="math inline">\({\mathsf{H}}\)</span>.</p>
 <p>A matrix <span class="math inline">\(A\)</span> is called <em>symmetric</em> if <span class="math inline">\(A^{\mathsf{T}} = A\)</span>, and is called <em>Hermitian</em> if <span class="math inline">\(A^{\mathsf{H}} = A\)</span>.</p>
-<p>The identity matrix will be denoted <span class="math inline">\(I\)</span>. Occasionally it may be denoted by <span class="math inline">\(I_k\)</span> to emphasize that it is of size <span class="math inline">\(k\)</span>.</p>
+<p>The identity matrix will be denoted <span class="math inline">\(I\)</span>.
+Occasionally it may be denoted by <span class="math inline">\(I_k\)</span> to emphasize that it is of size <span class="math inline">\(k\)</span>.</p>
 <p>A vector is called <em>normal</em> if it has norm one.</p>
 <p>Two vectors are called <em>orthogonal</em> if their inner product is zero.</p>
 <p>If two vectors are both normal, and are orthogonal to one another, they are called <em>orthonormal</em>.</p>
-<p>A matrix <span class="math inline">\(U\)</span> is called unitary if <span class="math inline">\(U^{\mathsf{H}}U = U U^{\mathsf{H}} = I\)</span>. This is equivalent to all the columns being (pairwise) orthonormal.</p>
-<p>A Hermitian (symmetric) matrix is called <em>positive definite</em> if <span class="math inline">\(x^{\mathsf{H}}Ax &gt; 0\)</span> (<span class="math inline">\(x^{\mathsf{T}}Ax&gt;0\)</span>) for all <span class="math inline">\(x\)</span>. This is equivalent to having all positive eigenvalues.</p>
+<p>A matrix <span class="math inline">\(U\)</span> is called unitary if <span class="math inline">\(U^{\mathsf{H}}U = U U^{\mathsf{H}} = I\)</span>.
+This is equivalent to all the columns being (pairwise) orthonormal.</p>
+<p>A Hermitian (symmetric) matrix is called <em>positive definite</em> if <span class="math inline">\(x^{\mathsf{H}}Ax &gt; 0\)</span> (<span class="math inline">\(x^{\mathsf{T}}Ax&gt;0\)</span>) for all <span class="math inline">\(x\)</span>.
+This is equivalent to having all positive eigenvalues.</p>
 <p>An <em>eigenvalue</em> of a square matrix <span class="math inline">\(A\)</span> is any scaler <span class="math inline">\(\lambda\)</span> for which there exists a vector <span class="math inline">\(v\)</span> so that <span class="math inline">\(Av = \lambda v\)</span>. The vector <span class="math inline">\(v\)</span> is called an <em>eigenvector</em>.</p>
-<h2 id="different-perspectives-on-matrix-multiplication">Different perspectives on matrix multiplication</h2>
-<h3 id="matrix-vector-products">Matrix vector products</h3>
+<h2>Different perspectives on matrix multiplication</h2>
+<h3>Matrix vector products</h3>
 <p>Let’s start with a matrix <span class="math inline">\(A\)</span> of size <span class="math inline">\(m\times n\)</span> (<span class="math inline">\(m\)</span> columns and <span class="math inline">\(n\)</span> rows), and a vector <span class="math inline">\(v\)</span> of size <span class="math inline">\(n\times 1\)</span> (<span class="math inline">\(n\)</span> columns and 1 row).</p>
-<p>Then the product <span class="math inline">\(Av\)</span> is well defined, and the <span class="math inline">\(i\)</span>-th entry of the product is given by, <span class="math display">\[
+<p>Then the product <span class="math inline">\(Av\)</span> is well defined, and the <span class="math inline">\(i\)</span>-th entry of the product is given by,
+<span class="math display">\[
 [Av]_i
 =
 \sum_{j=1}^{n} [A]_{i,j} [v]_k
 \]</span></p>
-<p>There are perhaps two dominant ways of thinking about this product. The first is that the <span class="math inline">\(i\)</span>-th entry is the matrix product of the <span class="math inline">\(i\)</span>-th row of <span class="math inline">\(A\)</span> with <span class="math inline">\(v\)</span>. That is, <span class="math display">\[
+<p>There are perhaps two dominant ways of thinking about this product.
+The first is that the <span class="math inline">\(i\)</span>-th entry is the matrix product of the <span class="math inline">\(i\)</span>-th row of <span class="math inline">\(A\)</span> with <span class="math inline">\(v\)</span>.
+That is,
+<span class="math display">\[
 [Av]_i = [A]_{i,:} v 
 \]</span></p>
-<p>Alternatively, and arguably more usefully, the product <span class="math inline">\(Av\)</span> can be though of as the linear combination of the columns of <span class="math inline">\(A\)</span>, where the coefficients are the entries of <span class="math inline">\(v\)</span>. That is, <span class="math display">\[
+<p>Alternatively, and arguably more usefully, the product <span class="math inline">\(Av\)</span> can be though of as the linear combination of the columns of <span class="math inline">\(A\)</span>, where the coefficients are the entries of <span class="math inline">\(v\)</span>. That is,
+<span class="math display">\[
 Av = \sum_{k=1}^m [v]_k [A]_{:,k}
 \]</span></p>
-<p>For example, suppose we have vectors <span class="math inline">\(q_1,q_2,\ldots, q_k \in \mathbb{R}^n\)</span>, and that <span class="math inline">\(Q\)</span> is the <span class="math inline">\(n\times k\)</span> matrix whose columns are <span class="math inline">\(\{q_1,q_2,\ldots, q_k\}\)</span>. Then saying <span class="math inline">\(x\)</span> is in the span of <span class="math inline">\(\{q_1,q_2,\ldots, q_k\}\)</span> by deifnition means that there exists coefficients <span class="math inline">\(c_i\)</span> such that, <span class="math display">\[
+<p>For example, suppose we have vectors <span class="math inline">\(q_1,q_2,\ldots, q_k \in \mathbb{R}^n\)</span>, and that <span class="math inline">\(Q\)</span> is the <span class="math inline">\(n\times k\)</span> matrix whose columns are <span class="math inline">\(\{q_1,q_2,\ldots, q_k\}\)</span>. Then saying <span class="math inline">\(x\)</span> is in the span of <span class="math inline">\(\{q_1,q_2,\ldots, q_k\}\)</span> by deifnition means that there exists coefficients <span class="math inline">\(c_i\)</span> such that,
+<span class="math display">\[
 x = c_1q_1 + c_2q_2 + \cdots + c_kq_k
 \]</span></p>
-<p>This this exactly the same as saying there exists a vector <span class="math inline">\(c\in\mathbb{R}^k\)</span> such that, <span class="math display">\[
+<p>This this exactly the same as saying there exists a vector <span class="math inline">\(c\in\mathbb{R}^k\)</span> such that,
+<span class="math display">\[
 x = Qc
 \]</span></p>
 <p>Understanding this perspective on matrix vector products will be very useful in understanding the matrix form of the Arnolidi and Lanczos algorithms.</p>
-<h3 id="matrix-matrix-products">Matrix matrix products</h3>
-<p>Now, lets keep our matrix <span class="math inline">\(A\)</span> of size <span class="math inline">\(m\times n\)</span>, and add a matrix <span class="math inline">\(B\)</span> of size <span class="math inline">\(n\times p\)</span>. Then the product <span class="math inline">\(AB\)</span> is well defined, and the <span class="math inline">\(i,j\)</span> entry of the product is given by, <span class="math display">\[
+<h3>Matrix matrix products</h3>
+<p>Now, lets keep our matrix <span class="math inline">\(A\)</span> of size <span class="math inline">\(m\times n\)</span>, and add a matrix <span class="math inline">\(B\)</span> of size <span class="math inline">\(n\times p\)</span>.
+Then the product <span class="math inline">\(AB\)</span> is well defined, and the <span class="math inline">\(i,j\)</span> entry of the product is given by,
+<span class="math display">\[
 [AB]_{i,j} = \sum_{k=1}^{n} [A]_{i,k}[B]_{k,j}
 \]</span></p>
-<p>Again we can view the <span class="math inline">\(i,j\)</span> entry as the matrix product of the <span class="math inline">\(i\)</span>-th row of <span class="math inline">\(A\)</span> with the <span class="math inline">\(j\)</span>-th column of <span class="math inline">\(B\)</span>. That is, <span class="math display">\[
+<p>Again we can view the <span class="math inline">\(i,j\)</span> entry as the matrix product of the <span class="math inline">\(i\)</span>-th row of <span class="math inline">\(A\)</span> with the <span class="math inline">\(j\)</span>-th column of <span class="math inline">\(B\)</span>.
+That is,
+<span class="math display">\[
 [AB]_{i,j} = [A]_{i,:} [B]_{:,j}
 \]</span></p>
-<p>On the other hand, we can view the <span class="math inline">\(j\)</span>-th column of <span class="math inline">\(AB\)</span> as the product of <span class="math inline">\(A\)</span> with the <span class="math inline">\(j\)</span>-th column of <span class="math inline">\(B\)</span>. That is, <span class="math display">\[
+<p>On the other hand, we can view the <span class="math inline">\(j\)</span>-th column of <span class="math inline">\(AB\)</span> as the product of <span class="math inline">\(A\)</span> with the <span class="math inline">\(j\)</span>-th column of <span class="math inline">\(B\)</span>.
+That is,
+<span class="math display">\[
 [AB]_{:,j} = AB_{:,j}
 \]</span></p>
-<p>We can now use either of our perspectives on matrix vector products to view <span class="math inline">\(AB_{:,j}\)</span>. This perspective is again useful for understanding the matrix forms of the Arnoldi and Lanczos algorithms.</p>
-<h2 id="inner-products-and-vector-norms">Inner products and vector norms</h2>
-<p>Given two vectors <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>, the Euclidian inner product is defined as, <span class="math display">\[
+<p>We can now use either of our perspectives on matrix vector products to view <span class="math inline">\(AB_{:,j}\)</span>.
+This perspective is again useful for understanding the matrix forms of the Arnoldi and Lanczos algorithms.</p>
+<h2>Inner products and vector norms</h2>
+<p>Given two vectors <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>, the Euclidian inner product is defined as,
+<span class="math display">\[
 \langle x,y\rangle = x^{\mathsf{H}}y
 \]</span></p>
-<p>This naturally defines the Euclidian norm (also called 2-norm) of a vector, <span class="math display">\[
+<p>This naturally defines the Euclidian norm (also called 2-norm) of a vector,
+<span class="math display">\[
 \|x\| = \|x\|_2 = \sqrt{\langle x,x\rangle}
 \]</span></p>
-<p>A symmetric positive definite matrix <span class="math inline">\(A\)</span> naturally induces the <em><span class="math inline">\(A\)</span>-inner product</em>, <span class="math inline">\(\langle \cdot,\cdot \rangle_A\)</span>, defined by <span class="math display">\[
+<p>A symmetric positive definite matrix <span class="math inline">\(A\)</span> naturally induces the <em><span class="math inline">\(A\)</span>-inner product</em>, <span class="math inline">\(\langle \cdot,\cdot \rangle_A\)</span>, defined by
+<span class="math display">\[
 \langle x,y\rangle_A = \langle x,Ay\rangle = \langle Ax,y \rangle
 \]</span></p>
-<p>The associated norm, called the <em><span class="math inline">\(A\)</span>-norm</em> will is denoted <span class="math inline">\(\| \cdot \|_A\)</span> and is defined by, <span class="math display">\[
+<p>The associated norm, called the <em><span class="math inline">\(A\)</span>-norm</em> will is denoted <span class="math inline">\(\| \cdot \|_A\)</span> and is defined by,
+<span class="math display">\[
 \|x\|_A^2 = \langle x,x \rangle_A = \langle x,Ax \rangle = \| A^{1/2}x \|
 \]</span></p>
-<h2 id="matrix-norms">Matrix norms</h2>
-<p>Usually the matrix norm 2-norm (also called operator norm, spectral norm, Euclidian norm) is defined by, <span class="math display">\[
+<h2>Matrix norms</h2>
+<p>Usually the matrix norm 2-norm (also called operator norm, spectral norm, Euclidian norm) is defined by,
+<span class="math display">\[
 \|A\| = \sup_{v\neq 0} \frac{\|Av\|}{\|v\|}
 \]</span></p>
 <p>It’s always the case that the 2-norm of a matrix is the largest singular value of that matrix.</p>
 <p>Since the singular values and eigenvalues of a positive definite matrix are the same, the 2-norm of a positive definite matrix is the largest eigenvalue.</p>
-<p>The 2-norm is <em>submultiplicative</em>. That is, for any two matrices <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>, <span class="math display">\[
+<p>The 2-norm is <em>submultiplicative</em>. That is, for any two matrices <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>,
+<span class="math display">\[
 \|AB\| \leq \|A\|\|B\|
 \]</span></p>
 <p>The 2-norm is <em>unitarily invariant</em>. That is, if <span class="math inline">\(U\)</span> is unitary then <span class="math inline">\(\|UA\| = \|AU\| = \|A\|\)</span>.</p>
-<h2 id="projections">Projections</h2>
-<p>The projection of <span class="math inline">\(x\)</span> onto <span class="math inline">\(q\)</span> is <span class="math display">\[
+<h2>Projections</h2>
+<p>The projection of <span class="math inline">\(x\)</span> onto <span class="math inline">\(q\)</span> is
+<span class="math display">\[
 \operatorname{proj}_q(x) = \frac{\langle x,q \rangle}{\langle q,q\rangle} q
-\]</span> If we <em>orthogonalize <span class="math inline">\(x\)</span> against <span class="math inline">\(q\)</span></em>, we mean take the component of <span class="math inline">\(x\)</span> orthogonal to <span class="math inline">\(q\)</span>. That is, <span class="math display">\[
+\]</span>
+If we <em>orthogonalize <span class="math inline">\(x\)</span> against <span class="math inline">\(q\)</span></em>, we mean take the component of <span class="math inline">\(x\)</span> orthogonal to <span class="math inline">\(q\)</span>.
+That is,
+<span class="math display">\[
 x - \operatorname{proj}_q(x) = x - \frac{\langle x,q \rangle}{\langle q,q \rangle} q
 \]</span></p>
 <p>In both cases, if <span class="math inline">\(q\)</span> is normal, then <span class="math inline">\(\langle q,q \rangle = 1\)</span></p>
-<p>A matrix is called a projection if <span class="math inline">\(P^2 = P\)</span>. However, we will generally be more concerned with projecting onto a subspace. If <span class="math inline">\(Q\)</span> has orthonormal columns, then <span class="math inline">\(QQ^{\mathsf{H}}\)</span> is a projector onto the span of the columns.</p>
-<p>In particular, if <span class="math inline">\(q_1,q_2,\ldots, q_k\)</span> are the columns of <span class="math inline">\(Q\)</span>, then, <span class="math display">\[\begin{align*}
+<p>A matrix is called a projection if <span class="math inline">\(P^2 = P\)</span>.
+However, we will generally be more concerned with projecting onto a subspace.
+If <span class="math inline">\(Q\)</span> has orthonormal columns, then <span class="math inline">\(QQ^{\mathsf{H}}\)</span> is a projector onto the span of the columns.</p>
+<p>In particular, if <span class="math inline">\(q_1,q_2,\ldots, q_k\)</span> are the columns of <span class="math inline">\(Q\)</span>, then,
+<span class="math display">\[\begin{align*}
 QQ^{\mathsf{H}}x 
 &amp;= q_1q_1^{\mathsf{H}}x + q_2q_2^{\mathsf{H}}x + \cdots + q_kq_k^{\mathsf{H}}x 
 \\&amp;= \langle q_1, x \rangle q_1 + \langle q_2,x \rangle q_2 + \cdots + \langle q_k, x \rangle q_k
 \end{align*}\]</span></p>
-<p>This is just the sum of the projections of <span class="math inline">\(x\)</span> onto each of <span class="math inline">\(\{q_1,q_2,\ldots, q_k\}\)</span>. Therefore, if we want to project onto a subspace <span class="math inline">\(V\)</span>, it is generally helpful to have an orthonormal basis for this subspace.</p>
+<p>This is just the sum of the projections of <span class="math inline">\(x\)</span> onto each of <span class="math inline">\(\{q_1,q_2,\ldots, q_k\}\)</span>.
+Therefore, if we want to project onto a subspace <span class="math inline">\(V\)</span>, it is generally helpful to have an orthonormal basis for this subspace.</p>
 <p>The point in a subspace <span class="math inline">\(V\)</span> nearest to a point <span class="math inline">\(x\)</span> is the projection of <span class="math inline">\(x\)</span> onto <span class="math inline">\(V\)</span> (where projection is done with respect to the inner product and distance is measured with the induced norm).</p>
-<p>Similarly, if we want to orthogonalize <span class="math inline">\(x\)</span> against <span class="math inline">\(q_1,q_2,\ldots, q_k\)</span> we simply remove the projection of <span class="math inline">\(x\)</span> onto this space from <span class="math inline">\(x\)</span>. That is, <span class="math display">\[
+<p>Similarly, if we want to orthogonalize <span class="math inline">\(x\)</span> against <span class="math inline">\(q_1,q_2,\ldots, q_k\)</span> we simply remove the projection of <span class="math inline">\(x\)</span> onto this space from <span class="math inline">\(x\)</span>. That is,
+<span class="math display">\[
 x - QQ^*x = (I- QQ^*)x 
 = x - \langle q_1, x \rangle q_1 - \langle q_2,x \rangle q_2 - \cdots - \langle q_k, x \rangle q_k
 \]</span></p>
 <p>The resulting vector is orthogonal to each of <span class="math inline">\(\{q_1,q_2,\ldots, q_k\}\)</span>.</p>
-<p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
+<p class="footer">
+More about the conjugate gradient method can be found <a href="./">here</a>.
+</p>
 </div>
 </body>
 </html>
+

@@ -1,5 +1,10 @@
-% Current research on Conjugate Gradient and related Krylov subspace methods
-% Tyler Chen
+---
+title: Current research on Conjugate Gradient and related Krylov subspace methods
+author: '[Tyler Chen](https://chen.pw)'
+keywords: ['applied','math']
+description: The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. This page discusses some of the current research into CG, and closely related algorithms.
+footer: <p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
+...
 
 Krylov subspace methods have remained an active area of research since they were first introduced. 
 In general, research focuses on understanding convergence properties in finite precision, and on speeding up the runtime of algorithms.

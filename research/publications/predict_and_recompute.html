@@ -1,20 +1,21 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
-<title>New communication hiding conjugate gradient variants</title>
-<meta name="description" content="We introduce a new class of communication hiding conjugate gradient variants.">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width user-scalable=no">
+  <meta charset="utf-8" />
+  <title>New communication hiding conjugate gradient variants</title>
+  <meta name="description" content="We introduce a new class of communication hiding conjugate gradient variants.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="author" content="Tyler Chen" />
 
-<link href="../../tc.ico" rel="shortcut icon" >
-<link href="../../css/main.css" rel="stylesheet" type="text/css" media="screen" />
-<link href="../../css/print.css" rel="stylesheet" type="text/css" media="print"/>
-<link rel="stylesheet" href="../../font/lato/stylesheet.css" type="text/css" charset="utf-8" />
-<link rel="stylesheet" href="font/vollkorn/stylesheet.css" type="text/css" charset="utf-8" />
-
-<script type="text/javascript" async
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <link href="../../tc.ico" rel="shortcut icon" >
+  <link href="../../css/main.css" rel="stylesheet" type="text/css" media="screen" />
+  <link href="../../css/print.css" rel="stylesheet" type="text/css" media="print"/>
+  <link rel="stylesheet" href="../../font/lato/stylesheet.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../../font/vollkorn/stylesheet.css" type="text/css" charset="utf-8" />
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-50592837-1"></script>
@@ -25,17 +26,14 @@
 
   gtag('config', 'UA-50592837-1');
 </script>
+
 </head>
-
 <body>
-
-<div id="contentContainer"  >
-<h1> New communication hiding conjugate gradient variants.
-</h1>
-<p class="authors"> Tyler Chen
-</p>
+<div id="contentContainer">
+<h1>New communication hiding conjugate gradient variants</h1>
+<p class="author"><a href="https://chen.pw">Tyler Chen</a></p>
 <p>This is a companion piece to the publication:</p>
-<pre><code>@article{chen_19,
+<p><pre>@article{chen_19,
     title={Predict-and-recompute conjugate gradient variants},
     author={Tyler Chen},
     year={2019},
@@ -44,21 +42,45 @@
     primaryClass={cs.NA},
     note = {arXiv preprint: 1905.01549}
 }
-</code></pre><p>A preprint is available on <a href="https://arxiv.org/pdf/1905.01549.pdf">arXiv (1905.01549)</a>.</p>
+</pre></p>
+<p>A preprint is available on <a href="https://arxiv.org/pdf/1905.01549.pdf">arXiv (1905.01549)</a>.</p>
 <p>Code available to help reproduce the plots in this paper is available on <a href="https://github.com/tchen01/new_cg_variants/tree/master/predict_and_recompute">Github</a>.</p>
-<h2 id="why-should-i-care">Why should I care?</h2>
-<p>Solving linear systems is a fundamental task in numerical linear algebra because of the wide range of applications to applied fields such as the sciences, medicine, and economics. Recently, there has been a rapid increase in the amount of data which scientists are able to collect and store. As a result, the linear systems which scientists now seek to solve have also been increasing in size. Iterative methods are often the only tractable way to deal with such large systems, and Krylov subspace methods are among the most successful and widely used iterative methods. However, the standard techniques developed years ago are no longer sufficient for many of today’s applications. As such, new iterative methods, designed explicitly to deal with high-dimensional data, are required to handle the problems scientists now seek to solve.</p>
+<h2>Why should I care?</h2>
+<p>Solving linear systems is a fundamental task in numerical linear algebra because of the wide range of applications to applied fields such as the sciences, medicine, and economics.
+Recently, there has been a rapid increase in the amount of data which scientists are able to collect and store.
+As a result, the linear systems which scientists now seek to solve have also been increasing in size.
+Iterative methods are often the only tractable way to deal with such large systems, and Krylov subspace methods are among the most successful and widely used iterative methods.
+However, the standard techniques developed years ago are no longer sufficient for many of today’s applications.
+As such, new iterative methods, designed explicitly to deal with high-dimensional data, are required to handle the problems scientists now seek to solve.</p>
 <p>The overarching motivation for this project is the fact that <em>the less time scientists have to wait for code to run, the more time they can spend thinking about the problems they are tackling</em>.</p>
-<h2 id="introduction">Introduction</h2>
-<p>The conjugate gradient algorithm (CG) is very popular for solving a class of linear systems <span class="math inline">\(Ax=b\)</span> which are fairly common throughout all of science. CG is popular for many reasons. Some important reasons are the low storage costs (linear), and the fact you don’t need to be able to actually represent <span class="math inline">\(A\)</span>, only to be able to evaluate the product <span class="math inline">\(v\mapsto Av\)</span>.</p>
-<p>While the low storage costs and low number of operations per iteration make CG an attractive choice for solving very large sparse (lots of zeros in <span class="math inline">\(A\)</span>) systems, the standard implementation of the conjugate gradient algorithm requires that nearly every computation be done sequentially. In particular, it requires two inner products and one (often sparse) matrix vector product per iteration, none of which can occur simultaneously. Each inner product requires global communication (meaning all the processors you use have to talk to one another), and the matrix vector product (if sparse) requires local communication. Communication (moving data between places on a computer) takes time, and on supercomputers, is the biggest thing slowing down the conjugate gradient algorithm. In the past others have come up with version of the CG algorithm which take less time per iteratoin by reducing communication. I’ve written a bit about some of those variants <a href="../cg/communication_hiding_variants.html">here</a>.</p>
-<p>However, it’s well known that CG behaves <em>very</em> differently in finite precision than it does in exact arithmetic. Understanding why this happens is a hard problem, and only a few results have been proved about it. I’ve written an introduction to the effects of finite precision on CG <a href="../cg/finite_precision_cg.html">here</a>, but to summarize, the main effects are (i) the loss of ultimately attainable accuracy and (ii) the increase in number of iterations to reach a given level of accuracy (delay of convergence).</p>
-<p>Unforunately, many of the past communication hiding variants do not always work well numerically. We would therefore like to develop variants which reduce communication (and therefore the time per iteration), while simultaneously ensuring that their numerical stability is not too severely impacted (so that the number of iterations required is not increased too much).</p>
-<h2 id="contributions-of-this-paper">Contributions of this paper</h2>
-<p>The primary contributions of this paper are several new mathematically equivalent CG variants, which perform better than their previously studied counterparts. A general framework for constructing these methods is presented. More importantly, the idea to use predictions of quantities to allow a computation to begin, and then recomputing these quantities at a later point (an idea originally due to Meurant) is applied to the ``pipelined’’ versions of these variants.</p>
-<p>The paper itself is meant to be fairly readable without a huge ammount of background, so I haven’t written a detailed summary here. As a result, while I include a few of the important figures and tables below, I leave detailed explinations to the paper itself.</p>
+<h2>Introduction</h2>
+<p>The conjugate gradient algorithm (CG) is very popular for solving a class of linear systems <span class="math inline">\(Ax=b\)</span> which are fairly common throughout all of science.
+CG is popular for many reasons. Some important reasons are the low storage costs (linear), and the fact you don’t need to be able to actually represent <span class="math inline">\(A\)</span>, only to be able to evaluate the product <span class="math inline">\(v\mapsto Av\)</span>.</p>
+<p>While the low storage costs and low number of operations per iteration make CG an attractive choice for solving very large sparse (lots of zeros in <span class="math inline">\(A\)</span>) systems, the standard implementation of the conjugate gradient algorithm requires that nearly every computation be done sequentially.
+In particular, it requires two inner products and one (often sparse) matrix vector product per iteration, none of which can occur simultaneously.
+Each inner product requires global communication (meaning all the processors you use have to talk to one another), and the matrix vector product (if sparse) requires local communication.
+Communication (moving data between places on a computer) takes time, and on supercomputers, is the biggest thing slowing down the conjugate gradient algorithm.
+In the past others have come up with version of the CG algorithm which take less time per iteratoin by reducing communication.
+I’ve written a bit about some of those variants <a href="../cg/communication_hiding_variants.html">here</a>.</p>
+<p>However, it’s well known that CG behaves <em>very</em> differently in finite precision than it does in exact arithmetic.
+Understanding why this happens is a hard problem, and only a few results have been proved about it.
+I’ve written an introduction to the effects of finite precision on CG <a href="../cg/finite_precision_cg.html">here</a>, but to summarize, the main effects are (i) the loss of ultimately attainable accuracy and (ii) the increase in number of iterations to reach a given level of accuracy (delay of convergence).</p>
+<p>Unforunately, many of the past communication hiding variants do not always work well numerically.
+We would therefore like to develop variants which reduce communication (and therefore the time per iteration), while simultaneously ensuring that their numerical stability is not too severely impacted (so that the number of iterations required is not increased too much).</p>
+<h2>Contributions of this paper</h2>
+<p>The primary contributions of this paper are several new mathematically equivalent CG variants, which perform better than their previously studied counterparts.
+A general framework for constructing these methods is presented.
+More importantly, the idea to use predictions of quantities to allow a computation to begin, and then recomputing these quantities at a later point (an idea originally due to Meurant) is applied to the ``pipelined’’ versions of these variants.</p>
+<p>The paper itself is meant to be fairly readable without a huge ammount of background, so I haven’t written a detailed summary here.
+As a result, while I include a few of the important figures and tables below, I leave detailed explinations to the paper itself.</p>
 <table>
-<caption><strong>Table 1.</strong> Summary of costs for various conjugate gradient variants. Values in parenthesis are the additional costs for the preconditioned variants. <em>vec. ops</em>: number of vector operations (i.e. <code>AXPY</code>s, and inner products) per iteration. <em>mult</em>: number of matrix vector products per iteration. <em>scal</em>: number of inner products per iteration. <em>communication</em>: time spend on communication for global reduction (GR) and matrix vector product/preconditioning (MV+PC). <em>mem</em>: number of vectors stored.</caption>
+<caption><strong>Table 1.</strong> Summary of costs for various conjugate gradient variants.
+Values in parenthesis are the additional costs for the preconditioned variants.
+<em>vec. ops</em>: number of vector operations (i.e. <code>AXPY</code>s, and inner products) per iteration.
+<em>mult</em>: number of matrix vector products per iteration.
+<em>scal</em>: number of inner products per iteration.
+<em>communication</em>: time spend on communication for global reduction (GR) and matrix vector product/preconditioning (MV+PC).
+<em>mem</em>: number of vectors stored.</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;">variant</th>
@@ -128,16 +150,20 @@
 </tr>
 </tbody>
 </table>
-<p>Table 1 shows a summary of the costs of some different variants. Note that PR-CG, Pipe-PR-MCG, and Pipe-PR-CG are the variants introduced in this paper. Numerical experiments on some test problems are shown in Figure 1.</p>
+<p>Table 1 shows a summary of the costs of some different variants. Note that PR-CG, Pipe-PR-MCG, and Pipe-PR-CG are the variants introduced in this paper.
+Numerical experiments on some test problems are shown in Figure 1.</p>
 <figure>
 <img src="imgs/predict-and-recompute_convergence.svg" alt="Figure 1. Convergence of conjugate gradient variants on some sample problems." /><figcaption><strong>Figure 1.</strong> Convergence of conjugate gradient variants on some sample problems.</figcaption>
 </figure>
-<p>Finally, Figure 2 shows the results of a strong scaling experiment. In particular, it should be noted that the predict and recompute varaints introduced in this paper do indeed reduce the runtime per iteration vs. HS-CG.</p>
+<p>Finally, Figure 2 shows the results of a strong scaling experiment.
+In particular, it should be noted that the predict and recompute varaints introduced in this paper do indeed reduce the runtime per iteration vs. HS-CG.</p>
 <figure>
 <img src="imgs/strong_scale.svg" alt="Figure 2. Strong scaling of variants on sample problem." /><figcaption><strong>Figure 2.</strong> Strong scaling of variants on sample problem.</figcaption>
 </figure>
 <p>Despite the advances presented in this paper, there is still significant room for future work on high performance conjugate gradient variants, especially in thedirection of further decreasing the communication costs.</p>
-<p class="footer">The rest of my publications can be found <a href="./../">here</a>.</p>
+<p class="footer">
+The rest of my publications can be found <a href="./../">here</a>.
+</p>
 </div>
 </body>
 </html>

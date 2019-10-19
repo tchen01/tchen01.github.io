@@ -1,5 +1,10 @@
-% The Arnoldi and Lanczos algorithms
-% Tyler Chen
+---
+title: The Arnoldi and Lanczos algorithms
+author: '[Tyler Chen](https://chen.pw)'
+keywords: ['applied','math']
+description: The Arnoldi and Lanczos algorithms for computing an orthonormal basis for Krylov subspaces are at the core of most Krylov subspace methods.
+footer: <p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
+...
 
 The Arnoldi and Lanczos algorithms for computing an orthonormal basis for Krylov subspaces are, in one way or another, at the core of all Krylov subspace methods.
 Essentially, these algorithms are the Gram-Schmidt procedure applied to the vectors $\{v,Av,A^2v,A^3v,\ldots\}$ in clever ways.

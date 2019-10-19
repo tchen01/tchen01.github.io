@@ -1,4 +1,8 @@
-% Tyler Chen
+---
+title:  Tyler Chen
+keywords: ['applied','math']
+description: I'm Tyler Chen, applied math PhD student at the University of Washington. Find out more about my research, teaching, and educational beliefs, and then get in contact with me.
+...
     
 I am a PhD student in the [applied mathematics](https://amath.washington.edu) department at the University of Washington, where I'm supported by the [NSF GRFP](https://www.nsfgrfp.org/).
 I study algorithms, specifically Krylov subspace methods.

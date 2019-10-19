@@ -1,8 +1,9 @@
 ---
-title: '\sffamily Power Structures in Academia'
+title: Power Structures in Academia
 author: '[Tyler Chen](https://chen.pw)'
-mainfont: Vollkorn
-sansfont: Lato
+keywords: ['applied','math']
+description: Academia is full of power imbalances which have the potential to greatly impact the wellbeing of those involved.
+footer: <p class="footer">More writing about my opinions on academia can be found <a href="./">here</a>.</p>
 header-includes: |
     \usepackage{sectsty}
     \allsectionsfont{\normalfont\sffamily\bfseries}
@@ -14,7 +15,7 @@ header-includes: |
       citecolor=Base02,
       urlcolor=Base02
     }
----
+...
 
 More to come...
         

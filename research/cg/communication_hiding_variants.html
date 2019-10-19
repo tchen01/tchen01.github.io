@@ -1,20 +1,22 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
-<title>Conjugate Gradient</title>
-<meta name="description" content="The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. Mathematically equivalent variants have been developed to reduce global communication.">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width user-scalable=no">
+  <meta charset="utf-8" />
+  <title>Communication Hiding Conjugate Gradient Algorithms</title>
+  <meta name="description" content="The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. Mathematically equivalent variants have been developed to reduce global communication.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="author" content="Tyler Chen" />
+  <meta name="keywords" content="applied, math" />
 
-<link href="../../tc.ico" rel="shortcut icon" >
-<link href="../../css/main.css" rel="stylesheet" type="text/css" media="screen" />
-<link href="../../css/print.css" rel="stylesheet" type="text/css" media="print"/>
-<link rel="stylesheet" href="../../font/lato/stylesheet.css" type="text/css" charset="utf-8" />
-<link rel="stylesheet" href="../../font/vollkorn/stylesheet.css" type="text/css" charset="utf-8" />
-
-<script type="text/javascript" async
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <link href="../../tc.ico" rel="shortcut icon" >
+  <link href="../../css/main.css" rel="stylesheet" type="text/css" media="screen" />
+  <link href="../../css/print.css" rel="stylesheet" type="text/css" media="print"/>
+  <link rel="stylesheet" href="../../font/lato/stylesheet.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../../font/vollkorn/stylesheet.css" type="text/css" charset="utf-8" />
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-50592837-1"></script>
@@ -25,26 +27,40 @@
 
   gtag('config', 'UA-50592837-1');
 </script>
+
 </head>
-
 <body>
-
-<div id="contentContainer"  >
-<h1> Communication Hiding Conjugate Gradient Algorithms
-</h1>
-<p class="authors"> Tyler Chen
-</p>
-<p>So far, all we have considered are error bounds in terms of the number of iterations. However, in practice, what we really care about is how long a computation takes. A natural way to try and speed up an algorithm is through parallelization, and many variants of the conjugate gradient algorithm have been introduced to try to reduce the runtime per iteration. However, while these variants are all equivalent in exact arithmetic, they perform operations in different orders meaning they are not equivalent in finite precision arithmetic. Based on our discussion about conjugate gradient in <a href="./finite_precision_cg.html">finite precision</a>, it should be too big of a surprise that the variants all behave differently.</p>
+<div id="contentContainer">
+<h1>Communication Hiding Conjugate Gradient Algorithms</h1>
+<p class="author"><a href="https://chen.pw">Tyler Chen</a></p>
+<p>So far, all we have considered are error bounds in terms of the number of iterations.
+However, in practice, what we really care about is how long a computation takes.
+A natural way to try and speed up an algorithm is through parallelization, and many variants of the conjugate gradient algorithm have been introduced to try to reduce the runtime per iteration.
+However, while these variants are all equivalent in exact arithmetic, they perform operations in different orders meaning they are not equivalent in finite precision arithmetic.
+Based on our discussion about conjugate gradient in <a href="./finite_precision_cg.html">finite precision</a>, it should be too big of a surprise that the variants all behave differently.</p>
 <figure>
 <img src="./convergence.svg" alt="Convergence of different variants in finite precision. Note that the computation would finish in at most 112 steps in exact arithmetic." /><figcaption>Convergence of different variants in finite precision. Note that the computation would finish in at most 112 steps in exact arithmetic.</figcaption>
 </figure>
-<p>The DOE supercomputer “Summit” is able to compute 122 petaflops per second. That’s something like <span class="math inline">\(10^{16}\)</span> floating point operations every second! Unfortunately, on high performance machines, conjugate gradient often perform orders of magnitude fewer floating point operations per second than the computer is theoretically capable of.</p>
+<p>The DOE supercomputer “Summit” is able to compute 122 petaflops per second.
+That’s something like <span class="math inline">\(10^{16}\)</span> floating point operations every second!
+Unfortunately, on high performance machines, conjugate gradient often perform orders of magnitude fewer floating point operations per second than the computer is theoretically capable of.</p>
 <p>The reason for this is <em>communication</em>.</p>
-<p>Traditionally, analysis of algorithm runtime has been done in terms the number of operations computed, and the amount of storage used. However, an important factor in the real world performance is the time it takes to move data around. Even on a single core computer, the cost of moving a big matrix from the hard drive to memory can be significant compared to the cost of the floating point operations done. Because of this, there is a lot of interest in reducing the communication costs of various algorithms, and conjugate gradient certainly has a lot of room for improvement.</p>
-<p>Parallel computers work by having different processors work on different parts of a computation at the same time. Naturally, many algorithms can be sped up this way, but the speedups are not necessarily proportional to the increase in computation power. In many numerical algorithms, “global communication” is one of the main causes of latency. Loosely speaking, global communication means that all processors working on a larger task must finish with their subtask and report on the result before the computation can proceed. This means that even if we can distribute a computation to many processors, the time it takes to move the data required for those computations will eventually limit how effective adding more processors is. So, a 1000x increase in processing power won’t necessarily cut the computation time to 1/1000th of the original time.</p>
-<h2 id="communication-bottlenecks-in-cg">Communication bottlenecks in CG</h2>
-<p>Recall the standard Hestenes and Stifel CG implementation. In the below description, every block of code after a “<strong>set</strong>” must wait for the output from the previous block. Much of the algorithm is scalar and vector updates which are relatively cheap (in terms of floating point operations and communication). The most expensive computations each iteration are the matrix vector product, and the two inner products.</p>
-<p><strong>Algorithm.</strong> (Hestenes and Stiefel conjugate gradient) <span class="math display">\[\begin{align*}
+<p>Traditionally, analysis of algorithm runtime has been done in terms the number of operations computed, and the amount of storage used.
+However, an important factor in the real world performance is the time it takes to move data around.
+Even on a single core computer, the cost of moving a big matrix from the hard drive to memory can be significant compared to the cost of the floating point operations done.
+Because of this, there is a lot of interest in reducing the communication costs of various algorithms, and conjugate gradient certainly has a lot of room for improvement.</p>
+<p>Parallel computers work by having different processors work on different parts of a computation at the same time.
+Naturally, many algorithms can be sped up this way, but the speedups are not necessarily proportional to the increase in computation power.
+In many numerical algorithms, “global communication” is one of the main causes of latency.
+Loosely speaking, global communication means that all processors working on a larger task must finish with their subtask and report on the result before the computation can proceed.
+This means that even if we can distribute a computation to many processors, the time it takes to move the data required for those computations will eventually limit how effective adding more processors is.
+So, a 1000x increase in processing power won’t necessarily cut the computation time to 1/1000th of the original time.</p>
+<h2>Communication bottlenecks in CG</h2>
+<p>Recall the standard Hestenes and Stifel CG implementation.
+Much of the algorithm is scalar and vector updates which are relatively cheap (in terms of floating point operations and communication).
+The most expensive computations each iteration are the matrix vector product, and the two inner products.</p>
+<p><strong>Algorithm.</strong> (Hestenes and Stiefel conjugate gradient)
+<span class="math display">\[\begin{align*}
 &amp;\textbf{procedure}\text{ HSCG}( A,b,x_0 ) 
 \\[-.4em]&amp;~~~~r_0 = b-Ax_0, \nu_0 = \langle r_0,r_0 \rangle, p_0 = r_0, s_0 = Ar_0, 
 \\[-.4em]&amp;~~~~a_0 = \nu_0 / \langle p_0,s_0 \rangle
@@ -52,44 +68,68 @@
 \\[-.4em]&amp;~~~~~~~~x_k = x_{k-1} + a_{k-1} p_{k-1} 
 \\[-.4em]&amp;~~~~~~~~r_k = r_{k-1} - a_{k-1} s_{k-1} 
 \\[-.4em]&amp;~~~~~~~~\nu_{k} = \langle r_k,r_k \rangle, \textbf{ and } b_k = \nu_k / \nu_{k-1}
-\\[-.4em]&amp;~~~~~~~~\textbf{set }p_k = r_k + b_k p_{k-1}
-\\[-.4em]&amp;~~~~~~~~\textbf{set }s_k = A p_k
-\\[-.4em]&amp;~~~~~~~~\textbf{set }\mu_k = \langle p_k,s_k \rangle, \textbf{ and } a_k = \nu_k / \mu_k
+\\[-.4em]&amp;~~~~~~~~p_k = r_k + b_k p_{k-1}
+\\[-.4em]&amp;~~~~~~~~s_k = A p_k
+\\[-.4em]&amp;~~~~~~~~\mu_k = \langle p_k,s_k \rangle, \textbf{ and } a_k = \nu_k / \mu_k
 \\[-.4em]&amp;~~~~~\textbf{end for}
 \\[-.4em]&amp;\textbf{end procedure}
 \end{align*}\]</span></p>
-<p>A matrix vector product requires <span class="math inline">\(\mathcal{O}(\text{nnz})\)</span> (number of nonzero) floating point operations, while an inner product of dense vectors requires <span class="math inline">\(\mathcal{O}(n)\)</span> operations. For many applications of CG, the number of nonzero entries is something like <span class="math inline">\(kn\)</span>, where <span class="math inline">\(k\)</span> relatively small. In these cases, the cost of floating point arithmetic for a matrix vector product and an inner product is roughly the same.</p>
-<p>While the number of floating point operations for a sparse matrix vector product and an inner product are often similar, the communication costs for the inner products can be much higher. In a matrix vector product, each entry of the output can be computed independently of the other entires. Moreover, each entry will generally depend on only a few entries of the matrix and a few entries of the vector. On the other hand, an inner product requires all of the entries of both vectors. This means that even if parts of the computation are sent to different processors, the outputs will have be be put together in a <em>global reduction</em> (also called <em>global synchronization</em> or <em>all-reduce</em>_. This communication ends up becomining the performance bottleneck each iteration on sufficintly high performance machines.</p>
-<p>There are multiply ways to address the communication bottleneck in CG. The two main approaches are “hiding” communication, and “avoiding” communication. Communication hiding algorithm such as as pipelined CG introduce auxiliary vectors so that the inner products can be computed at the same time, allowing all global communcation to happen at the same time. On the other hand, communication avoiding algorithms such as <span class="math inline">\(s\)</span>-step CG compute iterations in blocks of size <span class="math inline">\(s\)</span>, reducing the synchronization costs by a factor around <span class="math inline">\(s\)</span>.</p>
-<p>This piece focuses on some common communicating hiding methods. If you’re interested in communication avoiding methods, or want more information about communication hiding methods, Erin Carson has very useful <a href="https://math.nyu.edu/~erinc/ppt/Carson_PP18.pdf">slides</a>.</p>
-<h2 id="overlapping-inner-products">Overlapping inner products</h2>
-<p>Suppose that we would like to be able to reduce the number of points in the algorithm a global communication is required (i.e. be able to compute all inner products simultaneously). In the standard presentation of the conjugate gradient algorithm, we need to wait for each of the previous computations before we are able to do a matrix vector product or an inner product. This means there are two global communications per iteration and that none of the heavy computations can be overlapped.</p>
-<p>Using our recurrences we can write, <span class="math display">\[
+<p>A matrix vector product requires <span class="math inline">\(\mathcal{O}(\text{nnz})\)</span> (number of nonzero) floating point operations, while an inner product of dense vectors requires <span class="math inline">\(\mathcal{O}(n)\)</span> operations.
+For many applications of CG, the number of nonzero entries is something like <span class="math inline">\(kn\)</span>, where <span class="math inline">\(k\)</span> relatively small.
+In these cases, the cost of floating point arithmetic for a matrix vector product and an inner product is roughly the same.</p>
+<p>While the number of floating point operations for a sparse matrix vector product and an inner product are often similar, the communication costs for the inner products can be much higher.
+In a matrix vector product, each entry of the output can be computed independently of the other entires. Moreover, each entry will generally depend on only a few entries of the matrix and a few entries of the vector.
+On the other hand, an inner product requires all of the entries of both vectors.
+This means that even if parts of the computation are sent to different processors, the outputs will have be be put together in a <em>global reduction</em> (also called <em>global synchronization</em> or <em>all-reduce</em>).
+This communication ends up becomining the performance bottleneck each iteration on sufficintly high performance machines.</p>
+<p>There are multiply ways to address the communication bottleneck in CG. The two main approaches are “hiding” communication, and “avoiding” communication.
+Communication hiding algorithm such as as pipelined CG introduce auxiliary vectors so that the inner products can be computed at the same time, allowing all global communcation to happen at the same time.
+On the other hand, communication avoiding algorithms such as <span class="math inline">\(s\)</span>-step CG compute iterations in blocks of size <span class="math inline">\(s\)</span>, reducing the synchronization costs by a factor around <span class="math inline">\(s\)</span>.</p>
+<p>This piece focuses on some common communicating hiding methods.
+If you’re interested in communication avoiding methods, or want more information about communication hiding methods, Erin Carson has very useful <a href="https://math.nyu.edu/~erinc/ppt/Carson_PP18.pdf">slides</a>.</p>
+<h2>Overlapping inner products</h2>
+<p>Suppose that we would like to be able to reduce the number of points in the algorithm a global communication is required (i.e. be able to compute all inner products simultaneously).
+In the standard presentation of the conjugate gradient algorithm, we need to wait for each of the previous computations before we are able to do a matrix vector product or an inner product.
+This means there are two global communications per iteration and that none of the heavy computations can be overlapped.</p>
+<p>Using our recurrences we can write,
+<span class="math display">\[
 s_k = Ap_k = A(r_k + b_k p_{k-1}) 
 = Ar_k + b_k s_{k-1}
 \]</span></p>
-<p>If we define the axillary vector <span class="math inline">\(w_k = Ar_k\)</span>, in exact arithmetic using this formula for <span class="math inline">\(s_k\)</span> will be equivalent to the original formula for <span class="math inline">\(s_k\)</span>. However, we can now compute <span class="math inline">\(w_k\)</span> as soon as we have <span class="math inline">\(r_k\)</span>. Therefore, the computation of <span class="math inline">\(\nu_k = \langle r_k,r_k \rangle\)</span> can be overlapped with the computation of <span class="math inline">\(w_k = Ar_k\)</span>. However, this still requires two global communication points each iteration.</p>
-<p>We now note that, <span class="math display">\[\begin{align*}
+<p>If we define the axillary vector <span class="math inline">\(w_k = Ar_k\)</span>, in exact arithmetic using this formula for <span class="math inline">\(s_k\)</span> will be equivalent to the original formula for <span class="math inline">\(s_k\)</span>.
+However, we can now compute <span class="math inline">\(w_k\)</span> as soon as we have <span class="math inline">\(r_k\)</span>.
+Therefore, the computation of <span class="math inline">\(\nu_k = \langle r_k,r_k \rangle\)</span> can be overlapped with the computation of <span class="math inline">\(w_k = Ar_k\)</span>.
+However, this still requires two global communication points each iteration.</p>
+<p>We now note that,
+<span class="math display">\[\begin{align*}
 \mu_k = \langle p_k,s_k \rangle
 &amp;= \langle r_k + b_k p_{k-1}, w_k + b_k s_{k-1} \rangle
 \\&amp;= \langle r_k, w_k \rangle + b_k \langle p_{k-1}, w_k \rangle + b_k \langle r_k, s_{k-1} \rangle + b_k^2 \langle p_{k-1}, s_{k-1} \rangle
 \end{align*}\]</span></p>
-<p>Moreover, since <span class="math inline">\(w_k = Ar_k\)</span> and <span class="math inline">\(s_{k-1} = Ap_{k-1}\)</span>, then <span class="math inline">\(\langle p_{k-1},w_k \rangle = \langle r_{k}, s_{k-1} \rangle\)</span>. Thus, <span class="math display">\[
+<p>Moreover, since <span class="math inline">\(w_k = Ar_k\)</span> and <span class="math inline">\(s_{k-1} = Ap_{k-1}\)</span>, then <span class="math inline">\(\langle p_{k-1},w_k \rangle = \langle r_{k}, s_{k-1} \rangle\)</span>.
+Thus,
+<span class="math display">\[
 \mu_k = \langle r_k,w_k\rangle + 2 b_k \langle r_k,s_k \rangle + b_k^2 \mu_{k-1}
 \]</span></p>
-<p>Notice now that <span class="math inline">\(\langle r_k,w_k \rangle\)</span>, and <span class="math inline">\(\langle r_k,s_k \rangle\)</span> can both be overlapped with <span class="math inline">\(\nu_k = \langle r_k,r_k\rangle\)</span>. Thus, using this coefficient formula there is only a single global synchronization per iteration. However, this came at the cost of having to compute an additional inner product.</p>
-<p>It turns out that we can eliminate one of the inner products. Indeed, using our recurrence for <span class="math inline">\(r_k\)</span>, <span class="math display">\[
+<p>Notice now that <span class="math inline">\(\langle r_k,w_k \rangle\)</span>, and <span class="math inline">\(\langle r_k,s_k \rangle\)</span> can both be overlapped with <span class="math inline">\(\nu_k = \langle r_k,r_k\rangle\)</span>.
+Thus, using this coefficient formula there is only a single global synchronization per iteration.
+However, this came at the cost of having to compute an additional inner product.</p>
+<p>It turns out that we can eliminate one of the inner products.
+Indeed, using our recurrence for <span class="math inline">\(r_k\)</span>,
+<span class="math display">\[
 \langle r_k, s_{k-1} \rangle
 = \langle p_k - b_k p_{k-1}, s_{k-1} \rangle
 = -b_{k} \langle p_{k-1},s_{k-1} \rangle
 = -b_k\mu_{k-1}
 \]</span></p>
-<p>Thus, defining <span class="math inline">\(\eta_k = \langle w_k,r_k \rangle\)</span> and canceling terms, <span class="math display">\[
+<p>Thus, defining <span class="math inline">\(\eta_k = \langle w_k,r_k \rangle\)</span> and canceling terms,
+<span class="math display">\[
 \mu_k = \langle w_k,r_k \rangle - b_k^2 \mu_{k-1}
 = \eta_k - (b_k/a_k) \nu_k
 \]</span></p>
 <p>This variant is known as Chronopoulos and Gear conjugate gradient.</p>
-<p><strong>Algorithm.</strong> (Chronopoulos and Gear conjugate gradient) <span class="math display">\[\begin{align*}
+<p><strong>Algorithm.</strong> (Chronopoulos and Gear conjugate gradient)
+<span class="math display">\[\begin{align*}
 &amp;\textbf{procedure}\text{ CGCG}( A,b,x_0 ) 
 \\[-.4em]&amp;~~~~r_0 = b-Ax_0, \nu_0 = \langle r_0,r_0 \rangle, p_0 = r_0, s_0 = Ar_0, 
 \\[-.4em]&amp;~~~~a_0 = \nu_0 / \langle p_0,s_0 \rangle
@@ -104,18 +144,25 @@ s_k = Ap_k = A(r_k + b_k p_{k-1})
 \\[-.4em]&amp;~~~~~\textbf{end for}
 \\[-.4em]&amp;\textbf{end procedure}
 \end{align*}\]</span></p>
-<p>However, while we have only a single global communication per iteration, the matrix vector product must still be computed before we are able to compute the inner products. To allow the matrix vector product to be overlapped with the inner products, we again introduce auxiliary vectors. Observe that, <span class="math display">\[\begin{align*}
+<p>However, while we have only a single global communication per iteration, the matrix vector product must still be computed before we are able to compute the inner products.
+To allow the matrix vector product to be overlapped with the inner products, we again introduce auxiliary vectors.
+Observe that,
+<span class="math display">\[\begin{align*}
 w_k = Ar_k &amp;= A(r_{k-1} - a_{k-1}s_{k-1}) 
 \\&amp;= A r_{k-1} - a_{k-1} As_{k-1}
 \\&amp;= w_{k-1} - a_{k-1} As_{k-1}
 \end{align*}\]</span></p>
-<p>Now, define <span class="math inline">\(u_{k} = As_{k}\)</span> and note that, <span class="math display">\[\begin{align*}
+<p>Now, define <span class="math inline">\(u_{k} = As_{k}\)</span> and note that,
+<span class="math display">\[\begin{align*}
 u_{k} = As_k &amp;= A(w_k + b_k s_{k-1}) 
 \\&amp;= Aw_k + b_k As_{k-1} 
 \\&amp;= Aw_k + b_k u_{k-1}
 \end{align*}\]</span></p>
-<p>That’s it. For convenience we define <span class="math inline">\(t_k = Aw_k\)</span>. Then, the matrix vector product <span class="math inline">\(Aw_k\)</span> can occur as soon as we have computed <span class="math inline">\(w_k\)</span> and can be overlapped with both inner products. This variant is known as either Ghysels and Vanroose conjugate gradient or pipelined conjugate gradient.</p>
-<p><strong>Algorithm.</strong> (Ghysels and Vanroose (pipelined) conjugate gradient) <span class="math display">\[\begin{align*}
+<p>That’s it. For convenience we define <span class="math inline">\(t_k = Aw_k\)</span>.
+Then, the matrix vector product <span class="math inline">\(Aw_k\)</span> can occur as soon as we have computed <span class="math inline">\(w_k\)</span> and can be overlapped with both inner products.
+This variant is known as either Ghysels and Vanroose conjugate gradient or pipelined conjugate gradient.</p>
+<p><strong>Algorithm.</strong> (Ghysels and Vanroose (pipelined) conjugate gradient)
+<span class="math display">\[\begin{align*}
 &amp;\textbf{procedure}\text{ GVCG}( A,b,x_0 ) 
 \\[-.4em]&amp;~~~~r_0 = b-Ax_0, \nu_0 = \langle r_0,r_0 \rangle, p_0 = r_0, s_0 = Ar_0, 
 \\[-.4em]&amp;~~~~w_0 = s_0, u_0 = Aw_0, a_0 = \nu_0 / \langle p_0,s_0 \rangle
@@ -132,10 +179,16 @@ u_{k} = As_k &amp;= A(w_k + b_k s_{k-1})
 \\[-.4em]&amp;~~~~~\textbf{end for}
 \\[-.4em]&amp;\textbf{end procedure}
 \end{align*}\]</span></p>
+<p>In a derivation similar those of the “classic” communication hiding varaints on this page, I have developed <a href="../publications/predict_and_recompute.html">“predict-and-recompute”</a> variants.
+These variants have the same parallelism as the pipelined conjugate gradient shown here, but better numerical properties.</p>
 <p>Recently, Cornelis, Cools, and Van Roose have developed a <a href="https://arxiv.org/pdf/1801.04728.pdf">“deep pipelined”</a> conjugate gradient, which essentially introduces even more auxiliary vectors to allow for more overlapping.</p>
 <!--start_pdf_comment-->
-<p>Next: <a href="./current_research.html">Current research on CG and related Krylov subspace methods</a> <!--end_pdf_comment--></p>
-<p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
+<p>Next: <a href="./current_research.html">Current research on CG and related Krylov subspace methods</a>
+<!--end_pdf_comment--></p>
+<p class="footer">
+More about the conjugate gradient method can be found <a href="./">here</a>.
+</p>
 </div>
 </body>
 </html>
+

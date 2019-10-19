@@ -1,19 +1,8 @@
 ---
-title: '\sffamily \textbf{On the Convergence of Conjugate Gradient Variants in Finite Precision Arithmetic}'
+title: On the Convergence of Conjugate Gradient Variants in Finite Precision Arithmetic
 author: '[Tyler Chen](https://chen.pw)'
-mainfont: Georgia
-sansfont: Lato
-header-includes: |
-    \usepackage{sectsty}
-    \allsectionsfont{\normalfont\sffamily\bfseries}
-    \usepackage{xcolor}
-    \definecolor{Base02}{HTML}{073662}
-    \hypersetup{
-      colorlinks,
-      linkcolor=Base02,
-      citecolor=Base02,
-      urlcolor=Base02
-    }
+description: Multiple mathematically equivalent variants of the Conjugate Gradient algorithm have been developed to reduce communication in high performance environments. We analyze these variants in the context of [Greenbaum 89].
+footer: <p class="footer">The rest of my publications can be found <a href="./../">here</a>.</p>
 ---
 
 This is a companion piece to the publication:
@@ -44,14 +33,8 @@ Unforunately, nobody has been able to prove this for any of the high performance
 
 ## Contributions of this paper
 
-<<<<<<< HEAD
 In this paper we show (numerically) why on some problems certain variants of the conjugate gradient algorithm converge more slowly than others, but on some problems all variants behave the same.
 To do this we first analyze how closely different variants satisfy the three term Lanczos recurrence.
 It turns out that the standard implementation, and one due to Chronopoulos and Gear satisfy the three term recurrence to within local rounding errors.
 However, the pipelined variant due to Ghysels and Vanroose, which is more parallel, has a larger deviation from a three term recurrence.
 While the paper does not prove that this leads to worse convergence, it does suggest that 
-
-
-=======
-In this paper we show (numerically) why on some problems certain variants of the conjugate gradient algorithm converge more slowly.
->>>>>>> dbe2c394921d1c40db8ba9b2c7379aa5b8648198

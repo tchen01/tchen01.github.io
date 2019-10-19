@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="$lang$" xml:lang="$lang$"$if(dir)$ dir="$dir$"$endif$>
+<head>
+  <meta charset="utf-8" />
+  <title>$if(title-prefix)$$title-prefix$ – $endif$$pagetitle$</title>
+  <meta name="description" content="$description$">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+$for(author-meta)$
+  <meta name="author" content="$author-meta$" />
+$endfor$
+$if(date-meta)$
+  <meta name="dcterms.date" content="$date-meta$" />
+$endif$
+$if(keywords)$
+  <meta name="keywords" content="$for(keywords)$$keywords$$sep$, $endfor$" />
+$endif$
+
+$if(math)$
+  $math$
+$endif$
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+$for(header-includes)$
+  $header-includes$
+$endfor$
+  <link href="$depth$tc.ico" rel="shortcut icon" >
+  <link href="$depth$css/main.css" rel="stylesheet" type="text/css" media="screen" />
+  <link href="$depth$css/print.css" rel="stylesheet" type="text/css" media="print"/>
+  <link rel="stylesheet" href="$depth$font/lato/stylesheet.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="$depth$font/vollkorn/stylesheet.css" type="text/css" charset="utf-8" />
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-50592837-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-50592837-1');
+</script>
+
+</head>
+<body>
+$for(include-before)$
+$include-before$
+$endfor$
+<div id="contentContainer">
+$if(title)$
+<h1>$title$</h1>
+$if(subtitle)$
+<p class="subtitle">$subtitle$</p>
+$endif$
+$for(author)$
+<p class="author">$author$</p>
+$endfor$
+$endif$
+$body$
+$for(include-after)$
+$include-after$
+$endfor$
+$footer$
+</div>
+</body>
+</html>
+

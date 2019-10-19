@@ -1,5 +1,10 @@
-% A Derivation of the Conjugate Gradient Algorithm
-% Tyler Chen
+---
+title: A Derivation of the Conjugate Gradient Algorithm
+author: '[Tyler Chen](https://chen.pw)'
+keywords: ['applied','math']
+description: The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. While it's simple to state the algorithm, understanding where it comes from is not always so clear.
+footer: <p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
+...
 
 There are many ways to view/derive the conjugate gradient algorithm. 
 I'll derive the algorithm by directly minimizing by minimizing the $A$-norm of the error over successive Krylov subspaces, $\mathcal{K}_k(A,b)$.

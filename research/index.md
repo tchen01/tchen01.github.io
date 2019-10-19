@@ -1,10 +1,15 @@
-%Research
+---
+title:  Research
+keywords: ['applied','math']
+description: I'm Tyler Chen, applied math PhD student at the University of Washington. Find out more about my research, teaching, and educational beliefs, and then get in contact with me.
+footer: <p class="footer">The rest of my research can be found <a href="./">here</a>.</p>
+...
 
 The less time scientists have to wait for code to run, the more time they can spend thinking about the problems they are tackling.
 My research aims to develop methods to support the scientists taking on the problems of today.
 
 I'm interested in incorporating probabilistic techniques into classical algorithms to develop methods which are fast and reliable, both in theory and in practice.
-Right now, I in the field of Numerical Linear Algebra on [Krylov subspace methods](./krylov), specifically the [conjugate gradient algorithm](./cg).
+Right now, I work in the field of Numerical Linear Algebra on the [conjugate gradient algorithm](./cg).
 I hope that my work will help to bridge the gap between theoretical computer science and applied computational science.
 
 I am committed to making my research accessible and to facilitating the [reproducibility](../thoughts/reproducibility.html) of my work.
@@ -26,6 +31,7 @@ Here are links to my [Google Scholar profile](https://scholar.google.com/citatio
 [pub:cg_variants_convergence_rates]
 
 ## Talks and Posters
+<p></p>
 
 [talk:symmetric_preconditioner_baidu]
 
@@ -49,6 +55,6 @@ Here are links to my [Google Scholar profile](https://scholar.google.com/citatio
 
 I'm always interested in finding things to collaborate on (and people to collaborate with).
 
-If you're an undergrad student interested in research or grad school, please feel free to reach out; I'd be happy to try to help you find something to work on! You may also be interested in the [Women in Applied Mathematics Mentorship Program](https://amath.washington.edu/women-applied-mathematics-mentorship-program).
+If you're an undergrad student interested in research or grad school, please feel free to reach out; I'd be happy to try to help you find something to work on! You may also be interested in the [Washington Directed Reading Program](https://sites.uw.edu/wdrp/) as well as the [Women in Applied Mathematics Mentorship Program](https://amath.washington.edu/women-applied-mathematics-mentorship-program).
 
 

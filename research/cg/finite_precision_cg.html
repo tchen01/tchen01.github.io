@@ -1,20 +1,22 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
-<title>Conjugate Gradient</title>
-<meta name="description" content="The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. CG behaves very differently in finite precision due to rounding errors which cause a loss of orthogonality.">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width user-scalable=no">
+  <meta charset="utf-8" />
+  <title>Error Bounds for the Conjugate Gradient Algorithm</title>
+  <meta name="description" content="The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. CG behaves very differently in finite precision due to rounding errors which cause a loss of orthogonality.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="author" content="Tyler Chen" />
+  <meta name="keywords" content="applied, math" />
 
-<link href="../../tc.ico" rel="shortcut icon" >
-<link href="../../css/main.css" rel="stylesheet" type="text/css" media="screen" />
-<link href="../../css/print.css" rel="stylesheet" type="text/css" media="print"/>
-<link rel="stylesheet" href="../../font/lato/stylesheet.css" type="text/css" charset="utf-8" />
-<link rel="stylesheet" href="../../font/vollkorn/stylesheet.css" type="text/css" charset="utf-8" />
-
-<script type="text/javascript" async
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <link href="../../tc.ico" rel="shortcut icon" >
+  <link href="../../css/main.css" rel="stylesheet" type="text/css" media="screen" />
+  <link href="../../css/print.css" rel="stylesheet" type="text/css" media="print"/>
+  <link rel="stylesheet" href="../../font/lato/stylesheet.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../../font/vollkorn/stylesheet.css" type="text/css" charset="utf-8" />
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-50592837-1"></script>
@@ -25,69 +27,102 @@
 
   gtag('config', 'UA-50592837-1');
 </script>
+
 </head>
-
 <body>
-
-<div id="contentContainer"  >
-<h1> The Lanczos and Conjugate Gradient Algorithms in Finite Precision
-</h1>
-<p class="authors"> Tyler Chen
-</p>
-<p>A key component of our derivations of the <a href="./arnoldi_lanczos.html">Lanczos</a> and <a href="./cg_derivation.html">conjugate gradient</a> methods was the orthogonality of certain vectors. In finite precision, we cannot have exact orthogonality, so our induction based arguments no longer hold. It’s been known since their introductions, that these algorithms behave very differently in finite precision than exact arithmetic theory would predict. Even so, both methods are widely used in practice, which suggests that there are subtle forces at play allowing the algorithms to work.</p>
-<h2 id="finite-precision-lanczos">Finite Precision Lanczos</h2>
-<p>We have already seen that the conjugate gradient and Lanczos algorithms are <a href="./cg_lanczos.html">intimately related</a>. This has allowed ideas and results derived about the Lanczos algorithm to be transfered to the conjugate gradient algorithm.</p>
-<p>Recall that, in exact arithmetic, the Lanczos algorithm generates an orthonormal set <span class="math inline">\(\{q_1,q_2,\ldots,q_k\}\)</span> which satisfies, <span class="math display">\[
+<div id="contentContainer">
+<h1>Error Bounds for the Conjugate Gradient Algorithm</h1>
+<p class="author"><a href="https://chen.pw">Tyler Chen</a></p>
+<p>A key component of our derivations of the <a href="./arnoldi_lanczos.html">Lanczos</a> and <a href="./cg_derivation.html">conjugate gradient</a> methods was the orthogonality of certain vectors.
+In finite precision, we cannot have exact orthogonality, so our induction based arguments no longer hold.
+It’s been known since their introductions, that these algorithms behave very differently in finite precision than exact arithmetic theory would predict.
+Even so, both methods are widely used in practice, which suggests that there are subtle forces at play allowing the algorithms to work.</p>
+<h2>Finite Precision Lanczos</h2>
+<p>We have already seen that the conjugate gradient and Lanczos algorithms are <a href="./cg_lanczos.html">intimately related</a>.
+This has allowed ideas and results derived about the Lanczos algorithm to be transfered to the conjugate gradient algorithm.</p>
+<p>Recall that, in exact arithmetic, the Lanczos algorithm generates an orthonormal set <span class="math inline">\(\{q_1,q_2,\ldots,q_k\}\)</span> which satisfies,
+<span class="math display">\[
 AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^{\mathsf{T}}
-\]</span> where <span class="math inline">\(Q_k^{\mathsf{H}}Q_k = I_k\)</span>, and <span class="math inline">\(T_k\)</span> is symmetric tridiagonal, and <span class="math inline">\(\xi_k^{\mathsf{T}} = [0,\ldots,0,1]^{\mathsf{T}}\)</span> is the <span class="math inline">\(k\)</span>-th standard unit vector.</p>
-<p>In finite precision, orthogonality will be lost, and the algorithm can continue indefinitely. We can write this relationship as, <span class="math display">\[
+\]</span>
+where <span class="math inline">\(Q_k^{\mathsf{H}}Q_k = I_k\)</span>, and <span class="math inline">\(T_k\)</span> is symmetric tridiagonal, and <span class="math inline">\(\xi_k^{\mathsf{T}} = [0,\ldots,0,1]^{\mathsf{T}}\)</span> is the <span class="math inline">\(k\)</span>-th standard unit vector.</p>
+<p>In finite precision, orthogonality will be lost, and the algorithm can continue indefinitely.
+We can write this relationship as,
+<span class="math display">\[
 AQ_k = Q_k T_k + \beta_k q_{k+1} \xi_k^{\mathsf{T}} + F_k
-\]</span> where <span class="math inline">\(F_k\)</span> accounts for the rounding errors.</p>
-<p>The first significant advancement to the understanding of the Lanczos algorithm was done by Chris Paige in his 1971 PhD thesis where he showed that orthogonality of Lanczos vectors is lost once a Ritz vector has converged, and that orthogonality is lost in the direction of converged Ritz vectors <span class="citation" data-cites="paige_71">[@paige_71]</span>. The analysis relies on the assumptions that:</p>
+\]</span>
+where <span class="math inline">\(F_k\)</span> accounts for the rounding errors.</p>
+<p>The first significant advancement to the understanding of the Lanczos algorithm was done by Chris Paige in his 1971 PhD thesis where he showed that orthogonality of Lanczos vectors is lost once a Ritz vector has converged, and that orthogonality is lost in the direction of converged Ritz vectors <span class="citation" data-cites="paige_71">[@paige_71]</span>.
+The analysis relies on the assumptions that:</p>
 <ul>
 <li>the three term Lanczos recurrence is well satisfied: <span class="math inline">\(\| F_k \|\approx 0\)</span></li>
 <li>the Lanczos vectors have norm close to one: <span class="math inline">\(\|q_j\|\approx 1\)</span></li>
 <li>successive Lanczos vectors are nearly orthogonal: <span class="math inline">\(\langle q_j,q_{j+1}\rangle \approx 0\)</span></li>
 </ul>
 <p>Paige also proved that (what is now) the standard Lanczos implementation satisfies the three properties above.</p>
-<h3 id="addressing-convergence-in-finite-precision">Addressing convergence in finite precision</h3>
-<p>On suggestion to dealing with the loss of orthogonality is to store and explicitly orthogonalize against all previous Lanczos vectors [“Lanczos himself”]. Of course, this comes with additional storage and computation costs.</p>
+<h3>Addressing convergence in finite precision</h3>
+<p>On suggestion to dealing with the loss of orthogonality is to store and explicitly orthogonalize against all previous Lanczos vectors [“Lanczos himself”].
+Of course, this comes with additional storage and computation costs.</p>
 <p>Based on Paige’s analysis, an alternative approach to complete orthogonalization is selective orthogonalization [parlett 13-8].</p>
 <p>Only orthogonalized against converged Ritz vectors.</p>
-<h2 id="finite-precision-conjugate-gradient">Finite precision conjugate gradient</h2>
-<p>In exact arithmetic, the conjugate gradient algorithm finds the exact solution in at most <span class="math inline">\(n\)</span> steps, and the error at step <span class="math inline">\(k\)</span> is bounded by the size of the degree <span class="math inline">\(k\)</span> minimax polynomial on the eigenvalues of <span class="math inline">\(A\)</span>. In finite precision, the loss of orthogonality leads to two easily observable effects: delayed convergence, and reduced final accuracy. The following figure shows both of these phenomena for various precisions.</p>
+<h2>Finite precision conjugate gradient</h2>
+<p>In exact arithmetic, the conjugate gradient algorithm finds the exact solution in at most <span class="math inline">\(n\)</span> steps, and the error at step <span class="math inline">\(k\)</span> is bounded by the size of the degree <span class="math inline">\(k\)</span> minimax polynomial on the eigenvalues of <span class="math inline">\(A\)</span>.
+In finite precision, the loss of orthogonality leads to two easily observable effects: delayed convergence, and reduced final accuracy.
+The following figure shows both of these phenomena for various precisions.</p>
 <figure>
 <img src="./multiple_precision.svg" alt="Convergence of conjugate gradient in various precisions. Note that the computation would finish in at most 48 steps in exact arithmetic." /><figcaption>Convergence of conjugate gradient in various precisions. Note that the computation would finish in at most 48 steps in exact arithmetic.</figcaption>
 </figure>
-<h3 id="delay-of-convergence">Delay of convergence</h3>
-<p>In our <a href="./cg_derivation.html">derivation</a> of the conjugate gradient algorithm, we used the <span class="math inline">\(A\)</span>-orthogonality of successive search directions to show that we only needed to optimize over the current search direction. In finite precision, once orthogonality is lost, we not longer know that minimizing along a given search direction will also result in a solution which is optimal in the previous search directions. As such, a conjugate gradient algorithm in finite precision will end up doing “redundant” optimization.</p>
-<h3 id="loss-of-attainable-accuracy">Loss of attainable accuracy</h3>
-<p>Even if we knew the true solution <span class="math inline">\(x^*\)</span> to the system <span class="math inline">\(Ax=b\)</span>, it’s unlikely that we could represent it in finite precision. This means that any numerical method for solving linear systems will inherently have some loss of accuracy.</p>
-<p>An algorithm is <em>backwards stable</em> if the solution it returns is the exact to a “nearby” problem. For linear systems, this means the computed solution <span class="math inline">\(\tilde{x}\)</span> satisfies, <span class="math display">\[
+<h3>Delay of convergence</h3>
+<p>In our <a href="./cg_derivation.html">derivation</a> of the conjugate gradient algorithm, we used the <span class="math inline">\(A\)</span>-orthogonality of successive search directions to show that we only needed to optimize over the current search direction.
+In finite precision, once orthogonality is lost, we not longer know that minimizing along a given search direction will also result in a solution which is optimal in the previous search directions.
+As such, a conjugate gradient algorithm in finite precision will end up doing “redundant” optimization.</p>
+<h3>Loss of attainable accuracy</h3>
+<p>Even if we knew the true solution <span class="math inline">\(x^*\)</span> to the system <span class="math inline">\(Ax=b\)</span>, it’s unlikely that we could represent it in finite precision.
+This means that any numerical method for solving linear systems will inherently have some loss of accuracy.</p>
+<p>An algorithm is <em>backwards stable</em> if the solution it returns is the exact to a “nearby” problem. For linear systems, this means the computed solution <span class="math inline">\(\tilde{x}\)</span> satisfies,
+<span class="math display">\[
 (A+\delta A) \tilde{x} = b + \delta b
-\]</span> where <span class="math inline">\(\| \delta A \| \leq \epsilon \| A \|\)</span> and <span class="math inline">\(\| \delta b \| \leq \epsilon \| b \|\)</span>.</p>
-<p>In rounding error analysis, we generally assume that our real number <span class="math inline">\(a\)</span> can be represented in finite precision by <span class="math inline">\(\tilde{a}\)</span> satisfying, <span class="math inline">\((1-\epsilon) a \leq \tilde{a} \leq (1+\epsilon)a\)</span>, where <span class="math inline">\(\epsilon\)</span> is the machine precision. Thus, our numerical solution <span class="math inline">\(\tilde{x}\)</span> will have error something like <span class="math inline">\(\tilde{a}\)</span></p>
+\]</span>
+where <span class="math inline">\(\| \delta A \| \leq \epsilon \| A \|\)</span> and <span class="math inline">\(\| \delta b \| \leq \epsilon \| b \|\)</span>.</p>
+<p>In rounding error analysis, we generally assume that our real number <span class="math inline">\(a\)</span> can be represented in finite precision by <span class="math inline">\(\tilde{a}\)</span> satisfying, <span class="math inline">\((1-\epsilon) a \leq \tilde{a} \leq (1+\epsilon)a\)</span>, where <span class="math inline">\(\epsilon\)</span> is the machine precision.
+Thus, our numerical solution <span class="math inline">\(\tilde{x}\)</span> will have error something like <span class="math inline">\(\tilde{a}\)</span></p>
 <ul>
 <li>different variants converge to worse levels</li>
 </ul>
-<h3 id="updated-vs.true-residual">Updated vs. true residual</h3>
-<p>In exact precision, the updated residual <span class="math inline">\(r_k\)</span> was equal to the true residual <span class="math inline">\(b-Ax_k\)</span>. In finite precision, this is not longer the case. Interestingly, even in finite precision, the updated residual (of many variants) keeps decreasing far below machine precision, until it eventually underflows. <strong>Do we know why or have citations about this?</strong></p>
-<h2 id="greenbaums-analysis">Greenbaum’s analysis</h2>
-<p>An analysis of similar importance to that of Paige was done by Anne Greenbaum in her 1989 paper, <a href="https://www.sciencedirect.com/science/article/pii/0024379589902851">“Behavior of slightly perturbed Lanczos and conjugate-gradient recurrences”</a>. A big takeaway from Greenbaum’s analysis is that the error bound from the Chevyshev polynomials still holds in finite precision (to a close approximation).</p>
-<p>The analysis from this paper is quite involved, and while it provides sufficient conditions for good convergence, necessary conditions of similar strength are not known. It is still an open question of whether the conditions from the analysis can be relaxed significantly or not. In essence, Greenbaum showed that, in finite precision, a “good” conjugate gradient algorithm applied to the matrix <span class="math inline">\(A\)</span> will behave like exact conjugate gradient applied to a larger matrix <span class="math inline">\(\hat{T}\)</span> with eigenvalues near those of <span class="math inline">\(A\)</span>.</p>
+<h3>Updated vs. true residual</h3>
+<p>In exact precision, the updated residual <span class="math inline">\(r_k\)</span> was equal to the true residual <span class="math inline">\(b-Ax_k\)</span>.
+In finite precision, this is not longer the case.
+Interestingly, even in finite precision, the updated residual (of many variants) keeps decreasing far below machine precision, until it eventually underflows.
+<strong>Do we know why or have citations about this?</strong></p>
+<h2>Greenbaum’s analysis</h2>
+<p>An analysis of similar importance to that of Paige was done by Anne Greenbaum in her 1989 paper, <a href="https://www.sciencedirect.com/science/article/pii/0024379589902851">“Behavior of slightly perturbed Lanczos and conjugate-gradient recurrences”</a>.
+A big takeaway from Greenbaum’s analysis is that the error bound from the Chevyshev polynomials still holds in finite precision (to a close approximation).</p>
+<p>The analysis from this paper is quite involved, and while it provides sufficient conditions for good convergence, necessary conditions of similar strength are not known.
+It is still an open question of whether the conditions from the analysis can be relaxed significantly or not.
+In essence, Greenbaum showed that, in finite precision, a “good” conjugate gradient algorithm applied to the matrix <span class="math inline">\(A\)</span> will behave like exact conjugate gradient applied to a larger matrix <span class="math inline">\(\hat{T}\)</span> with eigenvalues near those of <span class="math inline">\(A\)</span>.</p>
 <p>Thus, while the <a href="./cg_error.html">error bounds</a> derived based on the minimax polynomial on the spectrum of <span class="math inline">\(A\)</span> no longer hold in exact arithmetic, bounds of a similar form can be obtained by finding the minimax polynomial on the union of small intervals about the eigenvalues of <span class="math inline">\(A\)</span>. In particular, the bound from Chebyshev polynomials will not be significantly affect, as the condition number of the larger matrix will be nearly identical to that of <span class="math inline">\(A\)</span>.</p>
 <p>As before, the <a href="./remez.html">Remez algorithm</a> can be used to compute the minimax polynomial of a given degree on the union of intervals.</p>
-<h3 id="some-conditions-for-the-analysis">Some conditions for the analysis</h3>
-<p>I have brushed what a “good” conjugate gradient implementation means. In some sense this is still not known, since there has been no analysis providing both necessary and sufficient conditions for convergence to behave in a certain way. That said, the conditions given in <span class="citation" data-cites="greenbaum_89">[@greenbaum_89]</span> are sufficient, and should be discussed.</p>
-<p>We have already seen that <a href="./cg_lanczos.html">CG is doing the Lanczos algorithm in disguise</a>. In particular, normalizing the residuals from CG gives the vectors <span class="math inline">\(q_j\)</span> produced by the Lanczos algorithm, and combing the CG constants in the right way gives the coefficients <span class="math inline">\(\alpha_j,\beta_j\)</span> for the three term Lanczos recurrence. The analysis by Greenbaum requires that the finite precision conjugate gradient algorithm (viewed as the Lanczos algorithm) satisfy the same three properties as Paige’s analysis.</p>
-<p>As it turns out, nobody has actually ever proved that any of the Conjugate Variant methods used in practice actually satisfy these conditions. Any proof that a given method satisfies these properties would constitute a significant theoretical advancement in the understanding of the conjugate gradient algorithm in finite precision. Similarly, finding weaker conditions which provide some sort of convergence guarantees for a finite precision CG implementation would also be of significant importance.</p>
+<h3>Some conditions for the analysis</h3>
+<p>I have brushed what a “good” conjugate gradient implementation means.
+In some sense this is still not known, since there has been no analysis providing both necessary and sufficient conditions for convergence to behave in a certain way.
+That said, the conditions given in <span class="citation" data-cites="greenbaum_89">[@greenbaum_89]</span> are sufficient, and should be discussed.</p>
+<p>We have already seen that <a href="./cg_lanczos.html">CG is doing the Lanczos algorithm in disguise</a>.
+In particular, normalizing the residuals from CG gives the vectors <span class="math inline">\(q_j\)</span> produced by the Lanczos algorithm, and combing the CG constants in the right way gives the coefficients <span class="math inline">\(\alpha_j,\beta_j\)</span> for the three term Lanczos recurrence.
+The analysis by Greenbaum requires that the finite precision conjugate gradient algorithm (viewed as the Lanczos algorithm) satisfy the same three properties as Paige’s analysis.</p>
+<p>As it turns out, nobody has actually ever proved that any of the Conjugate Variant methods used in practice actually satisfy these conditions.
+Any proof that a given method satisfies these properties would constitute a significant theoretical advancement in the understanding of the conjugate gradient algorithm in finite precision.
+Similarly, finding weaker conditions which provide some sort of convergence guarantees for a finite precision CG implementation would also be of significant importance.</p>
 <p>In our paper, <a href="./../publications/greenbaum_liu_chen_19.html">“On the Convergence of Conjugate Gradient Variants in Finite Precision Arithmetic”</a> we analyze some variants in terms of these quantities, and try to provide rounding error analysis which will explain why these properties are or are not satisfied for each variant.</p>
-<h3 id="finding-the-larger-matrix">Finding the larger matrix</h3>
-<p>A constructive algorithm for finding an extended matrix <span class="math inline">\(\hat{T}\)</span> where exact CG behaves like finite precision CG on <span class="math inline">\(A\)</span> was presented in <span class="citation" data-cites="greenbaum_89">[@greenbaum_89]</span>. The algorithm is given the Lanczos vectors and coefficients from the finite precision computation, and extends the tridiagonal matrix <span class="math inline">\(T\)</span> by slightly perturbing a new, exact, Lanczos recurrence so that it terminates. The resulting larger tridiagonal matrix <span class="math inline">\(\hat{T}\)</span>, which contains <span class="math inline">\(T\)</span> in the top left block, will have eigenvalues near those of <span class="math inline">\(A\)</span> (assuming <span class="math inline">\(T\)</span> came from a “good” implementation).</p>
+<h3>Finding the larger matrix</h3>
+<p>A constructive algorithm for finding an extended matrix <span class="math inline">\(\hat{T}\)</span> where exact CG behaves like finite precision CG on <span class="math inline">\(A\)</span> was presented in <span class="citation" data-cites="greenbaum_89">[@greenbaum_89]</span>.
+The algorithm is given the Lanczos vectors and coefficients from the finite precision computation, and extends the tridiagonal matrix <span class="math inline">\(T\)</span> by slightly perturbing a new, exact, Lanczos recurrence so that it terminates. The resulting larger tridiagonal matrix <span class="math inline">\(\hat{T}\)</span>, which contains <span class="math inline">\(T\)</span> in the top left block, will have eigenvalues near those of <span class="math inline">\(A\)</span> (assuming <span class="math inline">\(T\)</span> came from a “good” implementation).</p>
 <p>An explanation of the algorithm is given in the appendix of <span class="citation" data-cites="greenbaum_liu_chen_19">[@greenbaum_liu_chen_19]</span>, and an jupyter notebook is available <a href="https://github.com/tchen01/Conjugate_Gradient/blob/master/experiments/extend_t.ipynb">here</a>, and two Python implementations of the algorithm are available in the same Github repository.</p>
 <!--start_pdf_comment-->
-<p>Next: <a href="./communication_hiding_variants.html">Communication hiding conjugate gradient algorithms</a> <!--end_pdf_comment--></p>
-<p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
+<p>Next: <a href="./communication_hiding_variants.html">Communication hiding conjugate gradient algorithms</a>
+<!--end_pdf_comment--></p>
+<p class="footer">
+More about the conjugate gradient method can be found <a href="./">here</a>.
+</p>
 </div>
 </body>
 </html>
+

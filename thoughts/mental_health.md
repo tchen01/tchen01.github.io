@@ -1,8 +1,9 @@
 ---
-title: '\sffamily Mental Health in Gradschool'
+title: Mental Health in Grad School
 author: '[Tyler Chen](https://chen.pw)'
-mainfont: Vollkorn
-sansfont: Lato
+keywords: ['applied','math']
+description: Graduate students are more than six times as likely to experience depression and anxiety as compared to the general population. What can we do to address this issue?
+footer: <p class="footer">More writing about my opinions on academia can be found <a href="./">here</a>.</p>
 header-includes: |
     \usepackage{sectsty}
     \allsectionsfont{\normalfont\sffamily\bfseries}
@@ -14,11 +15,22 @@ header-includes: |
       citecolor=Base02,
       urlcolor=Base02
     }
----
+...
 
-More to come...
 
-A fairly recent [study](https://www.nature.com/articles/nbt.4089) in Nature points out that "Graduate students are more than six times as likely to experience depression and anxiety as compared to the general population."
+As noted by a recent study[^1] in Nature, "Graduate students are more than six times as likely to experience depression and anxiety as compared to the general population."
 
-Good opinion piece: ["Imposter syndrome isn’t the problem—toxic workplaces are"](https://qz.com/work/1286549/imposter-syndrome-lets-toxic-work-culture-off-the-hook/)
+# Imposter syndrome {#mental_health:imposter}
+
+https://academia.stackexchange.com/questions/11765/ive-somehow-convinced-everyone-that-im-actually-good-at-this-how-to-effect
+
+## Counterpoint
+
+Imposter syndrome is so prevalent in academia that it is easy to blame any feelings of not belonging **ofda fdasf as** on imposter syndrome.
+
+However, sometimes these difficulties aren't just "imposter syndrome", but the result of *fdafdasfsa*
+
+As Christine Liu writes in the article ["Imposter syndrome isn't the problem---toxic workplaces are"](https://qz.com/work/1286549),
+
+> Imposter syndrome is a convenient scapegoat for the systemic and institutional oppression that pushes people out of science. Hyper-focus on imposter syndrome can be a form of victim-blaming. It promotes the idea that people need to pull themselves up by their bootstraps and just feel better in order to do better.
 

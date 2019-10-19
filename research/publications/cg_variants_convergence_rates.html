@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
-<title>On the Convergence of Conjugate Gradient Variants in Finite Precision Arithmetic</title>
-<meta name="description" content="Multiple mathematically equivalent variants of the Conjugate Gradient algorithm have been developed to reduce communication in high performance environments. We analyze these variants in the context of [Greenbaum 89].">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width user-scalable=no">
+  <meta charset="utf-8" />
+  <title>On the Convergence of Conjugate Gradient Variants in Finite Precision Arithmetic</title>
+  <meta name="description" content="Multiple mathematically equivalent variants of the Conjugate Gradient algorithm have been developed to reduce communication in high performance environments. We analyze these variants in the context of [Greenbaum 89].">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="author" content="Tyler Chen" />
 
-<link href="../../tc.ico" rel="shortcut icon" >
-<link href="../../css/main.css" rel="stylesheet" type="text/css" media="screen" />
-<link href="../../css/print.css" rel="stylesheet" type="text/css" media="print"/>
-<link rel="stylesheet" href="../../font/lato/stylesheet.css" type="text/css" charset="utf-8" />
-<link rel="stylesheet" href="font/vollkorn/stylesheet.css" type="text/css" charset="utf-8" />
-
-<script type="text/javascript" async
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <link href="../../tc.ico" rel="shortcut icon" >
+  <link href="../../css/main.css" rel="stylesheet" type="text/css" media="screen" />
+  <link href="../../css/print.css" rel="stylesheet" type="text/css" media="print"/>
+  <link rel="stylesheet" href="../../font/lato/stylesheet.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../../font/vollkorn/stylesheet.css" type="text/css" charset="utf-8" />
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-50592837-1"></script>
@@ -25,17 +25,14 @@
 
   gtag('config', 'UA-50592837-1');
 </script>
+
 </head>
-
 <body>
-
-<div id="contentContainer"  >
-<h1> On the Convergence of Conjugate Gradient Variants in Finite Precision Arithmetic
-</h1>
-<p class="authors"> Tyler Chen
-</p>
+<div id="contentContainer">
+<h1>On the Convergence of Conjugate Gradient Variants in Finite Precision Arithmetic</h1>
+<p class="author"><a href="https://chen.pw">Tyler Chen</a></p>
 <p>This is a companion piece to the publication:</p>
-<pre><code>@article{greenbaum_liu_chen_19,
+<p><pre>@article{greenbaum_liu_chen_19,
     title = {On the Convergence Rate of Variants of the Conjugate Gradient Algorithm in Finite Precision Arithmetic},
     author = {Anne Greenbaum and Hexuan Liu and Tyler Chen},
     year = {2019},
@@ -44,17 +41,30 @@
     primaryClass = {cs.NA},
     note = {arXiv preprint: 1905.05874},
 }
-</code></pre><p>A preprint is available on <a href="https://arxiv.org/pdf/1905.05874.pdf">arXiv (1905.05874)</a>.</p>
-<h2 id="why-should-i-care">Why should I care?</h2>
-<p>The behaviour of the conjugate gradient algorithm in <a href="../cg/finite_precision_cg.html">finite precision</a> is very different than what is predicted by exact arithmetic theory. In this sense, the algorithm could be considered unstable. However, the conjugate gradient algorithm is widely used in practice, so it is important to understand its behaviour in finite precision.</p>
-<h2 id="introduction">Introduction</h2>
+</pre></p>
+<p>A preprint is available on <a href="https://arxiv.org/pdf/1905.05874.pdf">arXiv (1905.05874)</a>.</p>
+<h2>Why should I care?</h2>
+<p>The behaviour of the conjugate gradient algorithm in <a href="../cg/finite_precision_cg.html">finite precision</a> is very different than what is predicted by exact arithmetic theory.
+In this sense, the algorithm could be considered unstable.
+However, the conjugate gradient algorithm is widely used in practice, so it is important to understand its behaviour in finite precision.</p>
+<h2>Introduction</h2>
 <p>If you are not familiar with the Conjugate Gradient method, it may be worth reading through my introduction <a href="../cg/index.html">here</a>.</p>
-<p>As mentioned above, the conjugate gradient algorithm in finite precision is very different than the algorithm in exact arithmetic. One effect is that in finite precision the “rate of convergence” (how many iterations it takes to reach a given level of accuracy) is reduced compared to exact arithmetic. Previously Anne Greenbaum showed that a “good” implementation of the CG algorithm, when run in finite precision, will behave like exact CG applied to a larger matrix, and that this larger matrix has eigenvalues very near to those of the original matrix. I’ve written more about this result <a href="../cg/finite_precision_cg.html">here</a>.</p>
-<p>A natural question is whether any of the high performance variants satisfy the conditions for Greenbaum’s analysis to apply. Specifically, the analysis requires that (i) the three term Lanczos recurrence close to satisfied, and (ii) that successive residual vectors are nearly orthogonal. Unforunately, nobody has been able to prove this for any of the high performance variants, or even the standard implementation.</p>
-<h2 id="contributions-of-this-paper">Contributions of this paper</h2>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD In this paper we show (numerically) why on some problems certain variants of the conjugate gradient algorithm converge more slowly than others, but on some problems all variants behave the same. To do this we first analyze how closely different variants satisfy the three term Lanczos recurrence. It turns out that the standard implementation, and one due to Chronopoulos and Gear satisfy the three term recurrence to within local rounding errors. However, the pipelined variant due to Ghysels and Vanroose, which is more parallel, has a larger deviation from a three term recurrence. While the paper does not prove that this leads to worse convergence, it does suggest that</p>
-<p>======= In this paper we show (numerically) why on some problems certain variants of the conjugate gradient algorithm converge more slowly. &gt;&gt;&gt;&gt;&gt;&gt;&gt; dbe2c394921d1c40db8ba9b2c7379aa5b8648198</p>
-<p class="footer">The rest of my publications can be found <a href="./../">here</a>.</p>
+<p>As mentioned above, the conjugate gradient algorithm in finite precision is very different than the algorithm in exact arithmetic.
+One effect is that in finite precision the “rate of convergence” (how many iterations it takes to reach a given level of accuracy) is reduced compared to exact arithmetic.
+Previously Anne Greenbaum showed that a “good” implementation of the CG algorithm, when run in finite precision, will behave like exact CG applied to a larger matrix, and that this larger matrix has eigenvalues very near to those of the original matrix.
+I’ve written more about this result <a href="../cg/finite_precision_cg.html">here</a>.</p>
+<p>A natural question is whether any of the high performance variants satisfy the conditions for Greenbaum’s analysis to apply.
+Specifically, the analysis requires that (i) the three term Lanczos recurrence close to satisfied, and (ii) that successive residual vectors are nearly orthogonal.
+Unforunately, nobody has been able to prove this for any of the high performance variants, or even the standard implementation.</p>
+<h2>Contributions of this paper</h2>
+<p>In this paper we show (numerically) why on some problems certain variants of the conjugate gradient algorithm converge more slowly than others, but on some problems all variants behave the same.
+To do this we first analyze how closely different variants satisfy the three term Lanczos recurrence.
+It turns out that the standard implementation, and one due to Chronopoulos and Gear satisfy the three term recurrence to within local rounding errors.
+However, the pipelined variant due to Ghysels and Vanroose, which is more parallel, has a larger deviation from a three term recurrence.
+While the paper does not prove that this leads to worse convergence, it does suggest that</p>
+<p class="footer">
+The rest of my publications can be found <a href="./../">here</a>.
+</p>
 </div>
 </body>
 </html>

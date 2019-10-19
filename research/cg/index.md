@@ -1,6 +1,9 @@
 ---
-title: '\sffamily \textbf{An Introduction to Modern Analysis of the Conjugate Gradient Algorithm in Exact and Finite Precision}'
+title: An Introduction to Modern Analysis of the Conjugate Gradient Algorithm in Exact and Finite Precision
 author: '[Tyler Chen](https://chen.pw)'
+keywords: ['applied','math']
+description: The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. This website provides an introduction to the algorithm in theorey and in practice.
+footer: <p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
 mainfont: Vollkorn
 sansfont: Lato
 header-includes: |
