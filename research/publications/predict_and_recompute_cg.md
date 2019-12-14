@@ -1,5 +1,5 @@
 ---
-title: New communication hiding conjugate gradient variants
+title: Predict-and-recompute conjugate gradient variants
 author: '[Tyler Chen](https://chen.pw)'
 description: We introduce a new class of communication hiding conjugate gradient variants.
 footer: <p class="footer">The rest of my publications can be found <a href="./../">here</a>.</p>

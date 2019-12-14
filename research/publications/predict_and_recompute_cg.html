@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
   <meta charset="utf-8" />
-  <title>New communication hiding conjugate gradient variants</title>
+  <title>Predict-and-recompute conjugate gradient variants</title>
   <meta name="description" content="We introduce a new class of communication hiding conjugate gradient variants.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <meta name="author" content="Tyler Chen" />
@@ -30,17 +30,16 @@
 </head>
 <body>
 <div id="contentContainer">
-<h1>New communication hiding conjugate gradient variants</h1>
+<h1>Predict-and-recompute conjugate gradient variants</h1>
 <p class="author"><a href="https://chen.pw">Tyler Chen</a></p>
 <p>This is a companion piece to the publication:</p>
-<p><pre>@article{chen_19,
+<p><pre>@article{predict_and_recompute_cg,
     title={Predict-and-recompute conjugate gradient variants},
-    author={Tyler Chen},
-    year={2019},
+    author={Tyler Chen and Erin C. Carson},
+    year={2020},
     eprint={1905.01549},
     archivePrefix={arXiv},
     primaryClass={cs.NA},
-    note = {arXiv preprint: 1905.01549}
 }
 </pre></p>
 <p>A preprint is available on <a href="https://arxiv.org/pdf/1905.01549.pdf">arXiv (1905.01549)</a>.</p>
@@ -76,7 +75,7 @@ As a result, while I include a few of the important figures and tables below, I 
 <table>
 <caption><strong>Table 1.</strong> Summary of costs for various conjugate gradient variants.
 Values in parenthesis are the additional costs for the preconditioned variants.
-<em>vec. ops</em>: number of vector operations (i.e. <code>AXPY</code>s, and inner products) per iteration.
+<em>vec. ops</em>: number of vector operations (i.e. <code>AXPY</code>s, and inner products) per iteration.
 <em>mult</em>: number of matrix vector products per iteration.
 <em>scal</em>: number of inner products per iteration.
 <em>communication</em>: time spend on communication for global reduction (GR) and matrix vector product/preconditioning (MV+PC).
@@ -153,12 +152,12 @@ Values in parenthesis are the additional costs for the preconditioned variants.
 <p>Table 1 shows a summary of the costs of some different variants. Note that PR-CG, Pipe-PR-MCG, and Pipe-PR-CG are the variants introduced in this paper.
 Numerical experiments on some test problems are shown in Figure 1.</p>
 <figure>
-<img src="imgs/predict-and-recompute_convergence.svg" alt="Figure 1. Convergence of conjugate gradient variants on some sample problems." /><figcaption><strong>Figure 1.</strong> Convergence of conjugate gradient variants on some sample problems.</figcaption>
+<img src="imgs/predict-and-recompute_convergence.svg" alt="" /><figcaption><strong>Figure 1.</strong> Convergence of conjugate gradient variants on some sample problems.</figcaption>
 </figure>
 <p>Finally, Figure 2 shows the results of a strong scaling experiment.
 In particular, it should be noted that the predict and recompute varaints introduced in this paper do indeed reduce the runtime per iteration vs. HS-CG.</p>
 <figure>
-<img src="imgs/strong_scale.svg" alt="Figure 2. Strong scaling of variants on sample problem." /><figcaption><strong>Figure 2.</strong> Strong scaling of variants on sample problem.</figcaption>
+<img src="imgs/strong_scale.svg" alt="" /><figcaption><strong>Figure 2.</strong> Strong scaling of variants on sample problem.</figcaption>
 </figure>
 <p>Despite the advances presented in this paper, there is still significant room for future work on high performance conjugate gradient variants, especially in thedirection of further decreasing the communication costs.</p>
 <p class="footer">

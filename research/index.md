@@ -26,7 +26,9 @@ I also have some short introductory pieces on topics I think are interesting.
 
 Here are links to my [Google Scholar profile](https://scholar.google.com/citations?hl=en&user=FD4TjnYAAAAJ) and [ORCID](https://orcid.org/0000-0002-1187-1026): 0000-0002-1187-1026.
 
-[pub:predict_and_recompute]
+[pub:finite_precision_random_variables]
+
+[pub:predict_and_recompute_cg]
 
 [pub:cg_variants_convergence_rates]
 
@@ -48,8 +50,10 @@ Here are links to my [Google Scholar profile](https://scholar.google.com/citatio
     - [Current Research](./cg/current_research.html)
 
 - [The Remez Algorithm](./cg/remez.html)
-- [Broadcasting in numpy](./inprog.html)
-- [Communiction costs in matrix vector and inner products](./inprog.html)
+
+- [Misc. thoughts on Computing](./computing)
+    - [Broadcasting in numpy](./inprog.html)
+    - [Distributed computing in python: mpi4py](./computing/mpi4py.html)
   
 ## Collaboration
 

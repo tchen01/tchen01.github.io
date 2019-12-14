@@ -25,7 +25,7 @@ def bib_to_html(file_loc,bib_file,pub_idx):
            +f'<div class="pub-idx">[{pub_idx}]</div>'\
            +f'<div class="pub-container"><div class="title"><a href="./{file_loc}.{"pdf" if file_loc[0]=="t" else "html"}">{bib_info["title"]}</a>.</div>\n'\
            +f'<div class="authors">{bib_info["author"].replace("Tyler Chen","<strong>Tyler Chen</strong>")}.</div>\n'\
-           +f'<div class="notes">{bib_info["note"]}.</div>\n'\
+           +(f'<div class="notes">{bib_info["note"]}.</div>\n' if "note" in bib_info.keys() else '')\
            +(f'<div class="eprint">arXiv:<a href="https://arxiv.org/abs/{bib_info["eprint"]}">{bib_info["eprint"]}</a>.</div>\n' if "eprint" in bib_info.keys() else '')\
            +'</div></div>\n'
     
@@ -119,14 +119,16 @@ pages = ['index',
          'research/cg/remez',
          'research/cg/linear_algebra_review',
          'research/publications/cg_variants_convergence_rates',
-         'research/publications/predict_and_recompute',
+         'research/publications/predict_and_recompute_cg',
+         'research/computing/index',
+         'research/computing/mpi4py',
          'thoughts/index',
          'thoughts/mental_health',
          'thoughts/power_structures',
          'thoughts/reproducibility',
         ]
 
-pubs = ['cg_variants_convergence_rates','predict_and_recompute']
+pubs = ['cg_variants_convergence_rates','predict_and_recompute_cg']
 
 for page in pages:
     build_html(page)

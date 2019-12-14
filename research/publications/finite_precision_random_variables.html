@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <title>Random Variables in Finite Precision</title>
+  <meta name="description" content="We describe properties of random variables when rounded to finite precision">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="author" content="Tyler Chen" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <link href="../../tc.ico" rel="shortcut icon" >
+  <link href="../../css/main.css" rel="stylesheet" type="text/css" media="screen" />
+  <link href="../../css/print.css" rel="stylesheet" type="text/css" media="print"/>
+  <link rel="stylesheet" href="../../font/lato/stylesheet.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../../font/vollkorn/stylesheet.css" type="text/css" charset="utf-8" />
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-50592837-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-50592837-1');
+</script>
+
+</head>
+<body>
+<div id="contentContainer">
+<h1>Random Variables in Finite Precision</h1>
+<p class="author"><a href="https://chen.pw">Tyler Chen</a></p>
+<p>This is a companion piece to the publication:</p>
+<p><pre>@article{finite_precision_random_varianlts,
+    title = {Rounding Random Variables to Finite Precision},
+    author = {Tyler Chen},
+    year = {2019},
+}
+</pre></p>
+<p>A preprint will be available soon.</p>
+<h2>Why should I care?</h2>
+<p>Algorithms involving randomness have become commonplace, and in practice these algorithms are often run in finite precision.
+As a result, some of their theoretical properties based on the use of exact samples from continuous distributions, can no longer be guaranteed.
+Even so, many randomized algorithms appear to perform as well in practice as predicted by theory <a href="https://arxiv.org/abs/0909.4061">[HMT11]</a>, suggesting that errors resulting from sampling such distributions in finite precision are negligible.
+At the same time, especially in the case of Monte Carlo simulations, it is not typically clear how to differentiate the possible effects of rounding errors from the effects of sampling error.
+In fact, in many areas (such as the numerical solution to stochastic differential equations) this problem is typically addressed by ignoring the effects of rounding errors under the assumption that they are small <a href="https://www.springer.com/gp/book/9783540540625">[KP92]</a>.
+However, with the recent trend towards lower precision computations, and with the massive increase in the amount of data available, understanding the effects of rounding errors on random variables and the interplay between rounding and sampling error has become increasingly important.</p>
+<h2>Introduction</h2>
+<p>The effects of rounding random variables to a fixed set is an old problem in statistics.
+In fact, this problem was studied as early as the late 1890s by Shepard, who gave the relationship between the moments of a random variable <span class="math inline">\(X\)</span> (satisfying certain niceness conditions) and the moments of a perturbed random variable <span class="math inline">\(X^*\)</span>, obtained by rounding <span class="math inline">\(X\)</span> to a uniformly spaced set [She97].</p>
+<figure>
+<img src="imgs/error_framework.svg" alt="" /><figcaption><strong>Figure 1.</strong> <em>left</em>: original distribution.
+<em>center</em>: distribution after being subjected to a nonlinear transformation <span class="math inline">\(\varphi_1\)</span>; e.g. a distortion due to a lens.
+<em>right</em>: center distribution after begin subjected to a discretization <span class="math inline">\(\varphi_2\)</span>; e.g. discretization due to a measurement device.</figcaption>
+</figure>
+<p>More broadly, given some random variable <span class="math inline">\(X\)</span>, we may consider a perturbed random variable <span class="math inline">\(X^*=X+e(X)\)</span>, where <span class="math inline">\(e:\mathbb{R}\to\mathbb{R}\)</span> satisfies certain assumptions.
+For instance, we may assume that <span class="math inline">\(|e(x)| \leq \epsilon |x|\)</span> as is common in numerical analysis, or that <span class="math inline">\(e(x) = \lfloor x + 1/2\rfloor - x\)</span>; i.e. <span class="math inline">\(e(x)\)</span> is the difference between the nearest integer and <span class="math inline">\(x\)</span>.</p>
+<p>Based on these assumptions, we can derive information about properties of <span class="math inline">\(X\)</span> and <span class="math inline">\(X^*\)</span> and how they differ.
+For instance, we may want to know how close the moments of <span class="math inline">\(X^*\)</span> are to those are of <span class="math inline">\(X\)</span>.</p>
+<p>For instance, given that <span class="math inline">\(|e(x)| \leq \epsilon |x|\)</span>, it is trivial to show,
+<span class="math display">\[\begin{align*}
+    \left| \mathbb{E} \left[X^k - (X^*)^k \right] \right|
+    \leq \epsilon \mathbb{E}\big[ |X|^k \big]
+\end{align*}\]</span></p>
+<h2>Techniques</h2>
+<p>Suppose we would like to compute the difference in the means of <span class="math inline">\(X\)</span> and <span class="math inline">\(X^*\)</span>.
+We have,
+<span class="math display">\[\begin{align*}
+    \mathbb{E}[X^*-X] 
+    = \mathbb{E}[e(X)] 
+    = \int e(x) f_X(x) \mathrm{d}x
+\end{align*}\]</span></p>
+<p>Now, if we know <span class="math inline">\(e(x)\)</span> and <span class="math inline">\(f_X(x)\)</span>, then we can simply evaluate this integral (possibly numerically).
+However, in many situations, it is tedious to work with <span class="math inline">\(e(x)\)</span>, even if we know it.
+For instance, the <span class="math inline">\(e(x)\)</span> corresponding to rounding to some finite precision number system would be quite tricky to deal with.</p>
+<p>Even so, we expect this integral to be small if <span class="math inline">\(f_X(x)\)</span> is relatively well behaved.
+This is because <span class="math inline">\(e(x)\)</span> is positive about as much as it is negative.
+Indeed, as Figure 2 shows, the integral of <span class="math inline">\(e(x)\)</span> over any interval is small.</p>
+<figure>
+<img src="imgs/error_odd.svg" alt="" /><figcaption><strong>Figure 2.</strong> Sample error function</figcaption>
+</figure>
+<p>In this paper we provide a technique to bound integrals of the form <span class="math inline">\(\int fg \mathrm{d}x\)</span> given that the integral of <span class="math inline">\(g\)</span> is small on any interval.
+The previous example can be viwed as an appliation of the following proposition.</p>
+<p><strong>Proposition</strong>.
+Let <span class="math inline">\(f: \mathbb{R} \to \mathbb{R}_{\geq 0}\)</span> be lower semi-continuous and <span class="math inline">\(g:\mathbb{R} \to \mathbb{R}\)</span> integrable.
+Suppose that <span class="math inline">\(fg\)</span> is absolutely integrable and that there exists a function <span class="math inline">\(h : \mathbb{R} \times \mathbb{R} \to \mathbb{R}_{\geq 0}\)</span> such that for any <span class="math inline">\(a,b\in\mathbb{R}\)</span>,
+<span class="math display">\[\begin{align*}
+    \int_{a}^{b} g(x) \,\mathrm{d}{x}
+    \leq h(a,b)        
+\end{align*}\]</span></p>
+<p>Let <span class="math inline">\(\mathcal{O} \subset 2^\mathbb{R}\)</span> denote the set of all open subsets of <span class="math inline">\(\mathbb{R}\)</span>.
+Recall that any open set <span class="math inline">\(A \in \mathcal{O} \setminus \{ \varnothing \}\)</span> can be writen <span class="math inline">\(A = \bigcup_{i=1}^{k} (a_i,b_i)\)</span> where <span class="math inline">\((a_i,b_i)\)</span> are pairwise disjoint and <span class="math inline">\(k \in \mathbb{Z}_{&gt;0} \cup \{\infty\}\)</span>.
+Extend <span class="math inline">\(h : \mathbb{R} \times \mathbb{R} \to \mathbb{R}_{\geq 0}\)</span> to a function <span class="math inline">\(\mu : \mathcal{O} \to \mathbb{R}_{\geq 0} \cup \{ \infty \}\)</span> on open sets by <span class="math inline">\(\mu(\varnothing) = 0\)</span> and,
+<span class="math display">\[\begin{align*}
+    \mu(A)
+    = \mu\left( \bigcup_{i=1}^{k} (a_i,b_i) \right)
+    = \sum_{i=1}^{k} h(a_i,b_i)
+    ,&amp;&amp; \forall A \in \mathcal{O} \setminus \{ \varnothing \} 
+\end{align*}\]</span></p>
+<p>Then,
+<span class="math display">\[\begin{align*}
+    \int f(x) g(x) \,\mathrm{d}{x} 
+    \leq \int_{0}^{\infty} \mu ( \{ x : f(x) &gt; u\} ) \,\mathrm{d}{u}
+\end{align*}\]</span></p>
+<p class="footer">
+The rest of my publications can be found <a href="./../">here</a>.
+</p>
+</div>
+</body>
+</html>
+
