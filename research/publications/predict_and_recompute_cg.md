@@ -40,35 +40,38 @@ However, it's well known that CG behaves *very* differently in finite precision 
 Understanding why this happens is a hard problem, and only a few results have been proved about it.
 I've written an introduction to the effects of finite precision on CG [here](../cg/finite_precision_cg.html), but to summarize, the main effects are (i) the loss of ultimately attainable accuracy and (ii) the increase in number of iterations to reach a given level of accuracy (delay of convergence).
 
-Unforunately, many of the past communication hiding variants do not always work well numerically.
+Unfortunately, many of the past communication hiding variants do not always work well numerically.
 We would therefore like to develop variants which reduce communication (and therefore the time per iteration), while simultaneously ensuring that their numerical stability is not too severely impacted (so that the number of iterations required is not increased too much).
 
 ## Contributions of this paper
 
 The primary contributions of this paper are several new mathematically equivalent CG variants, which perform better than their previously studied counterparts.
 A general framework for constructing these methods is presented.
-More importantly, the idea to use predictions of quantities to allow a computation to begin, and then recomputing these quantities at a later point (an idea originally due to Meurant) is applied to the ``pipelined'' versions of these variants.
+More importantly, the idea to use predictions of quantities to allow a computation to begin, and then recomputing these quantities at a later point (an idea originally due to Meurant) is applied to the "pipelined" versions of these variants.
 
-The paper itself is meant to be fairly readable without a huge ammount of background, so I haven't written a detailed summary here.
-As a result, while I include a few of the important figures and tables below, I leave detailed explinations to the paper itself.
+The paper itself is meant to be fairly readable without a huge amount of background, so I haven't written a detailed summary here.
+As a result, while I include a few of the important figures and tables below, I leave detailed explanations to the paper itself.
 
-variant|vec. ops.|scal.|mult.|communication|mem.
-:------|:--------|:----|:----|:------------|:---
-          HS-CG |   5 (+0) |     1 |     2 |  2 GR + MV + PC  |  4 (+1)
-          CG-CG |   6 (+0) |     1 |     2 |  GR + MV + PC    |  5 (+1)
-           M-CG |   6 (+1) |     1 |     3 |  GR + MV + PC    |  4 (+2) 
-      **PR-CG** |   7 (+1) |     1 |     4 |  GR + MV + PC    |  4 (+2)
-          GV-CG |   8 (+2) |     1 |     2 |  max(GR,MV+PC)   |  7 (+3) 
-**Pipe-PR-MCG** |   9 (+3) |     2 |     3 |  max(GR,MV+PC)   |  6 (+4) 
- **Pipe-PR-CG** |   9 (+3) |     2 |     4 |  max(GR,MV+PC)   |  6 (+4)
+variant|mem.|vec.|scal.|time
+:------|:---|:---|:----|:---
+          HS-CG | 4 (+1) | 3 (+0) | 2 | 2 C<sub>gr</sub> + T<sub>mv</sub> + C<sub>mv</sub>
+          CG-CG | 5 (+1) | 4 (+0) | 2 | C<sub>gr</sub> + T<sub>mv</sub> + C<sub>mv</sub>
+           M-CG | 4 (+2) | 3 (+1) | 3 | C<sub>gr</sub> + T<sub>mv</sub> + C<sub>mv</sub>
+      **PR-CG** | 4 (+2) | 3 (+1) | 4 | C<sub>gr</sub> + T<sub>mv</sub> + C<sub>mv</sub>
+          GV-CG | 7 (+3) | 6 (+2) | 2 | max(C<sub>gr</sub>, T<sub>mv</sub> + C<sub>mv</sub>)
+**Pipe-PR-MCG** | 6 (+4) | 5 (+3) | 3 | max(C<sub>gr</sub>, T<sub>2mv</sub> + C<sub>mv</sub>)
+ **Pipe-PR-CG** | 6 (+4) | 5 (+3) | 4 | max(C<sub>gr</sub>, T<sub>2mv</sub> + C<sub>mv</sub>)
 
 :    **Table 1.** Summary of costs for various conjugate gradient variants.
 Values in parenthesis are the additional costs for the preconditioned variants.
-*vec. ops*: number of vector operations (i.e. `AXPY`s, and inner products) per iteration.
-*mult*: number of matrix vector products per iteration.
-*scal*: number of inner products per iteration.
-*communication*: time spend on communication for global reduction (GR) and matrix vector product/preconditioning (MV+PC).
-*mem*: number of vectors stored.
+**mem**: number of vectors stored.
+**vec**: number of vector updates (`AXPY`s) per iteration.
+**scal**: number of inner products per iteration.
+**time**: dominant costs (ignoring vector updates and inner products).
+C<sub>gr</sub> is the time spent on communication for a global reduction. 
+T<sub>mv</sub> and C<sub>mv</sub> are the times spend on comuting a matrix vector product, and communication associated with a matrix vector product and depend on the method of matrix multiplication (for instance a dense matrix has C<sub>mv</sub> = C<sub>gr</sub>). 
+T<sub>2mv</sub> is the cost of computing two matrix vector products simultaneously, which may be somewhat less than 2T<sub>mv</sub> if implemented in an efficient way.
+Note that in this abstraction we assume that the time of communication is independent of the size of messages sent.
 
 Table 1 shows a summary of the costs of some different variants. Note that PR-CG, Pipe-PR-MCG, and Pipe-PR-CG are the variants introduced in this paper.
 Numerical experiments on some test problems are shown in Figure 1. 
@@ -80,6 +83,6 @@ In particular, it should be noted that the predict and recompute varaints introd
 
 ![**Figure 2.** Strong scaling of variants on sample problem.](imgs/strong_scale.svg)
 
-Despite the advances presented in this paper,  there is still significant room for  future  work  on  high  performance  conjugate  gradient  variants,  especially  in  thedirection of further decreasing the communication costs.
+Despite the advances presented in this paper,  there is still significant room for  future  work  on  high  performance  conjugate  gradient  variants,  especially  in  the direction of further decreasing the communication costs.
 
 

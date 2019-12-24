@@ -2,7 +2,7 @@
 title:  Research
 keywords: ['applied','math']
 description: I'm Tyler Chen, applied math PhD student at the University of Washington. Find out more about my research, teaching, and educational beliefs, and then get in contact with me.
-footer: <p class="footer">The rest of my research can be found <a href="./">here</a>.</p>
+footer: <p class="footer">Return to my <a href="./../">homepage</a>.</p>
 ...
 
 The less time scientists have to wait for code to run, the more time they can spend thinking about the problems they are tackling.

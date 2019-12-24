@@ -69,7 +69,7 @@ Of course, this comes with additional storage and computation costs.</p>
 In finite precision, the loss of orthogonality leads to two easily observable effects: delayed convergence, and reduced final accuracy.
 The following figure shows both of these phenomena for various precisions.</p>
 <figure>
-<img src="./multiple_precision.svg" alt="" /><figcaption>Convergence of conjugate gradient in various precisions. Note that the computation would finish in at most 48 steps in exact arithmetic.</figcaption>
+<img src="./multiple_precision.svg" alt="Convergence of conjugate gradient in various precisions. Note that the computation would finish in at most 48 steps in exact arithmetic." /><figcaption>Convergence of conjugate gradient in various precisions. Note that the computation would finish in at most 48 steps in exact arithmetic.</figcaption>
 </figure>
 <h3>Delay of convergence</h3>
 <p>In our <a href="./cg_derivation.html">derivation</a> of the conjugate gradient algorithm, we used the <span class="math inline">\(A\)</span>-orthogonality of successive search directions to show that we only needed to optimize over the current search direction.

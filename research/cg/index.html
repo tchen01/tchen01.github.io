@@ -66,7 +66,7 @@ When <span class="math inline">\(A\)</span> is symmetric and positive definite (
 <p>This popularity of the conjugate gradient algorithm (CG) is due to a couple factors. First, like most Krylov subspace methods, CG is <em>matrix free</em>.
 This means that <span class="math inline">\(A\)</span> never has to be explicitly represented as a matrix, as long as there is some way of computing the product <span class="math inline">\(v\mapsto Av\)</span>, for a given input vector <span class="math inline">\(v\)</span>.
 For very large problems, this means a big reduction in storage, and if <span class="math inline">\(A\)</span> has some structure (eg. <span class="math inline">\(A\)</span> comes from a DFT, difference/integral operator, is very sparse, etc.), it allows the algorithm to take advantage of fast matrix vector products.
-Second, CG only requires <span class="math inline">\(\mathcal{O}(n)\)</span> storage to run, as compared to <span class="math inline">\(\mathcal{O}(n^2)\)</span> that many other algorithms require (we use <span class="math inline">\(n\)</span> to denote the size of <span class="math inline">\(A\)</span>, i.e. <span class="math inline">\(A\)</span> has shape <span class="math inline">\(n\times n\)</span>).
+Second, CG only requires <span class="math inline">\(\mathcal{O}(n)\)</span> storage to run, as compared to <span class="math inline">\(\mathcal{O}(n^2)\)</span> that many other algorithms require (we use <span class="math inline">\(n\)</span> to denote the size of <span class="math inline">\(A\)</span>, i.e. <span class="math inline">\(A\)</span> has shape <span class="math inline">\(n\times n\)</span>).
 When the size of <span class="math inline">\(A\)</span> is very large, this becomes increasingly important.</p>
 <p>While the conjugate gradient algorithm has many nice theoretical properties, its behavior in finite precision can be <em>extremely</em> different than the behavior predicted by assuming exact arithmetic.
 Understanding what leads to these vastly different behaviors has been an active area of research since the introduction of the algorithm in the 50s.
@@ -136,7 +136,7 @@ A^{-1} = -(c_1/c_0) I - (c_2/c_0) A - \cdots - (1/c_0) A^{n-1}
 <span class="math display">\[
 x^* = A^{-1}b = -(c_1/c_0) b - (c_2/c_0) Ab - \cdots - (1/c_0) A^{n-1}b
 \]</span></p>
-<p>That is, the solution <span class="math inline">\(x^*\)</span> to the system <span class="math inline">\(Ax = b\)</span> is a linear combination of <span class="math inline">\(b, Ab, A^2b, \ldots, A^{n-1}b\)</span> (i.e. <span class="math inline">\(x^*\in\mathcal{K}_n(A,b)\)</span>).
+<p>That is, the solution <span class="math inline">\(x^*\)</span> to the system <span class="math inline">\(Ax = b\)</span> is a linear combination of <span class="math inline">\(b, Ab, A^2b, \ldots, A^{n-1}b\)</span> (i.e. <span class="math inline">\(x^*\in\mathcal{K}_n(A,b)\)</span>).
 This observation is the motivation behind Krylov subspace methods.</p>
 <p>In fact, one way of viewing many Krylov subspace methods is as building low degree polynomial approximations to <span class="math inline">\(A^{-1}b\)</span> using powers of <span class="math inline">\(A\)</span> times <span class="math inline">\(b\)</span> (in fact Krylov subspace methods can be used to approximate <span class="math inline">\(f(A)b\)</span> where <span class="math inline">\(f\)</span> is any <a href="./current_research.html">function</a>).</p>
 <!--start_pdf_comment-->
