@@ -63,5 +63,6 @@ If we have to solve multiple systems $Ax=b_1, Ax=b_2, \ldots$, then it makes sen
 
 ## Computing matrix functions
 
-- $f(A)b$ for functions other that $f(x) = x^{-1}$
+Solving a linear system $Ax=b$ is a special case of the more general task of computing $x=f(A)b$ for some function $f$ (in the case of linear systems $f(x) = 1/x$.
+The Lanczos method can be used approximate $f(A)b$ using information about $T_k$ and $Q_k$ at any step $k$.
 

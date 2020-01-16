@@ -181,11 +181,10 @@ This variant is known as either Ghysels and Vanroose conjugate gradient or pipel
 \\[-.4em]&\textbf{end procedure}
 \end{align*}
 
-In a derivation similar those of the "classic" communication hiding varaints on this page, I have developed ["predict-and-recompute"](../publications/predict_and_recompute.html) variants.
+In a derivation similar those of the "classic" communication hiding varaints on this page, Erin Carson and myself have introduced ["predict-and-recompute"](../publications/predict_and_recompute.html) variants.
 These variants have the same parallelism as the pipelined conjugate gradient shown here, but better numerical properties.
 
-Recently, Cornelis, Cools, and Van Roose have developed a ["deep pipelined"](https://arxiv.org/pdf/1801.04728.pdf) conjugate gradient, which essentially introduces even more auxiliary vectors to allow for more overlapping.
-
+Recently, Cornelis, Cools, and Vanroose have developed a ["deep pipelined"](https://arxiv.org/pdf/1801.04728.pdf) conjugate gradient, which introduces even more auxiliary vectors to allow for more overlapping.
 
 <!--start_pdf_comment-->
 Next: [Current research on CG and related Krylov subspace methods](./current_research.html)
