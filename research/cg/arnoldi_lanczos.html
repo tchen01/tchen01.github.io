@@ -46,10 +46,11 @@ The Arnoldi algorithm works for any matrix, and the Lanczos algorithm works for 
 This is because this basis is essentially the <a href="https://en.wikipedia.org/wiki/Power_iteration">power method</a>.
 The trick behind the Arnoldi algorithm is the fact that you do not need to construct the whole set <span class="math inline">\(\{v,Av,A^2v,\ldots\}\)</span> ahead of time.
 This allows us to come up with a basis for <span class="math inline">\(\{v,Av,A^2v,\ldots\}\)</span> in a more “stable” way.</p>
-<p>Suppose at the beginning of step <span class="math inline">\(k\)</span> that we have already computed a basis <span class="math inline">\(\{q_1,q_2,\ldots,q_{k-1}\}\)</span> which has the same span as <span class="math inline">\(\{v,Av,\ldots, A^{k-2}v\}\)</span>.
+<p>Suppose at the beginning of step <span class="math inline">\(k\)</span> that we have already computed an orthonormal basis <span class="math inline">\(\{q_1,q_2,\ldots,q_{k-1}\}\)</span> which has the same span as <span class="math inline">\(\{v,Av,\ldots, A^{k-2}v\}\)</span>.
 If we were doing Gram-Schmidt, then we would obtain <span class="math inline">\(q_k\)</span> by orthogonalizing <span class="math inline">\(A^{k-1}v\)</span> against each of the vectors in the basis <span class="math inline">\(\{q_1,q_2, \ldots, q_{k-1}\}\)</span>.
 In the Arnoldi algorithm we instead orthogonalize <span class="math inline">\(Aq_{k-1}\)</span> against <span class="math inline">\(\{q_1,q_2,\ldots, q_{k-1}\}\)</span>.</p>
-<p>Let’s understand why these are the same. First, since the span of <span class="math inline">\(\{q_1,q_2,\ldots, q_{k-1}\}\)</span> is equal to the span of <span class="math inline">\(\{v,Av,\ldots, A^{k-2}v\}\)</span>, then <span class="math inline">\(q_{k-1}\)</span> can be written as a linear combination of <span class="math inline">\(\{v,Av,\ldots, A^{k-2}v\}\)</span>.
+<p>Let’s understand why these are the same.
+First, since the span of <span class="math inline">\(\{q_1,q_2,\ldots, q_{k-1}\}\)</span> is equal to the span of <span class="math inline">\(\{v,Av,\ldots, A^{k-2}v\}\)</span>, then <span class="math inline">\(q_{k-1}\)</span> can be written as a linear combination of <span class="math inline">\(\{v,Av,\ldots, A^{k-2}v\}\)</span>.
 That is, there exists coefficients <span class="math inline">\(c_i\)</span> such that,
 <span class="math display">\[
 q_{k-1} = c_1v + c_2Av + \cdots + c_{k-1} A^{k-2}v

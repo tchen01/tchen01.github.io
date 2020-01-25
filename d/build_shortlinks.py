@@ -27,7 +27,10 @@ def get_redir_HTML(redir):
 def gen_redir(short,redir):
     html = get_redir_HTML(redir)
     
-    os.system(f'mkdir -p ./{short}')
+    if os.path.exists(f'{short}'):
+        return 
+    
+    os.mkdir(f'./{short}')
     f = open(f'{short}/index.html', 'a')
     f.write(html)
     f.close()

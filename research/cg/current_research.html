@@ -68,9 +68,8 @@ These variants have similar parallelism to the standard communication hiding var
 <p>If we have to solve multiple systems <span class="math inline">\(Ax=b_1, Ax=b_2, \ldots\)</span>, then it makes sense to try to do these simultaneously so that we can reduce data movement.</p>
 <h2>Applications to machine learning</h2>
 <h2>Computing matrix functions</h2>
-<ul>
-<li><span class="math inline">\(f(A)b\)</span> for functions other that <span class="math inline">\(f(x) = x^{-1}\)</span></li>
-</ul>
+<p>Solving a linear system <span class="math inline">\(Ax=b\)</span> is a special case of the more general task of computing <span class="math inline">\(x=f(A)b\)</span> for some function <span class="math inline">\(f\)</span> (in the case of linear systems <span class="math inline">\(f(x) = 1/x\)</span>.
+The Lanczos method can be used approximate <span class="math inline">\(f(A)b\)</span> using information about <span class="math inline">\(T_k\)</span> and <span class="math inline">\(Q_k\)</span> at any step <span class="math inline">\(k\)</span>.</p>
 <p class="footer">
 More about the conjugate gradient method can be found <a href="./">here</a>.
 </p>

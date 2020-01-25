@@ -39,7 +39,7 @@ A natural way to try and speed up an algorithm is through parallelization, and m
 However, while these variants are all equivalent in exact arithmetic, they perform operations in different orders meaning they are not equivalent in finite precision arithmetic.
 Based on our discussion about conjugate gradient in <a href="./finite_precision_cg.html">finite precision</a>, it should be too big of a surprise that the variants all behave differently.</p>
 <figure>
-<img src="./convergence.svg" alt="Convergence of different variants in finite precision. Note that the computation would finish in at most 112 steps in exact arithmetic." /><figcaption>Convergence of different variants in finite precision. Note that the computation would finish in at most 112 steps in exact arithmetic.</figcaption>
+<img src="./convergence.svg" alt="" /><figcaption>Convergence of different variants in finite precision. Note that the computation would finish in at most 112 steps in exact arithmetic.</figcaption>
 </figure>
 <p>The DOE supercomputer “Summit” is able to compute 122 petaflops per second.
 That’s something like <span class="math inline">\(10^{16}\)</span> floating point operations every second!
@@ -179,9 +179,9 @@ This variant is known as either Ghysels and Vanroose conjugate gradient or pipel
 \\[-.4em]&amp;~~~~~\textbf{end for}
 \\[-.4em]&amp;\textbf{end procedure}
 \end{align*}\]</span></p>
-<p>In a derivation similar those of the “classic” communication hiding varaints on this page, I have developed <a href="../publications/predict_and_recompute.html">“predict-and-recompute”</a> variants.
+<p>In a derivation similar those of the “classic” communication hiding varaints on this page, Erin Carson and myself have introduced <a href="../publications/predict_and_recompute.html">“predict-and-recompute”</a> variants.
 These variants have the same parallelism as the pipelined conjugate gradient shown here, but better numerical properties.</p>
-<p>Recently, Cornelis, Cools, and Van Roose have developed a <a href="https://arxiv.org/pdf/1801.04728.pdf">“deep pipelined”</a> conjugate gradient, which essentially introduces even more auxiliary vectors to allow for more overlapping.</p>
+<p>Recently, Cornelis, Cools, and Vanroose have developed a <a href="https://arxiv.org/pdf/1801.04728.pdf">“deep pipelined”</a> conjugate gradient, which introduces even more auxiliary vectors to allow for more overlapping.</p>
 <!--start_pdf_comment-->
 <p>Next: <a href="./current_research.html">Current research on CG and related Krylov subspace methods</a>
 <!--end_pdf_comment--></p>
