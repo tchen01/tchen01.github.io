@@ -4,24 +4,9 @@ author: '[Tyler Chen](https://chen.pw)'
 keywords: ['applied','math']
 description: The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. This website provides an introduction to the algorithm in theorey and in practice.
 footer: <p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
-mainfont: Vollkorn
-sansfont: Lato
-header-includes: |
-    \usepackage{sectsty}
-    \allsectionsfont{\normalfont\sffamily\bfseries}
-    \usepackage{xcolor}
-    \definecolor{Base02}{HTML}{073662}
-    \hypersetup{
-      colorlinks,
-      linkcolor=Base02,
-      citecolor=Base02,
-      urlcolor=Base02
-    }
-
 ---
+# Introduction
 
-
-<!--start_pdf_comment-->
 
 ## Motivation
 Solving a linear system of equations $Ax=b$ is one of the most important tasks in modern science.
@@ -54,7 +39,7 @@ Thus, finding $x$ which solves $Ax=b$ could be written as finding the value of $
 
 Of course, since we are trying to compute $x^*$, it doesn't make sense for an algorithm to explicitly depend on $x^*$.
 The *residual* of $\tilde{x}$ is defined as $b-A\tilde{x}$.
-Again, $\|b-Ax^*\| = 0$, and since $x^*$ is the only point where this is true, finding $x$ to minimize $\|b-Ax\|$ gives the true solution.
+Again, $\|b-Ax^*\| = 0$, and since $x^*$ is the only point where this is true, finding $x$ to minimize $\|b-Ax\|$ gives the true solution to the linear system.
 The advantage is that we can easily compute the residual $b-A\tilde{x}$ once we have our numerical solution $\tilde{x}$, while there is not necessarily a good way to compute the error $x^*-\tilde{x}$.
 This means that the residual gives us a way of inspecting convergence of a method.
 
@@ -66,7 +51,7 @@ Unfortunately, this problem is "just as hard" as solving $Ax=b$.
 We would like to find a related "easier" problem.
 One way to do this is to restrict the choice of values which $x$ can take. 
 For instance, if we enforce that $x$ must be come from a smaller set of values, then the problem of minimizing $\|b-Ax\|$ is simpler (since there are less possibilities for $x$).
-As an extreme example, if we say that $x = cy$ for some fixed vector $y$, then this is a scalar minimization problem.
+As an extreme example, if we say that $x = \alpha y$ for some fixed vector $y$, then this is a scalar minimization problem.
 Of course, by restricting what values we choose for $x$ it is quite likely that we will not longer be able to exactly solve $Ax=b$.
 
 One thing we could try to do is balance the difficulty of the problems we have to solve at each step with the accuracy of the solutions they give.
@@ -128,16 +113,9 @@ This observation is the motivation behind Krylov subspace methods.
 In fact, one way of viewing many Krylov subspace methods is as building low degree polynomial approximations to $A^{-1}b$ using powers of $A$ times $b$ (in fact Krylov subspace methods can be used to approximate $f(A)b$ where $f$ is any [function](./current_research.html)).
 
 
-<!--start_pdf_comment-->
 
 
----
-title: The Arnoldi and Lanczos algorithms
-author: '[Tyler Chen](https://chen.pw)'
-keywords: ['applied','math']
-description: The Arnoldi and Lanczos algorithms for computing an orthonormal basis for Krylov subspaces are at the core of most Krylov subspace methods.
-footer: <p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
-...
+# The Arnoldi and Lanczos algorithms
 
 The Arnoldi and Lanczos algorithms for computing an orthonormal basis for Krylov subspaces are, in one way or another, at the core of all Krylov subspace methods.
 Essentially, these algorithms are the Gram-Schmidt procedure applied to the vectors $\{v,Av,A^2v,A^3v,\ldots\}$ in clever ways.
@@ -277,16 +255,9 @@ Here we assume that we only want to output the diagonals of the tridiagonal matr
     return alpha,beta
 -->
 
-<!--start_pdf_comment-->
 
 
----
-title: A Derivation of the Conjugate Gradient Algorithm
-author: '[Tyler Chen](https://chen.pw)'
-keywords: ['applied','math']
-description: The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. While it's simple to state the algorithm, understanding where it comes from is not always so clear.
-footer: <p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
-...
+# A Derivation of the Conjugate Gradient Algorithm
 
 There are many ways to view/derive the conjugate gradient algorithm. 
 I'll derive the algorithm by directly minimizing by minimizing the $A$-norm of the error over successive Krylov subspaces, $\mathcal{K}_k(A,b)$.
@@ -473,16 +444,9 @@ Note that we use $f$ for the right hand side vector to avoid conflict with the c
         return x
 -->
 
-<!--start_pdf_comment-->
 
 
----
-title: Conjugate Gradient is Lanczos in Disguise
-author: '[Tyler Chen](https://chen.pw)'
-keywords: ['applied','math']
-description: The Conjugate Gradient and Lanczos algorithms are both widely used Krylov subspace methods for positive definite matrices. In fact, the CG algorithm generates a three term Lanczos recurrence.
-footer: <p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
-...
+# Conjugate Gradient is Lanczos in Disguise
 
 It's perhaps not so surprising that the conjugate gradient and Lanczos algorithms are closely related. After all, they are both Krylov subspace methods for symmetric matrices.
 
@@ -567,18 +531,11 @@ q_{j+1} \equiv (-1)^j\dfrac{r_j}{\|r_j\|}
 \alpha_j \equiv \left(\frac{1}{a_{j-1}} + \frac{b_{j}}{a_{j-2}}\right)
 \end{align*}
 
-<!--start_pdf_comment-->
 
 
 
 
----
-title: Error Bounds for the Conjugate Gradient Algorithm
-author: '[Tyler Chen](https://chen.pw)'
-keywords: ['applied','math']
-description: The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. Characterizing the convergence of CG is important for understanding the rescources the algorithm will require.
-footer: <p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
-...
+# Error Bounds for the Conjugate Gradient Algorithm
 
 In our [derivation](./cg_derivation.html) of the conjugate gradient method, we minimized the $A$-norm of the error over sucessive Krylov subspaces.
 Ideally we would like to know how quickly this method converge.
@@ -687,17 +644,11 @@ Then, from properties of these polynomials,
 $$
 \frac{\|e_k\|_A}{\|e_0\|_A} \leq 2 \left( \frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1} \right)^k
 $$
+This bound is often referred to as the Chebyshev error bound, condition number error bound, or $\sqrt{\kappa}$ error bound.
 
-<!--start_pdf_comment-->
 
 
----
-title: Error Bounds for the Conjugate Gradient Algorithm
-author: '[Tyler Chen](https://chen.pw)'
-keywords: ['applied','math']
-description: The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. CG behaves very differently in finite precision due to rounding errors which cause a loss of orthogonality.
-footer: <p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
-...
+# The Conjugate Gradient Algorithm in Finite Precision
 
 A key component of our derivations of the [Lanczos](./arnoldi_lanczos.html) and [conjugate gradient](./cg_derivation.html) methods was the orthogonality of certain vectors.
 In finite precision, we cannot have exact orthogonality, so our induction based arguments no longer hold.
@@ -768,7 +719,7 @@ In exact arithmetic, the conjugate gradient algorithm finds the exact solution i
 In finite precision, the loss of orthogonality leads to two easily observable effects: delayed convergence, and reduced final accuracy.
 The following figure shows both of these phenomena for various precisions.
 
-![Convergence of conjugate gradient in various precisions. Note that the computation would finish in at most 48 steps in exact arithmetic.](./multiple_precision.svg)
+![Convergence of conjugate gradient in various precisions. Note that the computation would finish in at most 48 steps in exact arithmetic.](./imgs/multiple_precision.svg)
 
 ### Delay of convergence
 
@@ -838,15 +789,8 @@ The algorithm is given the Lanczos vectors and coefficients from the finite prec
 An explanation of the algorithm is given in the appendix of [@greenbaum_liu_chen_19], and an jupyter notebook is available [here](https://github.com/tchen01/Conjugate_Gradient/blob/master/experiments/extend_t.ipynb), and two Python implementations of the algorithm are available in the same Github repository. 
 
 
-<!--start_pdf_comment-->
 
----
-title: Communication Hiding Conjugate Gradient Algorithms
-author: '[Tyler Chen](https://chen.pw)'
-keywords: ['applied','math']
-description: The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. Mathematically equivalent variants have been developed to reduce global communication.
-footer: <p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
-...
+# Communication Hiding Conjugate Gradient Algorithms
 
 So far, all we have considered are error bounds in terms of the number of iterations. 
 However, in practice, what we really care about is how long a computation takes.
@@ -854,7 +798,7 @@ A natural way to try and speed up an algorithm is through parallelization, and m
 However, while these variants are all equivalent in exact arithmetic, they perform operations in different orders meaning they are not equivalent in finite precision arithmetic.
 Based on our discussion about conjugate gradient in [finite precision](./finite_precision_cg.html), it should be too big of a surprise that the variants all behave differently.
 
-![Convergence of different variants in finite precision. Note that the computation would finish in at most 112 steps in exact arithmetic.](./convergence.svg)
+![Convergence of different variants in finite precision. Note that the computation would finish in at most 112 steps in exact arithmetic.](./imgs/convergence.svg)
 
 The DOE supercomputer "Summit" is able to compute 122 petaflops per second. 
 That's something like $10^{16}$ floating point operations every second!
@@ -873,6 +817,11 @@ In many numerical algorithms, "global communication" is one of the main causes o
 Loosely speaking, global communication means that all processors working on a larger task must finish with their subtask and report on the result before the computation can proceed.
 This means that even if we can distribute a computation to many processors, the time it takes to move the data required for those computations will eventually limit how effective adding more processors is. 
 So, a 1000x increase in processing power won't necessarily cut the computation time to 1/1000th of the original time.
+
+Ultimately, when it comes to iterative methods like CG, users usually only care about the *time to solution*; i.e. how long it will take to reach some specified accuracy.
+This means that both the time per iteration and the number of iterations required to reach some accuracy should be considered.
+Improving one of these quantities as the expense of the other may not actually result in a faster method.
+
 
 ## Communication bottlenecks in CG
 
@@ -1028,75 +977,6 @@ These variants have the same parallelism as the pipelined conjugate gradient sho
 
 Recently, Cornelis, Cools, and Vanroose have developed a ["deep pipelined"](https://arxiv.org/pdf/1801.04728.pdf) conjugate gradient, which introduces even more auxiliary vectors to allow for more overlapping.
 
-<!--start_pdf_comment-->
 
 
-
----
-title: Current research on Conjugate Gradient and related Krylov subspace methods
-author: '[Tyler Chen](https://chen.pw)'
-keywords: ['applied','math']
-description: The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. This page discusses some of the current research into CG, and closely related algorithms.
-footer: <p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
-...
-
-Krylov subspace methods have remained an active area of research since they were first introduced. 
-In general, research focuses on understanding convergence properties in finite precision, and on speeding up the runtime of algorithms.
-I've included some topics below, but this should by no means be taken as a comprehensive list; I'm sure there are many important and interesting areas which don't show up here.
-
-
-**find some citations and links**
-
-## Preconditioners
-
-Preconditioning linear systems is perhaps one of the oldest methods for improving convergence of iterative methods. 
-The basic idea is to convert the system $Ax=b$ to one which is nicer to work with.
-If $M^{-1}$ is full rank, then solving $Ax=b$ gives the same solution as solving,
-$$
-M^{-1}Ax = M^{-1} b
-$$
-
-If $M^{-1} = A^{-1}$ then this system is trivial to solve.
-Of course, finding $A^{-1}$ is generally not easy, but if $M^{-1}$ "approximates" $A^{-1}$ in some way, then often $M^{-1}A$ will be much better conditioned than $A$, and so iterative methods will have better convergence properties.
-
-Unfortunately, $M^{-1}A$ will probably not be Hermitian.
-On the other hand, $R^{-1}AR^{-{\mathsf{H}}}$ is Hermitian positive definite if $A$ is Herimitian positive definite (here $R^{-{\mathsf{H}}} = (R^{-1})^{\mathsf{H}}$). Thus, we can solve the system,
-$$
-(R^{-1}AR^{-{\mathsf{H}}}) y = R^{-1}b
-$$
-for $y$, and then find $x$ by solving the system,
-$$
-R^{\mathsf{H}}x = y
-$$
-
-There is a lot of interest in developing new preconditioners, and understanding the theoretical properties of preconditioners.
-
-## Multiple/reduced precision
-
-Using lower precision (e.g. single, or float16 instead of doubles) means reduced storage, less communication, faster floating point arithmetic etc.
-Perhaps more importantly, GPUs have been highly optimized for single precision floating point computations.
-
-However, we have already seen that conjugate gradient can be significantly affected by [finite precision](./finite_precision_cg.html), so simply running the traditional algorithms in reduced precision will often lead to poor convergence.
-
-
-## Avoiding communication 
-
-I've already talked about some classic [communication hiding](./communication_hiding_variants.html) variants of the conjugate gradient algorithm.
-
-Recently, I have introduced ["predict-and-recompute"](../publications/predict_and_recompute.html) conjugate gradient varaints.
-These variants have similar parallelism to the standard communication hiding varaints, but better numerical properties.
-
-
-### Blocked methods
-
-If we have to solve multiple systems $Ax=b_1, Ax=b_2, \ldots$, then it makes sense to try to do these simultaneously so that we can reduce data movement.
-
-
-## Applications to machine learning
-
-
-## Computing matrix functions
-
-Solving a linear system $Ax=b$ is a special case of the more general task of computing $x=f(A)b$ for some function $f$ (in the case of linear systems $f(x) = 1/x$.
-The Lanczos method can be used approximate $f(A)b$ using information about $T_k$ and $Q_k$ at any step $k$.
 

@@ -1,5 +1,5 @@
 ---
-title: Error Bounds for the Conjugate Gradient Algorithm
+title: The Conjugate Gradient Algorithm in Finite Precision
 author: '[Tyler Chen](https://chen.pw)'
 keywords: ['applied','math']
 description: The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. CG behaves very differently in finite precision due to rounding errors which cause a loss of orthogonality.
@@ -75,7 +75,7 @@ In exact arithmetic, the conjugate gradient algorithm finds the exact solution i
 In finite precision, the loss of orthogonality leads to two easily observable effects: delayed convergence, and reduced final accuracy.
 The following figure shows both of these phenomena for various precisions.
 
-![Convergence of conjugate gradient in various precisions. Note that the computation would finish in at most 48 steps in exact arithmetic.](./multiple_precision.svg)
+![Convergence of conjugate gradient in various precisions. Note that the computation would finish in at most 48 steps in exact arithmetic.](./imgs/multiple_precision.svg)
 
 ### Delay of convergence
 

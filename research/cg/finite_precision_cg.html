@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
   <meta charset="utf-8" />
-  <title>Error Bounds for the Conjugate Gradient Algorithm</title>
+  <title>The Conjugate Gradient Algorithm in Finite Precision</title>
   <meta name="description" content="The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. CG behaves very differently in finite precision due to rounding errors which cause a loss of orthogonality.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <meta name="author" content="Tyler Chen" />
@@ -31,7 +31,7 @@
 </head>
 <body>
 <div id="contentContainer">
-<h1>Error Bounds for the Conjugate Gradient Algorithm</h1>
+<h1>The Conjugate Gradient Algorithm in Finite Precision</h1>
 <p class="author"><a href="https://chen.pw">Tyler Chen</a></p>
 <p>A key component of our derivations of the <a href="./arnoldi_lanczos.html">Lanczos</a> and <a href="./cg_derivation.html">conjugate gradient</a> methods was the orthogonality of certain vectors.
 In finite precision, we cannot have exact orthogonality, so our induction based arguments no longer hold.
@@ -87,7 +87,7 @@ In this approach new Lanczos vectors are only orthogonalized against converged R
 In finite precision, the loss of orthogonality leads to two easily observable effects: delayed convergence, and reduced final accuracy.
 The following figure shows both of these phenomena for various precisions.</p>
 <figure>
-<img src="./multiple_precision.svg" alt="" /><figcaption>Convergence of conjugate gradient in various precisions. Note that the computation would finish in at most 48 steps in exact arithmetic.</figcaption>
+<img src="./imgs/multiple_precision.svg" alt="Convergence of conjugate gradient in various precisions. Note that the computation would finish in at most 48 steps in exact arithmetic." /><figcaption>Convergence of conjugate gradient in various precisions. Note that the computation would finish in at most 48 steps in exact arithmetic.</figcaption>
 </figure>
 <h3>Delay of convergence</h3>
 <p>In our <a href="./cg_derivation.html">derivation</a> of the conjugate gradient algorithm, we used the <span class="math inline">\(A\)</span>-orthogonality of successive search directions to show that we only needed to optimize over the current search direction.

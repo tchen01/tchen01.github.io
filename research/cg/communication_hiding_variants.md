@@ -12,7 +12,7 @@ A natural way to try and speed up an algorithm is through parallelization, and m
 However, while these variants are all equivalent in exact arithmetic, they perform operations in different orders meaning they are not equivalent in finite precision arithmetic.
 Based on our discussion about conjugate gradient in [finite precision](./finite_precision_cg.html), it should be too big of a surprise that the variants all behave differently.
 
-![Convergence of different variants in finite precision. Note that the computation would finish in at most 112 steps in exact arithmetic.](./convergence.svg)
+![Convergence of different variants in finite precision. Note that the computation would finish in at most 112 steps in exact arithmetic.](./imgs/convergence.svg)
 
 The DOE supercomputer "Summit" is able to compute 122 petaflops per second. 
 That's something like $10^{16}$ floating point operations every second!
@@ -31,6 +31,11 @@ In many numerical algorithms, "global communication" is one of the main causes o
 Loosely speaking, global communication means that all processors working on a larger task must finish with their subtask and report on the result before the computation can proceed.
 This means that even if we can distribute a computation to many processors, the time it takes to move the data required for those computations will eventually limit how effective adding more processors is. 
 So, a 1000x increase in processing power won't necessarily cut the computation time to 1/1000th of the original time.
+
+Ultimately, when it comes to iterative methods like CG, users usually only care about the *time to solution*; i.e. how long it will take to reach some specified accuracy.
+This means that both the time per iteration and the number of iterations required to reach some accuracy should be considered.
+Improving one of these quantities as the expense of the other may not actually result in a faster method.
+
 
 ## Communication bottlenecks in CG
 

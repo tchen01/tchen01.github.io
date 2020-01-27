@@ -33,7 +33,15 @@
 <h1>Predict-and-recompute conjugate gradient variants</h1>
 <p class="author"><a href="https://chen.pw">Tyler Chen</a></p>
 <p>This is a companion piece to the publication:</p>
-<p>[bibtex]</p>
+<p><pre>@article{predict_and_recompute_cg,
+    title={Predict-and-recompute conjugate gradient variants},
+    author={Tyler Chen and Erin C. Carson},
+    year={2020},
+    eprint={1905.01549},
+    archivePrefix={arXiv},
+    primaryClass={cs.NA},
+}
+</pre></p>
 <p>A preprint is available on <a href="https://arxiv.org/pdf/1905.01549.pdf">arXiv (1905.01549)</a>.</p>
 <p>Code available to help reproduce the plots in this paper is available on <a href="https://github.com/tchen01/new_cg_variants/tree/master/predict_and_recompute">Github</a>.</p>
 <h2>Why should I care?</h2>
@@ -139,12 +147,12 @@ Note that in this abstraction we assume that the time of communication is indepe
 <p>Table 1 shows a summary of the costs of some different variants. Note that PR-CG, Pipe-PR-MCG, and Pipe-PR-CG are the variants introduced in this paper.
 Numerical experiments on some test problems are shown in Figure 1.</p>
 <figure>
-<img src="imgs/predict-and-recompute_convergence.svg" alt="" /><figcaption><strong>Figure 1.</strong> Convergence of conjugate gradient variants on some sample problems.</figcaption>
+<img src="imgs/predict-and-recompute_convergence.svg" alt="Figure 1. Convergence of conjugate gradient variants on some sample problems." /><figcaption><strong>Figure 1.</strong> Convergence of conjugate gradient variants on some sample problems.</figcaption>
 </figure>
 <p>Finally, Figure 2 shows the results of a strong scaling experiment.
 In particular, it should be noted that the predict and recompute varaints introduced in this paper do indeed reduce the runtime per iteration vs. HS-CG.</p>
 <figure>
-<img src="imgs/strong_scale.svg" alt="" /><figcaption><strong>Figure 2.</strong> Strong scaling of variants on sample problem.</figcaption>
+<img src="imgs/strong_scale.svg" alt="Figure 2. Strong scaling of variants on sample problem." /><figcaption><strong>Figure 2.</strong> Strong scaling of variants on sample problem.</figcaption>
 </figure>
 <p>Despite the advances presented in this paper, there is still significant room for future work on high performance conjugate gradient variants, especially in the direction of further decreasing the communication costs.</p>
 <p class="footer">

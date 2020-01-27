@@ -51,8 +51,12 @@ def gen_redir(short,redir):
 
 
 maps = {
-    'f5b':'./../research/talks/general.pdf',
-    'i7g':'https://github.com/tchen01/new_cg_variants/tree/master/predict_and_recompute',
+#    '2mn':'../../misc/thesis_proposal.pdf',
+#    'f5b':'../../misc/thesis_proposal_slides.pdf',
+#    'i7g':'https://github.com/tchen01/new_cg_variants/tree/master/predict_and_recompute',
+#    'x13':'../../research/cg/cg.pdf',
+#    'k5k':'../../misc/grfp_proposal.pdf',
+#    '2v6':'../../misc/grfp_personal.pdf',
 }
 
 for key,val in maps.items():

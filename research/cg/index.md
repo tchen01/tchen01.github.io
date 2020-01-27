@@ -4,20 +4,6 @@ author: '[Tyler Chen](https://chen.pw)'
 keywords: ['applied','math']
 description: The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. This website provides an introduction to the algorithm in theorey and in practice.
 footer: <p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
-mainfont: Vollkorn
-sansfont: Lato
-header-includes: |
-    \usepackage{sectsty}
-    \allsectionsfont{\normalfont\sffamily\bfseries}
-    \usepackage{xcolor}
-    \definecolor{Base02}{HTML}{073662}
-    \hypersetup{
-      colorlinks,
-      linkcolor=Base02,
-      citecolor=Base02,
-      urlcolor=Base02
-    }
-
 ---
 
 
@@ -81,7 +67,7 @@ Thus, finding $x$ which solves $Ax=b$ could be written as finding the value of $
 
 Of course, since we are trying to compute $x^*$, it doesn't make sense for an algorithm to explicitly depend on $x^*$.
 The *residual* of $\tilde{x}$ is defined as $b-A\tilde{x}$.
-Again, $\|b-Ax^*\| = 0$, and since $x^*$ is the only point where this is true, finding $x$ to minimize $\|b-Ax\|$ gives the true solution.
+Again, $\|b-Ax^*\| = 0$, and since $x^*$ is the only point where this is true, finding $x$ to minimize $\|b-Ax\|$ gives the true solution to the linear system.
 The advantage is that we can easily compute the residual $b-A\tilde{x}$ once we have our numerical solution $\tilde{x}$, while there is not necessarily a good way to compute the error $x^*-\tilde{x}$.
 This means that the residual gives us a way of inspecting convergence of a method.
 
@@ -93,7 +79,7 @@ Unfortunately, this problem is "just as hard" as solving $Ax=b$.
 We would like to find a related "easier" problem.
 One way to do this is to restrict the choice of values which $x$ can take. 
 For instance, if we enforce that $x$ must be come from a smaller set of values, then the problem of minimizing $\|b-Ax\|$ is simpler (since there are less possibilities for $x$).
-As an extreme example, if we say that $x = cy$ for some fixed vector $y$, then this is a scalar minimization problem.
+As an extreme example, if we say that $x = \alpha y$ for some fixed vector $y$, then this is a scalar minimization problem.
 Of course, by restricting what values we choose for $x$ it is quite likely that we will not longer be able to exactly solve $Ax=b$.
 
 One thing we could try to do is balance the difficulty of the problems we have to solve at each step with the accuracy of the solutions they give.

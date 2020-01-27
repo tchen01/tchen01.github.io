@@ -113,6 +113,7 @@ Then, from properties of these polynomials,
 $$
 \frac{\|e_k\|_A}{\|e_0\|_A} \leq 2 \left( \frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1} \right)^k
 $$
+This bound is often referred to as the Chebyshev error bound, condition number error bound, or $\sqrt{\kappa}$ error bound.
 
 <!--start_pdf_comment-->
 Next: [The conjugate gradient Algorithm in Finite Precision](./finite_precision_cg.html)

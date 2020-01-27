@@ -66,7 +66,7 @@ When <span class="math inline">\(A\)</span> is symmetric and positive definite (
 <p>This popularity of the conjugate gradient algorithm (CG) is due to a couple factors. First, like most Krylov subspace methods, CG is <em>matrix free</em>.
 This means that <span class="math inline">\(A\)</span> never has to be explicitly represented as a matrix, as long as there is some way of computing the product <span class="math inline">\(v\mapsto Av\)</span>, for a given input vector <span class="math inline">\(v\)</span>.
 For very large problems, this means a big reduction in storage, and if <span class="math inline">\(A\)</span> has some structure (eg. <span class="math inline">\(A\)</span> comes from a DFT, difference/integral operator, is very sparse, etc.), it allows the algorithm to take advantage of fast matrix vector products.
-Second, CG only requires <span class="math inline">\(\mathcal{O}(n)\)</span> storage to run, as compared to <span class="math inline">\(\mathcal{O}(n^2)\)</span> that many other algorithms require (we use <span class="math inline">\(n\)</span> to denote the size of <span class="math inline">\(A\)</span>, i.e. <span class="math inline">\(A\)</span> has shape <span class="math inline">\(n\times n\)</span>).
+Second, CG only requires <span class="math inline">\(\mathcal{O}(n)\)</span> storage to run, as compared to <span class="math inline">\(\mathcal{O}(n^2)\)</span> that many other algorithms require (we use <span class="math inline">\(n\)</span> to denote the size of <span class="math inline">\(A\)</span>, i.e. <span class="math inline">\(A\)</span> has shape <span class="math inline">\(n\times n\)</span>).
 When the size of <span class="math inline">\(A\)</span> is very large, this becomes increasingly important.</p>
 <p>While the conjugate gradient algorithm has many nice theoretical properties, its behavior in finite precision can be <em>extremely</em> different than the behavior predicted by assuming exact arithmetic.
 Understanding what leads to these vastly different behaviors has been an active area of research since the introduction of the algorithm in the 50s.
@@ -83,7 +83,7 @@ In fact, when we say that a sequence <span class="math inline">\(x_0,x_1,x_2,\ld
 Thus, finding <span class="math inline">\(x\)</span> which solves <span class="math inline">\(Ax=b\)</span> could be written as finding the value of <span class="math inline">\(x\)</span> which minimizes <span class="math inline">\(\|x - x^*\| = \|x-A^{-1}b\|\)</span>.</p>
 <p>Of course, since we are trying to compute <span class="math inline">\(x^*\)</span>, it doesn’t make sense for an algorithm to explicitly depend on <span class="math inline">\(x^*\)</span>.
 The <em>residual</em> of <span class="math inline">\(\tilde{x}\)</span> is defined as <span class="math inline">\(b-A\tilde{x}\)</span>.
-Again, <span class="math inline">\(\|b-Ax^*\| = 0\)</span>, and since <span class="math inline">\(x^*\)</span> is the only point where this is true, finding <span class="math inline">\(x\)</span> to minimize <span class="math inline">\(\|b-Ax\|\)</span> gives the true solution.
+Again, <span class="math inline">\(\|b-Ax^*\| = 0\)</span>, and since <span class="math inline">\(x^*\)</span> is the only point where this is true, finding <span class="math inline">\(x\)</span> to minimize <span class="math inline">\(\|b-Ax\|\)</span> gives the true solution to the linear system.
 The advantage is that we can easily compute the residual <span class="math inline">\(b-A\tilde{x}\)</span> once we have our numerical solution <span class="math inline">\(\tilde{x}\)</span>, while there is not necessarily a good way to compute the error <span class="math inline">\(x^*-\tilde{x}\)</span>.
 This means that the residual gives us a way of inspecting convergence of a method.</p>
 <h2>Krylov subspaces</h2>
@@ -92,7 +92,7 @@ Unfortunately, this problem is “just as hard” as solving <span class="math i
 <p>We would like to find a related “easier” problem.
 One way to do this is to restrict the choice of values which <span class="math inline">\(x\)</span> can take.
 For instance, if we enforce that <span class="math inline">\(x\)</span> must be come from a smaller set of values, then the problem of minimizing <span class="math inline">\(\|b-Ax\|\)</span> is simpler (since there are less possibilities for <span class="math inline">\(x\)</span>).
-As an extreme example, if we say that <span class="math inline">\(x = cy\)</span> for some fixed vector <span class="math inline">\(y\)</span>, then this is a scalar minimization problem.
+As an extreme example, if we say that <span class="math inline">\(x = \alpha y\)</span> for some fixed vector <span class="math inline">\(y\)</span>, then this is a scalar minimization problem.
 Of course, by restricting what values we choose for <span class="math inline">\(x\)</span> it is quite likely that we will not longer be able to exactly solve <span class="math inline">\(Ax=b\)</span>.</p>
 <p>One thing we could try to do is balance the difficulty of the problems we have to solve at each step with the accuracy of the solutions they give.
 If we can obtain a very approximate solution by solving an easy problem, and then improve the solution by solving successively more difficult problems.
@@ -136,7 +136,7 @@ A^{-1} = -(c_1/c_0) I - (c_2/c_0) A - \cdots - (1/c_0) A^{n-1}
 <span class="math display">\[
 x^* = A^{-1}b = -(c_1/c_0) b - (c_2/c_0) Ab - \cdots - (1/c_0) A^{n-1}b
 \]</span></p>
-<p>That is, the solution <span class="math inline">\(x^*\)</span> to the system <span class="math inline">\(Ax = b\)</span> is a linear combination of <span class="math inline">\(b, Ab, A^2b, \ldots, A^{n-1}b\)</span> (i.e. <span class="math inline">\(x^*\in\mathcal{K}_n(A,b)\)</span>).
+<p>That is, the solution <span class="math inline">\(x^*\)</span> to the system <span class="math inline">\(Ax = b\)</span> is a linear combination of <span class="math inline">\(b, Ab, A^2b, \ldots, A^{n-1}b\)</span> (i.e. <span class="math inline">\(x^*\in\mathcal{K}_n(A,b)\)</span>).
 This observation is the motivation behind Krylov subspace methods.</p>
 <p>In fact, one way of viewing many Krylov subspace methods is as building low degree polynomial approximations to <span class="math inline">\(A^{-1}b\)</span> using powers of <span class="math inline">\(A\)</span> times <span class="math inline">\(b\)</span> (in fact Krylov subspace methods can be used to approximate <span class="math inline">\(f(A)b\)</span> where <span class="math inline">\(f\)</span> is any <a href="./current_research.html">function</a>).</p>
 <!--start_pdf_comment-->
