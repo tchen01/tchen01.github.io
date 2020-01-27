@@ -27,14 +27,14 @@ def get_redir_HTML(redir):
 def gen_redir(short,redir):
     html = get_redir_HTML(redir)
     
-    if os.path.exists(f'{short}'):
-        return 
-    
-    os.mkdir(f'./{short}')
-    f = open(f'{short}/index.html', 'a')
+    os.makedirs(f'./{short}',exist_ok=True)
+    f = open(f'{short}/index.html', 'w')
     f.write(html)
     f.close()
-    
+ 
+    if os.path.exists(f'{short}'):
+        return 
+   
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -51,12 +51,12 @@ def gen_redir(short,redir):
 
 
 maps = {
-#    '2mn':'../../misc/thesis_proposal.pdf',
-#    'f5b':'../../misc/thesis_proposal_slides.pdf',
-#    'i7g':'https://github.com/tchen01/new_cg_variants/tree/master/predict_and_recompute',
-#    'x13':'../../research/cg/cg.pdf',
-#    'k5k':'../../misc/grfp_proposal.pdf',
-#    '2v6':'../../misc/grfp_personal.pdf',
+    '2mn':'../../misc/thesis_proposal.pdf',
+    'f5b':'../../misc/thesis_proposal_slides.pdf',
+    'i7g':'https://github.com/tchen01/new_cg_variants/tree/master/predict_and_recompute',
+    'x13':'../../research/cg/cg.pdf',
+    'k5k':'../../misc/grfp_proposal.pdf',
+    '2v6':'../../misc/grfp_personal.pdf',
 }
 
 for key,val in maps.items():
