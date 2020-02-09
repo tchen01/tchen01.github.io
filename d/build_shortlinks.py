@@ -57,6 +57,8 @@ maps = {
 #    'x13':'../../research/cg/cg.pdf',
 #    'k5k':'../../misc/grfp_proposal.pdf',
 #    '2v6':'../../misc/grfp_personal.pdf',
+    'f91':'https://arxiv.org/abs/1905.01549',
+    '0ak':'../../research/talks/predict_and_recompute_PP20.pdf',
 }
 
 for key,val in maps.items():
