@@ -26,15 +26,13 @@ I also have some short introductory pieces on topics I think are interesting.
 
 Here are links to my [Google Scholar profile](https://scholar.google.com/citations?hl=en&user=FD4TjnYAAAAJ) and [ORCID](https://orcid.org/0000-0002-1187-1026): 0000-0002-1187-1026.
 
-[pub:finite_precision_random_variables]
-
 [pub:predict_and_recompute_cg]
-
 [pub:cg_variants_convergence_rates]
 
 ## Talks and Posters
-<p></p>
 
+[talk:predict_and_recompute_CM20]
+[talk:predict_and_recompute_PP20]
 [talk:symmetric_preconditioner_baidu]
 
 ## Introductions to some topics I think are interesting

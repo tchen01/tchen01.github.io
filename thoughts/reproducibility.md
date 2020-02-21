@@ -62,7 +62,7 @@ This has the effect of excluding less privileged persons from the scientific pro
 	
 ## Why should academics in stem care?
 
-If there are people with the right tools to reproduce the results of a paper, it's reasonable to ask is why should researchers care about making it easier for others to also reproduce your results.
+If there are people with the right tools to reproduce the results of a paper, it's reasonable to ask why should researchers care about making it easier for others to also reproduce your results.
 That is, does it really matter who replicates the results as long as someone is able to?
 
 First, reducing the barriers to reproducibility within academia are necessary to create a more equitable research environment.
