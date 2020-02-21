@@ -131,9 +131,10 @@ pages = ['index',
 pubs = ['cg_variants_convergence_rates','predict_and_recompute_cg']
 
 
-for page in pages:
-    build_html(page)
+#for page in pages:
+#    build_html(page)
 
+build_html('research/index')
 for pub in pubs:
     add_bibtex(pub)
 
