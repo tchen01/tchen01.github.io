@@ -33,76 +33,125 @@
 <h1>Random Variables in Finite Precision</h1>
 <p class="author"><a href="https://chen.pw">Tyler Chen</a></p>
 <p>This is a companion piece to the publication:</p>
-<p><pre>@article{finite_precision_random_varianlts,
+<p><pre>@article{finite_precision_random_variables,
     title = {Rounding Random Variables to Finite Precision},
     author = {Tyler Chen},
-    year = {2019},
+    year = {2020},
 }
 </pre></p>
 <p>A preprint will be available soon.</p>
 <h2>Why should I care?</h2>
 <p>Algorithms involving randomness have become commonplace, and in practice these algorithms are often run in finite precision.
-As a result, some of their theoretical properties based on the use of exact samples from continuous distributions, can no longer be guaranteed.
-Even so, many randomized algorithms appear to perform as well in practice as predicted by theory <a href="https://arxiv.org/abs/0909.4061">[HMT11]</a>, suggesting that errors resulting from sampling such distributions in finite precision are negligible.
+As a result, some of their theoretical properties, based on the use of exact samples from given distributions, can no longer be guaranteed.
+Even so, many randomized algorithms appear to perform as well in practice as predicted by theory [<a href="https://arxiv.org/abs/0909.4061">HMT11</a>], suggesting that errors resulting from sampling such distributions in finite precision are often negligible.
 At the same time, especially in the case of Monte Carlo simulations, it is not typically clear how to differentiate the possible effects of rounding errors from the effects of sampling error.
-In fact, in many areas (such as the numerical solution to stochastic differential equations) this problem is typically addressed by ignoring the effects of rounding errors under the assumption that they are small <a href="https://www.springer.com/gp/book/9783540540625">[KP92]</a>.
-However, with the recent trend towards lower precision computations, and with the massive increase in the amount of data available, understanding the effects of rounding errors on random variables and the interplay between rounding and sampling error has become increasingly important.</p>
-<h2>Introduction</h2>
-<p>The effects of rounding random variables to a fixed set is an old problem in statistics.
-In fact, this problem was studied as early as the late 1890s by Shepard, who gave the relationship between the moments of a random variable <span class="math inline">\(X\)</span> (satisfying certain niceness conditions) and the moments of a perturbed random variable <span class="math inline">\(X^*\)</span>, obtained by rounding <span class="math inline">\(X\)</span> to a uniformly spaced set [She97].</p>
+In fact, in many areas (such as the numerical solution to stochastic differential equations) this problem is typically addressed by ignoring the effects of rounding errors under the assumption that they are small [<a href="https://www.springer.com/gp/book/9783540540625">KP92</a>].
+However, with the recent trend towards lower precision computations in the machine learning [<a href="https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/37631.pdf">VSM11</a>, <a href="https://arxiv.org/abs/1502.02551">GAGN15</a>, <a href="https://papers.nips.cc/paper/7994-training-deep-neural-networks-with-8-bit-floating-point-numbers.pdf">WCBCG18</a>, etc.] and scientific computing [<a href="https://www.elsevier.com/books/introduction-to-matrix-computations/stewart/978-0-08-092614-8">Ste73</a>, <a href="http://ftp.demec.ufpr.br/CFD/bibliografia/Higham_2002_Accuracy%20and%20Stability%20of%20Numerical%20Algorithms.pdf">Hig02</a>] communities, and with the massive increase in the amount of data available, the foundational problems of understanding the effect of rounding errors on random variables and the interplay between rounding and sampling error have become increasingly important.</p>
 <figure>
-<img src="imgs/error_framework.svg" alt="" /><figcaption><strong>Figure 1.</strong> <em>left</em>: original distribution.
+<img src="imgs/error_framework.svg" alt="Figure 1. left: original distribution. center: distribution after being subjected to a nonlinear transformation \varphi_1; e.g. a distortion due to a lens. right: center distribution after begin subjected to a discretization \varphi_2; e.g. discretization due to a measurement device." /><figcaption><strong>Figure 1.</strong> <em>left</em>: original distribution.
 <em>center</em>: distribution after being subjected to a nonlinear transformation <span class="math inline">\(\varphi_1\)</span>; e.g. a distortion due to a lens.
 <em>right</em>: center distribution after begin subjected to a discretization <span class="math inline">\(\varphi_2\)</span>; e.g. discretization due to a measurement device.</figcaption>
 </figure>
-<p>More broadly, given some random variable <span class="math inline">\(X\)</span>, we may consider a perturbed random variable <span class="math inline">\(X^*=X+e(X)\)</span>, where <span class="math inline">\(e:\mathbb{R}\to\mathbb{R}\)</span> satisfies certain assumptions.
-For instance, we may assume that <span class="math inline">\(|e(x)| \leq \epsilon |x|\)</span> as is common in numerical analysis, or that <span class="math inline">\(e(x) = \lfloor x + 1/2\rfloor - x\)</span>; i.e. <span class="math inline">\(e(x)\)</span> is the difference between the nearest integer and <span class="math inline">\(x\)</span>.</p>
-<p>Based on these assumptions, we can derive information about properties of <span class="math inline">\(X\)</span> and <span class="math inline">\(X^*\)</span> and how they differ.
-For instance, we may want to know how close the moments of <span class="math inline">\(X^*\)</span> are to those are of <span class="math inline">\(X\)</span>.</p>
-<p>For instance, given that <span class="math inline">\(|e(x)| \leq \epsilon |x|\)</span>, it is trivial to show,
-<span class="math display">\[\begin{align*}
-    \left| \mathbb{E} \left[X^k - (X^*)^k \right] \right|
-    \leq \epsilon \mathbb{E}\big[ |X|^k \big]
-\end{align*}\]</span></p>
-<h2>Techniques</h2>
-<p>Suppose we would like to compute the difference in the means of <span class="math inline">\(X\)</span> and <span class="math inline">\(X^*\)</span>.
+<h2>Introduction</h2>
+<p>It would be exceedingly tedious to perform a separate analysis for every finite precision number system <span class="math inline">\(\mathbb{F}\)</span> and perturbation function <span class="math inline">\(\operatorname{rd} : \mathbb{R} \to \mathbb{F}\)</span>.
+This was recognized by numerical analysts decades ago.
+To simplify analysis, they adopted the following standard assumption from which most numerical analysis results are derived.</p>
+<p><strong>Assumption 1</strong>.
+size of rounding error is bounded:</p>
+<ol type="i">
+<li><span class="math inline">\(| \operatorname{rd}(x) - x | \leq \epsilon|x|\)</span></li>
+<li><span class="math inline">\(| \operatorname{rd}(x) - x | \leq \delta\)</span></li>
+</ol>
+<p>Using this assumption we can trivially derive the following result on the convergence in mean of <span class="math inline">\(\operatorname{rd}(X) \to X\)</span>.</p>
+<p><strong>Theorem 1</strong> (1st order strong convergence).
+Suppose <span class="math inline">\((\mathbb{F}, \operatorname{rd})\)</span> satisfies Assumption 1. Then, for any real valued random variable <span class="math inline">\(X\)</span> with finite <span class="math inline">\(k\)</span>-th moment,</p>
+<ol type="i">
+<li><span class="math inline">\(| \mathbb{E}[ \operatorname{rd}(X) - X |^k ] = \mathcal{O}( \epsilon^k )\)</span></li>
+<li><span class="math inline">\(| \mathbb{E}[ \operatorname{rd}(X) - X |^k ] = \mathcal{O}( \delta^k )\)</span></li>
+</ol>
+<p>The form of this theorem is reminiscent of Assumption 1.
+This is not surprising, as it is essentially the same as applying Assumption 1 pointwise to the value of X corresponding to each outcome in X’s sample space.
+However, it allows us to trivially generalize a wide range of numerical analysis results to the random variable case.</p>
+<p>Similarly, we have that centered moments converge linearly.
+We denote the <span class="math inline">\(k\)</span>-th centered moment of <span class="math inline">\(Y\)</span> by <span class="math inline">\(\mathbb{M}_k[Y] := \mathbb{E}[ |Y - \mathbb{E}[Y]|^k ]\)</span>.</p>
+<p><strong>Theorem 2</strong> (1st order convergence of moments).
+Suppose <span class="math inline">\((\mathbb{F}, \operatorname{rd})\)</span> satisfies Assumption 1. Then, for any real valued random variable <span class="math inline">\(X\)</span> with finite <span class="math inline">\(k\)</span>-th moment,</p>
+<ol type="i">
+<li><span class="math inline">\(| \mathbb{M}_k[\operatorname{rd}(X)] - \mathbb{M}_k[X] | = \mathcal{O}( \epsilon )\)</span></li>
+<li><span class="math inline">\(| \mathbb{M}_k[\operatorname{rd}(X)] - \mathbb{M}_k[X] | = \mathcal{O}( \delta )\)</span>.</li>
+</ol>
+<h2>Main result</h2>
+<p>Roughly speaking, the main result is that Theorem 2 can be improved to <em>quadratic</em> in <span class="math inline">\(\epsilon\)</span> and <span class="math inline">\(delta\)</span> for a wide range of distributions.</p>
+<p>Suppose we would like to compute the difference in the means of <span class="math inline">\(X\)</span> and <span class="math inline">\(\operatorname{rd}(X)\)</span>.
 We have,
 <span class="math display">\[\begin{align*}
-    \mathbb{E}[X^*-X] 
-    = \mathbb{E}[e(X)] 
-    = \int e(x) f_X(x) \mathrm{d}x
+    \mathbb{E}[\operatorname{rd}(X)-X] 
+    = \mathbb{E}[\operatorname{err}(X)] 
+    = \int \operatorname{err}(x) f_X(x) \mathrm{d}x
 \end{align*}\]</span></p>
-<p>Now, if we know <span class="math inline">\(e(x)\)</span> and <span class="math inline">\(f_X(x)\)</span>, then we can simply evaluate this integral (possibly numerically).
-However, in many situations, it is tedious to work with <span class="math inline">\(e(x)\)</span>, even if we know it.
-For instance, the <span class="math inline">\(e(x)\)</span> corresponding to rounding to some finite precision number system would be quite tricky to deal with.</p>
+<p>Now, if we know <span class="math inline">\(\operatorname{err}(x)\)</span> and <span class="math inline">\(f_X(x)\)</span>, then we can simply evaluate this integral (possibly numerically).
+However, in many situations, it is tedious to work with <span class="math inline">\(\operatorname{err}(x)\)</span>, even if we know it.
+For instance, the <span class="math inline">\(\operatorname{err}(x)\)</span> corresponding to rounding to some finite precision number system would be quite tricky to deal with.</p>
 <p>Even so, we expect this integral to be small if <span class="math inline">\(f_X(x)\)</span> is relatively well behaved.
-This is because <span class="math inline">\(e(x)\)</span> is positive about as much as it is negative.
-Indeed, as Figure 2 shows, the integral of <span class="math inline">\(e(x)\)</span> over any interval is small.</p>
+This is because <span class="math inline">\(\operatorname{err}(x)\)</span> is positive about as much as it is negative.
+Indeed, as Figure 2 shows, the integral of <span class="math inline">\(\operatorname{err}(x)\)</span> over any interval is small.</p>
 <figure>
-<img src="imgs/error_odd.svg" alt="" /><figcaption><strong>Figure 2.</strong> Sample error function</figcaption>
+<img src="imgs/error_odd.svg" alt="Figure 2. Sample error function" /><figcaption><strong>Figure 2.</strong> Sample error function</figcaption>
 </figure>
 <p>In this paper we provide a technique to bound integrals of the form <span class="math inline">\(\int fg \mathrm{d}x\)</span> given that the integral of <span class="math inline">\(g\)</span> is small on any interval.
-The previous example can be viwed as an appliation of the following proposition.</p>
-<p><strong>Proposition</strong>.
-Let <span class="math inline">\(f: \mathbb{R} \to \mathbb{R}_{\geq 0}\)</span> be lower semi-continuous and <span class="math inline">\(g:\mathbb{R} \to \mathbb{R}\)</span> integrable.
-Suppose that <span class="math inline">\(fg\)</span> is absolutely integrable and that there exists a function <span class="math inline">\(h : \mathbb{R} \times \mathbb{R} \to \mathbb{R}_{\geq 0}\)</span> such that for any <span class="math inline">\(a,b\in\mathbb{R}\)</span>,
+The previous example can be viewed as an application of the following proposition.</p>
+<p><strong>Lemma</strong>.</p>
+<p>Let <span class="math inline">\(f: \mathbb{R} \to \mathbb{R}_{\geq 0}\)</span> be lower semi-continuous and <span class="math inline">\(g:\mathbb{R} \to \mathbb{R}\)</span> integrable.
+Suppose that <span class="math inline">\(fg\)</span> is absolutely integrable and that there exists a function <span class="math inline">\(G : \mathbb{R} \times \mathbb{R} \to \mathbb{R}_{\geq 0}\)</span> such that for any <span class="math inline">\(a,b\in\mathbb{R}\)</span>,
 <span class="math display">\[\begin{align*}
-    \int_{a}^{b} g(x) \,\mathrm{d}{x}
-    \leq h(a,b)        
+    \int_{a}^{b} g(x) \mathrm{d}{x}
+    \leq G(a,b)
 \end{align*}\]</span></p>
 <p>Let <span class="math inline">\(\mathcal{O} \subset 2^\mathbb{R}\)</span> denote the set of all open subsets of <span class="math inline">\(\mathbb{R}\)</span>.
 Recall that any open set <span class="math inline">\(A \in \mathcal{O} \setminus \{ \varnothing \}\)</span> can be writen <span class="math inline">\(A = \bigcup_{i=1}^{k} (a_i,b_i)\)</span> where <span class="math inline">\((a_i,b_i)\)</span> are pairwise disjoint and <span class="math inline">\(k \in \mathbb{Z}_{&gt;0} \cup \{\infty\}\)</span>.
-Extend <span class="math inline">\(h : \mathbb{R} \times \mathbb{R} \to \mathbb{R}_{\geq 0}\)</span> to a function <span class="math inline">\(\mu : \mathcal{O} \to \mathbb{R}_{\geq 0} \cup \{ \infty \}\)</span> on open sets by <span class="math inline">\(\mu(\varnothing) = 0\)</span> and,
+Extend <span class="math inline">\(G : \mathbb{R} \times \mathbb{R} \to \mathbb{R}_{\geq 0}\)</span> to a function <span class="math inline">\(\mu : \mathcal{O} \to \mathbb{R}_{\geq 0} \cup \{ \infty \}\)</span> on open sets by <span class="math inline">\(\mu(\varnothing) = 0\)</span> and,
 <span class="math display">\[\begin{align*}
     \mu(A)
     = \mu\left( \bigcup_{i=1}^{k} (a_i,b_i) \right)
-    = \sum_{i=1}^{k} h(a_i,b_i)
+    = \sum_{i=1}^{k} G(a_i,b_i)
     ,&amp;&amp; \forall A \in \mathcal{O} \setminus \{ \varnothing \} 
-\end{align*}\]</span></p>
-<p>Then,
+\end{align*}\]</span>
+Then,
 <span class="math display">\[\begin{align*}
-    \int f(x) g(x) \,\mathrm{d}{x} 
-    \leq \int_{0}^{\infty} \mu ( \{ x : f(x) &gt; u\} ) \,\mathrm{d}{u}
+    \int f(x) g(x) \mathrm{d}{x} 
+    \leq \int_{0}^{\infty} \mu ( \{ x : f(x) &gt; u\} ) \mathrm{d}{u}.
+\end{align*}\]</span></p>
+<h2>Applications</h2>
+<h3>Balancing sampling error and measurement error</h3>
+<p>Often, one would like to estimate statistics about a random variable by repeatedly sampling said random variable.
+For instance, if <span class="math inline">\(X_1, \ldots, X_n\)</span> are independent and identically distributed (iid) samples of <span class="math inline">\(X\)</span>, then the sample mean <span class="math inline">\(Z := (X_1 + \cdots + X_n) / n\)</span> provides an estimate for the true mean <span class="math inline">\(\mathbb{E}[X]\)</span> in the sense that
+<span class="math display">\[\begin{align*}
+    \mathbb{P}[ | Z - \mathbb{E}[X] | &gt; t ] \leq \frac{\mathbb{V}[X]}{n t^2}.
+\end{align*}\]</span></p>
+<p>In practice, sampling <span class="math inline">\(X\)</span> necessarily incurs some sort of measurement errors.
+These could be due to discretization, biases in the measurement device, random noise, unknown non-linear effects, etc.
+Intuitively, there is some balance between sampling error and measurement error; if only a few samples are taken then sampling error will dominate, and conversely, if a large number of samples are taken then measurement error will dominate.
+Our analysis provides several ways to relate the moments of a perturbed random variable <span class="math inline">\(\operatorname{rd}(X)\)</span> to those of the underlying random variable <span class="math inline">\(X\)</span>, based on various amounts of information about the perturbation <span class="math inline">\(\operatorname{rd}\)</span> and random variable <span class="math inline">\(X\)</span>.
+We can use these bounds to balance measurement error and sampling error.</p>
+<p>It is easy to imagine scenarios in which more measurements can be taken provided that they are done less accurately.
+For instance, recording data in half precision instead of double precision would allow four times as many data points to be saved (per unit storage), and less accurate sensors be produced more cheaply.
+Naturally then, we may hope to optimize the cost subject to an accuracy constraint, the accuracy subject to a cost constraint, or some combination of the two.
+Such a trade off for discretization error was explored in [<a href="https://sci-hub.tw/10.1016/j.measurement.2004.08.005">Wil05</a>].
+However, the analysis is based on Sheppard’s corrections, and is therefore not generally applicable, due to niceness constraints on the density of the random variable to be measured, as well as the fact that measurements errors are not soley due to discretization.</p>
+<p>Using our analysis, it is straightforward to show that we can ensure that our sample mean <span class="math inline">\(Z:=(\operatorname{rd}(X_1) + \cdots + \operatorname{rd}(X_n))/n\)</span> is within <span class="math inline">\(c\)</span> standard deviations of the true mean with probability <span class="math inline">\(1-p\)</span> by taking <span class="math inline">\(n &gt; 1 / (pc^2)\)</span> iid samples of <span class="math inline">\(X\)</span> with maximum absolute measurement error,
+<span class="math display">\[\begin{align*}
+    \delta 
+    \leq
+    \frac{c\sqrt{np} - 1}{\sqrt{np}+1} \sqrt{\mathbb{V}[X]}.
+\end{align*}\]</span></p>
+<h3>Generalizing numerical analysis results</h3>
+<p>Theorem 1 can be easily used to generalize many standard numerical analysis results from the scalar variables to random variable case.</p>
+<p>For instance, suppose <span class="math inline">\(X_1, \ldots, X_k\)</span> are random variables.
+Fix an ordering and let <span class="math inline">\(S_k = X_1 + \cdots + X_k\)</span>, and let <span class="math inline">\(\tilde{S}_k = X_1 \oplus \cdots \oplus X_k\)</span>.
+<span class="math display">\[\begin{align*}
+    \mathbb{E}[ | S_n - \tilde{S}_n | ]
+    &amp;\leq \left[ \sum_{k=1}^{n-1} \sum_{i=1}^{k+1} \mathbb{E}[ | X_i | ] \right] \cdot \epsilon + \mathcal{O}(\epsilon^2)
+    \\&amp;\leq (n-1) \left[ \sum_{i=1}^{n} \mathbb{E}[ | X_i | ] \right] \cdot \epsilon + \mathcal{O}(\epsilon^2).
 \end{align*}\]</span></p>
 <p class="footer">
 The rest of my publications can be found <a href="./../">here</a>.
