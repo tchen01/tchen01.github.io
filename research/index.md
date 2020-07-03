@@ -15,7 +15,7 @@ I hope that my work will help to bridge the gap between theoretical computer sci
 I am committed to making my research accessible and to facilitating the [reproducibility](../thoughts/reproducibility.html) of my work.
 Please feel free to contact me with any questions or concerns about my research.
 
-I'm advised by [Anne Greenbaum](http://faculty.washington.edu/greenbau/).
+I'm advised by [Anne Greenbaum](http://faculty.washington.edu/greenbau/) and [Tom Trogdon](http://faculty.washington.edu/trogdon/).
     
 This page contains a collection of the things I've been working on recently.
 In general, I try to include a description of papers which are readable by a broader audience interested in learning about or keeping up with recent advancements in the field.

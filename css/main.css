@@ -111,8 +111,12 @@ figure {
     padding: 0;
 }
 
-.title,.authors,.eprint,.notes {
+.title,.authors,.eprint,.pdf,.links,.intro,.notes {
     display: inline;
+}
+
+.links {
+    white-space: nowrap;
 }
 
 .title{
@@ -121,6 +125,14 @@ figure {
 
 .authors {
     font-size: 90%;
+}
+
+.bibtex {
+    display: none;
+}
+
+.paper:focus .bibtex {
+    display: inherit;
 }
 
 .footer {
