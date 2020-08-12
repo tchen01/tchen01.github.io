@@ -9,7 +9,7 @@ The less time scientists have to wait for code to run, the more time they can sp
 My research aims to develop methods to support the scientists taking on the problems of today.
 
 I'm interested in incorporating probabilistic techniques into classical algorithms to develop methods which are fast and reliable, both in theory and in practice.
-Right now, I work in the field of Numerical Linear Algebra on the [conjugate gradient algorithm](./cg).
+Right now, I work in the field of Numerical Linear Algebra on the [conjugate gradient](./cg) and Lanczos methods.
 I hope that my work will help to bridge the gap between theoretical computer science and applied computational science.
 
 I am committed to making my research accessible and to facilitating the [reproducibility](../thoughts/reproducibility.html) of my work.
@@ -26,6 +26,7 @@ I also have some short introductory pieces on topics I think are interesting.
 
 Here are links to my [Google Scholar profile](https://scholar.google.com/citations?hl=en&user=FD4TjnYAAAAJ) and [ORCID](https://orcid.org/0000-0002-1187-1026): 0000-0002-1187-1026.
 
+[pub:lanczos_error_bounds]
 [pub:finite_precision_random_variables]
 [pub:predict_and_recompute_cg]
 [pub:cg_variants_convergence_rates]

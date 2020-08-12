@@ -790,7 +790,13 @@ An explanation of the algorithm is given in the appendix of [@greenbaum_liu_chen
 
 
 
-# Communication Hiding Conjugate Gradient Algorithms
+esearch/cg/communication_hiding_variants.html---
+title: Communication Hiding Conjugate Gradient Algorithms
+author: '[Tyler Chen](https://chen.pw)'
+keywords: ['applied','math']
+description: The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. Mathematically equivalent variants have been developed to reduce global communication.
+footer: <p class="footer">More about the conjugate gradient method can be found <a href="./">here</a>.</p>
+...
 
 So far, all we have considered are error bounds in terms of the number of iterations. 
 However, in practice, what we really care about is how long a computation takes.
@@ -972,7 +978,7 @@ This variant is known as either Ghysels and Vanroose conjugate gradient or pipel
 \\[-.4em]&\textbf{end procedure}
 \end{align*}
 
-In a derivation similar those of the "classic" communication hiding varaints on this page, Erin Carson and myself have introduced ["predict-and-recompute"](../publications/predict_and_recompute.html) variants.
+In a derivation similar those of the "classic" communication hiding varaints on this page, Erin Carson and myself have introduced ["predict-and-recompute"](../publications/predict_and_recompute_cg.html) variants.
 These variants have the same parallelism as the pipelined conjugate gradient shown here, but better numerical properties.
 
 Recently, Cornelis, Cools, and Vanroose have developed a ["deep pipelined"](https://arxiv.org/pdf/1801.04728.pdf) conjugate gradient, which introduces even more auxiliary vectors to allow for more overlapping.

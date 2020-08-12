@@ -90,6 +90,24 @@ figure {
     text-align: center;
 }
 
+sup, sub {
+    vertical-align: baseline;
+	position: relative;
+	font-size: 100%;
+}
+
+.footnote-ref sup::before {
+    content: '[';
+}
+
+.footnote-ref sup::after {
+	content: ']';
+}
+
+.footnotes p {
+	margin: 0;
+}
+
 .paper {
 
 }

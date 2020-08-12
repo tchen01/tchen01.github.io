@@ -5,6 +5,25 @@ import re
 import os
 os.environ['PATH'] += os.pathsep + '/home/tyler/anaconda3/bin/'
 
+
+def get_clean_bib(bib_file):
+    """
+    removes metadata tags from bibtex
+    """
+
+    bib_clean = ''
+
+    for raw_line in bib_file.split('\n'):
+        line = raw_line.strip()
+        eq_loc = line.find('=')
+
+        if line[:eq_loc].strip() in ['pdf','intro']:
+            continue
+
+        bib_clean += ('    ' if eq_loc != -1 else '')+line+'\n'
+
+    return bib_clean[:-2]
+
 def bib_to_html(file_loc,bib_file,pub_idx):
     """
     given bibtex string, output html string.
@@ -21,13 +40,18 @@ def bib_to_html(file_loc,bib_file,pub_idx):
         bib_info[line[:eq_loc].strip()] = line[l_loc+1:r_loc].replace(' and', ',')
 
     # build html
-    html = '<div class="paper">\n'\
+    html = '<div tabindex="0" class="paper">\n'\
            +f'<div class="pub-idx">[{pub_idx}]</div>'\
-           +f'<div class="pub-container"><div class="title"><a href="./{file_loc}.{"pdf" if file_loc[0]=="t" else "html"}">{bib_info["title"]}</a>.</div>\n'\
+           +f'<div class="pub-container"><div class="title">{bib_info["title"]}.</div>\n'\
            +f'<div class="authors">{bib_info["author"].replace("Tyler Chen","<strong>Tyler Chen</strong>")}.</div>\n'\
            +(f'<div class="notes">{bib_info["note"]}.</div>\n' if "note" in bib_info.keys() else '')\
-           +(f'<div class="eprint">arXiv:<a href="https://arxiv.org/abs/{bib_info["eprint"]}">{bib_info["eprint"]}</a>.</div>\n' if "eprint" in bib_info.keys() else '')\
-           +'</div></div>\n'
+           +'<div class="links">\n'\
+           +(f'<div class="pdf"><a href="{"./"+file_loc+".pdf" if bib_info["pdf"]=="" else bib_info["pdf"]}">[pdf]</a></div>\n' if "pdf" in bib_info.keys() else '')\
+           +(f'<div class="intro"><a href="./{file_loc}.html">[intro]</a></div>\n' if "intro" in bib_info.keys() else '')\
+           +(f'<div class="eprint"><a href="https://arxiv.org/abs/{bib_info["eprint"]}">[arXiv]</a></div>\n' if "eprint" in bib_info.keys() else '')\
+           +'</div></div>\n'\
+           +f'<div class="bibtex"><pre>{get_clean_bib(bib_file)}</pre></div>'\
+           +'</div>\n'
     
     return html
 
@@ -41,7 +65,7 @@ def build_html(file_name):
     # convert md to html
 
     options = ['--from markdown-auto_identifiers',
-               '--to html5',
+               '--to html5+footnotes',
                '--wrap=preserve',
                '--standalone ',
                '--mathjax',
@@ -51,6 +75,7 @@ def build_html(file_name):
 
     os.system(f'pandoc {" ".join(options)} -o {file_name}.html {file_name}.md --template template.html')
     #os.system(f'pandoc -o {file_name}.pdf src/{file_name}.md')
+
 
 def add_bibtex(file_name):
     """
@@ -68,7 +93,7 @@ def add_bibtex(file_name):
     bib_raw = f.read()
     f.close()
 
-    html_new = html_raw.replace("[bibtex]",f'<pre>{bib_raw}</pre>')
+    html_new = html_raw.replace("[bibtex]",f'<pre>{get_clean_bib(bib_raw)}</pre>')
 
     f = open(f'research/publications/{file_name}.html','w')
     f.write(html_new)
@@ -120,22 +145,33 @@ pages = ['index',
          'research/cg/linear_algebra_review',
          'research/publications/cg_variants_convergence_rates',
          'research/publications/predict_and_recompute_cg',
+         'research/publications/finite_precision_random_variables',
+         'research/publications/lanczos_error_bounds',
          'research/computing/index',
          'research/computing/mpi4py',
          'thoughts/index',
          'thoughts/mental_health',
          'thoughts/power_structures',
          'thoughts/reproducibility',
+         'thoughts/petitions/index',
         ]
 
-pubs = ['cg_variants_convergence_rates','predict_and_recompute_cg','finite_precision_random_variables']
+pubs = ['cg_variants_convergence_rates',
+        'predict_and_recompute_cg',
+        'finite_precision_random_variables',
+        'lanczos_error_bounds']
 
 
 #for page in pages:
 #    build_html(page)
 
-build_html('research/publications/finite_precision_random_variables')
-build_html('research/index')
+#build_html('research/publications/lanczos_error_bounds')
+#build_html('research/publications/finite_precision_random_variables')
+#build_html('research/index')
+build_html('thoughts/petitions/index')
+build_html('thoughts/index')
+build_html('thoughts/mental_health')
+build_html('index')
 
 for pub in pubs:
     add_bibtex(pub)

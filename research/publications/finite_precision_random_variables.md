@@ -9,7 +9,7 @@ This is a companion piece to the publication:
 
 [bibtex]
 
-A preprint will be available soon.
+A preprint is available on [arXiv (2007.11041)](https://arxiv.org/abs/2007.11041).
 
 ## Why should I care?
 

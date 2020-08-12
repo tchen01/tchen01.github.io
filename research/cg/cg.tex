@@ -801,7 +801,16 @@ The algorithm is given the Lanczos vectors and coefficients from the finite prec
 
 An explanation of the algorithm is given in the appendix of {[}@greenbaum\_liu\_chen\_19{]}, and an jupyter notebook is available \href{https://github.com/tchen01/Conjugate_Gradient/blob/master/experiments/extend_t.ipynb}{here}, and two Python implementations of the algorithm are available in the same Github repository.
 
-\section{Communication Hiding Conjugate Gradient Algorithms}
+esearch/cg/communication\_hiding\_variants.html---
+title: Communication Hiding Conjugate Gradient Algorithms
+author: `\href{https://chen.pw}{Tyler Chen}'
+keywords: {[}`applied',`math'{]}
+description: The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. Mathematically equivalent variants have been developed to reduce global communication.
+footer:
+
+More about the conjugate gradient method can be found here.
+
+\ldots{}
 
 So far, all we have considered are error bounds in terms of the number of iterations.
 However, in practice, what we really care about is how long a computation takes.
@@ -983,7 +992,7 @@ This variant is known as either Ghysels and Vanroose conjugate gradient or pipel
 \\[-.4em]&\textbf{end procedure}
 \end{align*}
 
-In a derivation similar those of the ``classic'' communication hiding varaints on this page, Erin Carson and myself have introduced \href{../publications/predict_and_recompute.html}{``predict-and-recompute''} variants.
+In a derivation similar those of the ``classic'' communication hiding varaints on this page, Erin Carson and myself have introduced \href{../publications/predict_and_recompute_cg.html}{``predict-and-recompute''} variants.
 These variants have the same parallelism as the pipelined conjugate gradient shown here, but better numerical properties.
 
 Recently, Cornelis, Cools, and Vanroose have developed a \href{https://arxiv.org/pdf/1801.04728.pdf}{``deep pipelined''} conjugate gradient, which introduces even more auxiliary vectors to allow for more overlapping.
