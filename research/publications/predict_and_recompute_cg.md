@@ -9,8 +9,6 @@ This is a companion piece to the publication:
 
 [bibtex]
 
-A preprint is available on [arXiv (1905.01549)](https://arxiv.org/pdf/1905.01549.pdf).
-
 Code available to help reproduce the plots in this paper is available on [Github](https://github.com/tchen01/new_cg_variants/tree/master/predict_and_recompute).
 
 ## Why should I care?

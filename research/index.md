@@ -28,8 +28,8 @@ Here are links to my [Google Scholar profile](https://scholar.google.com/citatio
 
 [pub:lanczos_error_bounds]
 [pub:finite_precision_random_variables]
-[pub:predict_and_recompute_cg]
 [pub:cg_variants_convergence_rates]
+[pub:predict_and_recompute_cg]
 
 ## Talks and Posters
 [talk:predict_and_recompute_HH20]

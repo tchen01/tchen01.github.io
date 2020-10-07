@@ -64,7 +64,7 @@ div {
 }
 
 a {
-    text-decoration: underline;
+    text-decoration: none;
     color: #073662;
     font-weight: 400;
     cursor: pointer;
@@ -129,7 +129,7 @@ sup, sub {
     padding: 0;
 }
 
-.title,.authors,.eprint,.pdf,.links,.intro,.notes {
+.title,.authors,.journal,.eprint,.pdf,.doi,.links,.intro,.notes {
     display: inline;
 }
 

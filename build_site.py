@@ -44,10 +44,12 @@ def bib_to_html(file_loc,bib_file,pub_idx):
            +f'<div class="pub-idx">[{pub_idx}]</div>'\
            +f'<div class="pub-container"><div class="title">{bib_info["title"]}.</div>\n'\
            +f'<div class="authors">{bib_info["author"].replace("Tyler Chen","<strong>Tyler Chen</strong>")}.</div>\n'\
+           +(f'<div class="journal">{bib_info["journal"]}.</div>\n' if "journal" in bib_info.keys() else '')\
            +(f'<div class="notes">{bib_info["note"]}.</div>\n' if "note" in bib_info.keys() else '')\
            +'<div class="links">\n'\
            +(f'<div class="pdf"><a href="{"./"+file_loc+".pdf" if bib_info["pdf"]=="" else bib_info["pdf"]}">[pdf]</a></div>\n' if "pdf" in bib_info.keys() else '')\
            +(f'<div class="intro"><a href="./{file_loc}.html">[intro]</a></div>\n' if "intro" in bib_info.keys() else '')\
+           +(f'<div class="doi"><a href="https://doi.org/{bib_info["doi"]}">[journal]</a></div>\n' if "doi" in bib_info.keys() else '')\
            +(f'<div class="eprint"><a href="https://arxiv.org/abs/{bib_info["eprint"]}">[arXiv]</a></div>\n' if "eprint" in bib_info.keys() else '')\
            +'</div></div>\n'\
            +f'<div class="bibtex"><pre>{get_clean_bib(bib_file)}</pre></div>'\
@@ -64,8 +66,8 @@ def build_html(file_name):
 
     # convert md to html
 
-    options = ['--from markdown-auto_identifiers',
-               '--to html5+footnotes',
+    options = ['--from markdown+tex_math_single_backslash-auto_identifiers',
+               '--to html5',
                '--wrap=preserve',
                '--standalone ',
                '--mathjax',
@@ -165,13 +167,13 @@ pubs = ['cg_variants_convergence_rates',
 #for page in pages:
 #    build_html(page)
 
-#build_html('research/publications/lanczos_error_bounds')
+build_html('research/publications/predict_and_recompute_cg')
 #build_html('research/publications/finite_precision_random_variables')
-#build_html('research/index')
-build_html('thoughts/petitions/index')
-build_html('thoughts/index')
-build_html('thoughts/mental_health')
-build_html('index')
+build_html('research/index')
+#build_html('thoughts/petitions/index')
+#build_html('thoughts/index')
+#build_html('thoughts/mental_health')
+#build_html('index')
 
 for pub in pubs:
     add_bibtex(pub)

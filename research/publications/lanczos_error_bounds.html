@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <meta name="author" content="Tyler Chen" />
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
@@ -31,6 +32,7 @@
 <div id="contentContainer">
 <h1>Lanczos Error Bounds</h1>
 <p class="author"><a href="https://chen.pw">Tyler Chen</a></p>
+
 <p>This is a companion piece to the publication:</p>
 <p><pre>@article{lanczos_error_bounds,
     title = {Error bounds for the Lanczos algorithm for function approximation},
@@ -38,7 +40,18 @@
     year = {},
 }</pre></p>
 <h2>Why should I care?</h2>
+<p>Computing the product of a matrix function <span class="math inline">\(f(\mathbf{A})\)</span> with a vector <span class="math inline">\(\mathbf{b}\)</span>, where <span class="math inline">\(\mathbf{A}\)</span> is a symmetric matrix and <span class="math inline">\(f : \mathbb{R} \to \mathbb{R}\)</span> is a scalar function, is a fundamental task in many disciplines, including scientific computing and data science.
+Perhaps the most well known example is when <span class="math inline">\(f(x) = 1/x\)</span> in which case <span class="math inline">\(f(\mathbf{A}) \mathbf{b} = \mathbf{A}^{-1} \mathbf{b}\)</span> corresponds to solving a linear system of equations.
+Other commonly used functions include the exponential and logarithm, square root, and sign function, which have applications such as
+differential equations ,
+Gaussian sampling ,
+principle component projection/regression ,
+quantum chromodynamics ,
+eigenvalue counting , etc. .</p>
 <h2>Introduction</h2>
+<p>In practice, the error of the Lanczos-FA approximation to <span class="math inline">\(f(\mathbf{A}) \mathbf{b}\)</span> is close to optimal among all polynomial approximations of degree <span class="math inline">\(&lt; k\)</span>.
+If <span class="math inline">\(f(x) = 1/x\)</span> and the error is measured in the <span class="math inline">\(\mathbf{A}\)</span>-norm for some positive definite <span class="math inline">\(\mathbf{A}\)</span>, then Lanczos-FA is indeed optimal.
+However, despite decades of research, similar optimality or near optimality results for a wider range of functions and norms remains limited to a few specific functions, and often involves constants which are overly pessimistic in practice.</p>
 <p class="footer">
 The rest of my publications can be found <a href="./../">here</a>.
 </p>
