@@ -20,18 +20,16 @@ Iterative methods are often the only tractable way to deal with such large syste
 However, the standard techniques developed years ago are no longer sufficient for many of today's applications. 
 As such, new iterative methods, designed explicitly to deal with high-dimensional data, are required to handle the problems scientists now seek to solve.
 
-The overarching motivation for this project is the fact that *the less time scientists have to wait for code to run, the more time they can spend thinking about the problems they are tackling*.
-
 ## Introduction
 
-The conjugate gradient algorithm (CG) is very popular for solving a class of linear systems $Ax=b$ which are fairly common throughout all of science.
-CG is popular for many reasons. Some important reasons are the low storage costs (linear), and the fact you don't need to be able to actually represent $A$, only to be able to evaluate the product $v\mapsto Av$.
+The conjugate gradient algorithm (CG) is very popular for solving a class of linear systems $\mathbf{A}\mathbf{x}=\mathbf{b}$ which are fairly common throughout all of science.
+CG is popular for many reasons. Some important reasons are the low storage costs (linear), and the fact you don't need to be able to actually represent $\mathbf{A}$, only to be able to evaluate the product $\mathbf{v}\mapsto \mathbf{A}\mathbf{v]$.
 
 While the low storage costs and low number of operations per iteration make CG an attractive choice for solving very large sparse (lots of zeros in $A$) systems, the standard implementation of the conjugate gradient algorithm requires that nearly every computation be done sequentially. 
 In particular, it requires two inner products and one (often sparse) matrix vector product per iteration, none of which can occur simultaneously. 
 Each inner product requires global communication (meaning all the processors you use have to talk to one another), and the matrix vector product (if sparse) requires local communication.
 Communication (moving data between places on a computer) takes time, and on supercomputers, is the biggest thing slowing down the conjugate gradient algorithm.
-In the past others have come up with version of the CG algorithm which take less time per iteratoin by reducing communication.
+In the past others have come up with version of the CG algorithm which take less time per iteration by reducing communication.
 I've written a bit about some of those variants [here](../cg/communication_hiding_variants.html).
 
 However, it's well known that CG behaves *very* differently in finite precision than it does in exact arithmetic.
@@ -74,12 +72,12 @@ Note that in this abstraction we assume that the time of communication is indepe
 Table 1 shows a summary of the costs of some different variants. Note that PR-CG, Pipe-PR-MCG, and Pipe-PR-CG are the variants introduced in this paper.
 Numerical experiments on some test problems are shown in Figure 1. 
 
-![**Figure 1.** Convergence of conjugate gradient variants on some sample problems.](imgs/predict-and-recompute_convergence.svg)
+![**Figure 1.** Convergence of conjugate gradient variants on some sample problems.](imgs/predict_and_recompute_cg/predict-and-recompute_convergence.svg)
 
 Finally, Figure 2 shows the results of a strong scaling experiment.
 In particular, it should be noted that the predict and recompute varaints introduced in this paper do indeed reduce the runtime per iteration vs. HS-CG.
 
-![**Figure 2.** Strong scaling of variants on sample problem.](imgs/strong_scale.svg)
+![**Figure 2.** Strong scaling of variants on sample problem.](imgs/predict_and_recompute_cg/strong_scale.svg)
 
 Despite the advances presented in this paper,  there is still significant room for  future  work  on  high  performance  conjugate  gradient  variants,  especially  in  the direction of further decreasing the communication costs.
 

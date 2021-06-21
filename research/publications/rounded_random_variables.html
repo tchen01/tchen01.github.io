@@ -116,14 +116,15 @@ Then, for any <span class="math inline">\([a,b] \subseteq [-1,1]\)</span>, as <s
 <li><em>if <span class="math inline">\(\rd:\mathbb{R}\to\mathbb{F}\)</span> is ‘round to nearest’,</em>
 <span class="math display">\[\begin{align*}  
          \abs{ \int_{a}^{b}  \abs{ \err_n(x) }^k \d{x} 
-         - \left[ 2^{-k} c_{\rd}(k) \int_{a}^{b} \nu(x)^{-k} \d{x}  \right] \cdot n^{-k} } =  o(n^{-k}).
+         - \left[ 2^{-k} e_{\rd}(k) \int_{a}^{b} \nu(x)^{-k} \d{x}  \right] \cdot n^{-k} } =  o(n^{-k}).
  \end{align*}\]</span></li>
 <li><em>if <span class="math inline">\(\rd:\mathbb{R}\to\mathbb{F}\)</span> is ‘stochastic round’,</em>
 <span class="math display">\[\begin{align*}  
           \abs{ \int_{a}^{b}  \EE_{\rd}\!\left[ \abs{ \err_n(x) }^k \right] \d{x} 
-          - \left[ c_{\rd}(k) \int_{a}^{b} \nu(x)^{-k} \d{x}  \right] \cdot n^{-k} } =  o(n^{-k}).
+          - \left[ e_{\rd}(k) \int_{a}^{b} \nu(x)^{-k} \d{x}  \right] \cdot n^{-k} } =  o(n^{-k}).
      \end{align*}\]</span></li>
 </ol>
+<p>Here <span class="math inline">\(e_{\rd}\)</span> is a constant whose exact value is known but is not particularly important for the general intuition of the bound.</p>
 <p class="footer">
 The rest of my publications can be found <a href="./../">here</a>.
 </p>

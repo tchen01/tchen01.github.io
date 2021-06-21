@@ -21,21 +21,25 @@ This page contains a collection of the things I've been working on recently.
 In general, I try to include a description of papers which are readable by a broader audience interested in learning about or keeping up with recent advancements in the field.
 I also have some short introductory pieces on topics I think are interesting.
 
-    
+## Collaboration
+
+I'm always interested in finding things to collaborate on (and people to collaborate with).
+
+If you're an undergrad student interested in research or grad school, please feel free to reach out; I'd be happy to try to help you find something to work on! You may also be interested in the [Washington Directed Reading Program](https://sites.uw.edu/wdrp/) as well as the [Women in Applied Mathematics Mentorship Program](https://amath.washington.edu/women-applied-mathematics-mentorship-program).
+
+   
 ## Publications
 
 Here are links to my [Google Scholar profile](https://scholar.google.com/citations?hl=en&user=FD4TjnYAAAAJ) and [ORCID](https://orcid.org/0000-0002-1187-1026): 0000-0002-1187-1026.
+More information can be found in my [CV](../cv.pdf).
 
-[pub:lanczos_error_bounds]
-[pub:finite_precision_random_variables]
+
+[pub:lanczos_function_CIF]
 [pub:cg_variants_convergence_rates]
+[pub:slq_analysis]
+[pub:rounded_random_variables]
 [pub:predict_and_recompute_cg]
 
-## Talks and Posters
-[talk:predict_and_recompute_HH20]
-[talk:predict_and_recompute_CM20]
-[talk:predict_and_recompute_PP20]
-[talk:symmetric_preconditioner_baidu]
 
 ## Introductions to some topics I think are interesting
 
@@ -55,10 +59,4 @@ Here are links to my [Google Scholar profile](https://scholar.google.com/citatio
     - [Broadcasting in numpy](./inprog.html)
     - [Distributed computing in python: mpi4py](./computing/mpi4py.html)
   
-## Collaboration
-
-I'm always interested in finding things to collaborate on (and people to collaborate with).
-
-If you're an undergrad student interested in research or grad school, please feel free to reach out; I'd be happy to try to help you find something to work on! You may also be interested in the [Washington Directed Reading Program](https://sites.uw.edu/wdrp/) as well as the [Women in Applied Mathematics Mentorship Program](https://amath.washington.edu/women-applied-mathematics-mentorship-program).
-
 

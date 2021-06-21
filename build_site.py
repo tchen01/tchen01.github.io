@@ -147,8 +147,9 @@ pages = ['index',
          'research/cg/linear_algebra_review',
          'research/publications/cg_variants_convergence_rates',
          'research/publications/predict_and_recompute_cg',
-         'research/publications/finite_precision_random_variables',
+         'research/publications/rounded_random_variables',
          'research/publications/lanczos_error_bounds',
+         'research/publications/slq_analysis',
          'research/computing/index',
          'research/computing/mpi4py',
          'thoughts/index',
@@ -158,22 +159,26 @@ pages = ['index',
          'thoughts/petitions/index',
         ]
 
-pubs = ['cg_variants_convergence_rates',
-        'predict_and_recompute_cg',
-        'finite_precision_random_variables',
-        'lanczos_error_bounds']
-
 
 #for page in pages:
 #    build_html(page)
 
-build_html('research/publications/predict_and_recompute_cg')
-#build_html('research/publications/finite_precision_random_variables')
+build_html('research/publications/lanczos_function_CIF')
+#build_html('research/publications/slq_analysis')
+#build_html('research/publications/rounded_random_variables')
 build_html('research/index')
 #build_html('thoughts/petitions/index')
 #build_html('thoughts/index')
 #build_html('thoughts/mental_health')
-#build_html('index')
+build_html('index')
+
+
+pubs = ['cg_variants_convergence_rates',
+        'predict_and_recompute_cg',
+        'rounded_random_variables',
+        'lanczos_function_CIF',
+        'slq_analysis']
+
 
 for pub in pubs:
     add_bibtex(pub)
