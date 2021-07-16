@@ -80,7 +80,7 @@ By repeating this process over multiple samples and averaging, we arrive at SLQ:
 ## Contributions of this paper
 
 Our main theoretical result is a runtime guarantee for SLQ.
-In particular, we show that if \( n_{\textup{v}} > 4 ( n+2 )^{-1} t^{-2} \ln(2n\eta^{-1}) \) and \( k > 12 t^{-1} \), then 
+In particular, we show that if \( n_{\textup{v}} > 4 ( n+2 )^{-1} t^{-2} \ln(2n\eta^{-1}) \) and \( k > 12 t^{-1} + \frac{1}{2} \), then 
 \begin{align*}
     \PP\big[ \W( \Phi[\vec{A}], \samp{\gq{k}{\Psi_i} } ) > t I[\vec{A}]  \big] < \eta,
 \end{align*}

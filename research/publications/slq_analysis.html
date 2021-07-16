@@ -37,10 +37,16 @@ This is a companion piece to the publication:</p>
 <p><pre>@inproceedings{slq_analysis,
     title={Analysis of stochastic Lanczos quadrature for spectrum approximation},
     author={Tyler Chen and Thomas Trogdon and Shashanka Ubaru},
-    year={2021},
-    booktitle = {Proceedings of the 37th International Conference on Machine Learning},
-    series = {Proceedings of Machine Learning Research},
-    publisher = {PMLR},
+    author+an = {1=highlight},
+    booktitle = 	 {Proceedings of the 38th International Conference on Machine Learning},
+    pages = 	 {1728--1739},
+    year = 	 {2021},
+    editor = 	 {Meila, Marina and Zhang, Tong},
+    volume = 	 {139},
+    series = 	 {Proceedings of Machine Learning Research},
+    month = 	 {18--24 Jul},
+    publisher =    {PMLR},
+    url = 	 {http://proceedings.mlr.press/v139/chen21s.html},
     eprint={2105.06595},
     archivePrefix={arXiv},
     primaryClass={cs.DS},
@@ -92,7 +98,7 @@ where <span class="math inline">\(\ehat = [1,0,\ldots, 0]^{\T}\)</span>.</p>
 \end{align*}\]</span></p>
 <h2>Contributions of this paper</h2>
 <p>Our main theoretical result is a runtime guarantee for SLQ.
-In particular, we show that if <span class="math inline">\(n_{\textup{v}} &gt; 4 ( n+2 )^{-1} t^{-2} \ln(2n\eta^{-1})\)</span> and <span class="math inline">\(k &gt; 12 t^{-1}\)</span>, then
+In particular, we show that if <span class="math inline">\(n_{\textup{v}} &gt; 4 ( n+2 )^{-1} t^{-2} \ln(2n\eta^{-1})\)</span> and <span class="math inline">\(k &gt; 12 t^{-1} + \frac{1}{2}\)</span>, then
 <span class="math display">\[\begin{align*}
     \PP\big[ \W( \Phi[\vec{A}], \samp{\gq{k}{\Psi_i} } ) &gt; t I[\vec{A}]  \big] &lt; \eta,
 \end{align*}\]</span>
