@@ -5,7 +5,6 @@ description: I'm Tyler Chen, applied math PhD student at the University of Washi
 ...
     
 I am a PhD student in the [applied mathematics](https://amath.washington.edu) department at the University of Washington, where I'm supported by the [NSF GRFP](https://www.nsfgrfp.org/). 
-I am also currently a research intern at the Baidu Research.
 Previously, I graduated from Tufts University with a BS in math and physics, and a minor in studio art.
     
 
