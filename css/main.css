@@ -64,7 +64,7 @@ div {
 }
 
 a {
-    text-decoration: none;
+    text-decoration: underline;
     color: #073662;
     font-weight: 400;
     cursor: pointer;
