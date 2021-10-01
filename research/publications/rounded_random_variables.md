@@ -1,5 +1,5 @@
 ---
-title: Random Variables in Finite Precision
+title: Non-asymptotic moment bounds for random variables rounded to non-uniformly spaced sets
 author: '[Tyler Chen](https://chen.pw)'
 description: We describe properties of random variables when rounded to finite precision
 footer: <p class="footer">The rest of my publications can be found <a href="./../">here</a>.</p>
