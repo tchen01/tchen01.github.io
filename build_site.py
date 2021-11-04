@@ -165,8 +165,9 @@ pages = ['index',
 #    build_html(page)
 
 build_html('research/publications/lanczos_function_CIF')
+build_html('research/publications/lowmem_rational_opt')
 build_html('research/publications/slq_analysis')
-#build_html('research/publications/rounded_random_variables')
+build_html('research/publications/rounded_random_variables')
 build_html('research/index')
 #build_html('thoughts/petitions/index')
 #build_html('thoughts/index')
@@ -178,6 +179,7 @@ pubs = ['cg_variants_convergence_rates',
         'predict_and_recompute_cg',
         'rounded_random_variables',
         'lanczos_function_CIF',
+        'lowmem_rational_opt',
         'slq_analysis']
 
 
