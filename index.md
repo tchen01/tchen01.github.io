@@ -13,5 +13,5 @@ This means developing techniques and algorithms which help others to tackle the 
 Here is my [curriculum vitae (cv)](./cv.pdf), and here is more information about my [research](./research).
     
 
-You can email me at [chentyl@uw.edu](mailto:chentyl@uw.edu), answer my questions on [StackExchange](https://math.stackexchange.com/users/352534/tch), or follow me on [Instagram](https://instagram.com/chen.tyler).
+You can email me at [chentyl@uw.edu](mailto:chentyl@uw.edu).
 Pronouns: he or they.
