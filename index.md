@@ -1,15 +1,16 @@
 ---
 title:  Tyler Chen
 keywords: ['applied','math']
-description: I'm Tyler Chen, applied math PhD student at the University of Washington. Find out more about my research, and teaching, and then get in contact with me.
+description: I'm Tyler Chen, applied math PhD student at the University of Washington. Find out more about my research and teaching, and then get in contact with me.
 ...
     
-I am a PhD student in the [applied mathematics](https://amath.washington.edu) department at the University of Washington, where I'm supported by the [NSF GRFP](https://www.nsfgrfp.org/). 
+In the fall, I will be joining New York University as a Courant Instructor.
+Until then, I am a PhD student in the [applied mathematics](https://amath.washington.edu) department at the University of Washington, where I'm supported by the [NSF GRFP](https://www.nsfgrfp.org/). 
 Previously, I graduated from Tufts University with a BS in math and physics, and a minor in studio art.
     
 
 I believe in empowering others to contribute to science. 
-This means developing techniques and algorithms which help others to tackle the big problems of today, as well as working to build up the next generation of scientists.
+This means developing techniques and algorithms which help researchers to tackle the big problems of today, as well as working to build up the next generation of scientists.
 Here is my [curriculum vitae (cv)](./cv.pdf), and here is more information about my [research](./research).
     
 

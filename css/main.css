@@ -30,8 +30,8 @@ section {
 
 
 h1 {
-    margin: 0 0 .5em;
-    padding-top: .2em;
+    margin: 0 0 .5em 0;
+    padding: .2em 0 .2em 0;
     font-weight: 700;
     font-size: 150%;
     border-bottom: 2px solid #000;
