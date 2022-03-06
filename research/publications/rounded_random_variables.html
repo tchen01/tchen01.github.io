@@ -7,7 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <meta name="author" content="Tyler Chen" />
 
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
@@ -49,8 +48,6 @@
     archivePrefix = {arXiv},
     primaryClass = {math.ST},
 }</pre></p>
-<p>A preprint is available on <a href="https://arxiv.org/abs/2007.11041">arXiv (2007.11041)</a>.</p>
-<p><span class="math inline">\(\newcommand{\abs}[1]{\left|#1\right|} \newcommand{\EE}{\mathbb{E}} \newcommand{\d}{\mathrm{d}} \newcommand{\flx}{{\lfloor{x}\rfloor}} \newcommand{\clx}{{\lceil{x}\rceil}} \newcommand{\flc}{{\lfloor{c}\rfloor}} \newcommand{\clc}{{\lceil{c}\rceil}} \newcommand{\err}{{\operatorname{err}}} \newcommand{\rd}{{\operatorname{rd}}}\)</span></p>
 <h2>Why should I care?</h2>
 <p>Algorithms involving randomness have become commonplace, and in practice these algorithms are often run in finite precision.
 As a result, some of their theoretical properties, based on the use of exact samples from given distributions, can no longer be guaranteed.
@@ -58,81 +55,10 @@ Even so, many randomized algorithms appear to perform as well in practice as pre
 At the same time, especially in the case of Monte Carlo simulations, it is not typically clear how to differentiate the possible effects of rounding errors from the effects of sampling error.
 In fact, in many areas (such as the numerical solution to stochastic differential equations) this problem is typically addressed by ignoring the effects of rounding errors under the assumption that they are small [<a href="https://www.springer.com/gp/book/9783540540625">KP92</a>].
 However, with the recent trend towards lower precision computations in the machine learning [<a href="https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/37631.pdf">VSM11</a>, <a href="https://arxiv.org/abs/1502.02551">GAGN15</a>, <a href="https://papers.nips.cc/paper/7994-training-deep-neural-networks-with-8-bit-floating-point-numbers.pdf">WCBCG18</a>, etc.] and scientific computing [<a href="https://www.elsevier.com/books/introduction-to-matrix-computations/stewart/978-0-08-092614-8">Ste73</a>, <a href="http://ftp.demec.ufpr.br/CFD/bibliografia/Higham_2002_Accuracy%20and%20Stability%20of%20Numerical%20Algorithms.pdf">Hig02</a>] communities, and with the massive increase in the amount of data available, the foundational problems of understanding the effect of rounding errors on random variables and the interplay between rounding and sampling error have become increasingly important.</p>
-<figure>
-<img src="imgs/finite_precision_random_variables/error_framework.svg" alt="" /><figcaption><strong>Figure 1.</strong> <em>left</em>: original distribution.
-<em>center</em>: distribution after being subjected to a nonlinear transformation <span class="math inline">\(\varphi_1\)</span>; e.g. a distortion due to a lens.
-<em>right</em>: center distribution after begin subjected to a discretization <span class="math inline">\(\varphi_2\)</span>; e.g. discretization due to a measurement device.</figcaption>
-</figure>
-<h2>Introduction</h2>
-<p>Let <span class="math inline">\(\mathbb{F} \subset \mathbb{R}\)</span> be a discrete set on which the rounded random variable will be supported, and for notational convenience define <span class="math inline">\(\clx := \min\{ z \in \mathbb{F} : z \geq x \}\)</span> and <span class="math inline">\(\flx := \max\{ z \in \mathbb{F} : z \leq x \}\)</span>.
-We consider two rounding functions <span class="math inline">\(\rd : \mathbb{R} \to \mathbb{F}\)</span> respectively defined by
-<span class="math display">\[\begin{align*}
-    \text{round to nearest}
-    &amp;&amp;
-    \rd(x) 
-    &amp;:= \begin{cases}
-        \flx, &amp; x \leq \frac{1}{2}(\flx +  \clx )\\ 
-        \clx, &amp; x &gt; \frac{1}{2}(\flx +  \clx )
-    \end{cases}
-    \\
-    \text{stochastic rounding}
-    &amp;&amp;
-    \rd(x) 
-    &amp;:= \begin{cases}
-        \flx, &amp; \text{w.p. } 1 - (x-\flx)/(\clx - \flx ) \\ 
-        \clx, &amp; \text{w.p. } (x-\flx)/(\clx - \flx ).
-    \end{cases}
-\end{align*}\]</span>
-The first is the standard `round to nearest’ scheme, which minimizes the distance between <span class="math inline">\(X\)</span> and a random variable supported on <span class="math inline">\(\mathbb{F}\)</span> in many metrics; e.g. “earth mover” distance, <span class="math inline">\(L^p\)</span> norm, etc. The second is a randomized scheme which has gained popularity in recent years, particularly in machine learning</p>
-<p>In principle, we could use this explicitly compute quantities such as <span class="math inline">\(\EE[\rd(X)]\)</span>, but it would be exceedingly tedious to perform a separate analysis for every finite precision number system <span class="math inline">\(\mathbb{F}\)</span>.
-As such, as is common in numerical analysis, we will use the assumption that,
-<span class="math display">\[\begin{align*}
-%    \label{eqn:bounded}
-    \abs{\err(x)} = \abs{ \rd(x) - x } \leq \epsilon E(x)
-\end{align*}\]</span>
-for some fixed function <span class="math inline">\(E : \mathbb{R} \to \mathbb{R}_{\geq 0}\)</span> where we have defined
-<span class="math display">\[\begin{align*}
-    \err(x) := \rd(x) - x.
-\end{align*}\]</span>
-If <span class="math inline">\(E(x) = \abs{x}\)</span> this bound is the standard bound for rounding to floating point number systems, and if <span class="math inline">\(E(x) = 1\)</span> this bound is the standard bound for fixed point systems; see for instance .</p>
-<p>From this bound it is essentially immediate that
-<span class="math display">\[\begin{align*}
-    \abs{ \EE\!\left[X^{k}\right] - \EE\!\left[\rd(X)^{k}\right] } = O(\epsilon).
-\end{align*}\]</span></p>
-<h2>Results</h2>
-<p>Our main result is basically that these rounding schemes preserve the moments to order <span class="math inline">\(\epsilon^2\)</span>.</p>
-<p><strong>Theorem.</strong>
-<em>Suppose <span class="math inline">\(\EE[|X|^{k}] &lt; \infty\)</span> for some integer <span class="math inline">\(k &gt; 0\)</span> and that <span class="math inline">\(x\mapsto x^{\alpha-1} f_X(x)\)</span> has finitely many regions of local maxima for some <span class="math inline">\(K &gt; 0\)</span>,
-Suppose further that <span class="math inline">\(E : \mathbb{R} \to \mathbb{R}_{\geq 0}\)</span> is piecewise linear with a finite number of breakpoints.</em></p>
-<p><em>Then there exists a constant <span class="math inline">\(C &gt; 0\)</span> such that, for all <span class="math inline">\(\epsilon \in(0,1)\)</span> and <span class="math inline">\((\mathbb{F},\rd)\)</span> where <span class="math inline">\(\rd: \mathbb{R}\to\mathbb{F}\)</span> corresponds to ‘round to nearest’ or ‘stochatsic round’ and satisfies <span class="math inline">\(| \rd(x) - x| &lt; \epsilon E(x)\)</span>,
-<span class="math display">\[\begin{align*}
-   \abs{ \EE\!\left[X^{k}\right] - \EE\!\left[\rd(X)^{k}\right] } &lt; C \epsilon^2.
-\end{align*}\]</span></em></p>
-<p>In addition, we have some sharper results for special cases.
-For instance, if <span class="math inline">\(\mathbb{F}\)</span> has equally spaced points we can derive lower bounds and if <span class="math inline">\(\mathbb{F}\)</span> corresponds to a sequence of points with “uniform clock behavior” we have asymptotic bounds.</p>
-<p><strong>Definition.</strong>
-<em>Let <span class="math inline">\(\nu : [-1,1] \to \mathbb{R}\)</span> be a continuous, non-vanishing, probability density function.
-We say a sequence of sets of points <span class="math inline">\(\{ \{ p_{n,i} \}_{i=1}^{n} \}_{n=1}^{\infty}\)</span> has uniform clock behavior with respect to <span class="math inline">\(\nu\)</span> if
-<span class="math display">\[\begin{align*}
-    \lim_{n\to\infty} \sup_{i&lt;n} \{ | n ( p_{n,i+1} - p_{n,i} ) - \nu(p_{n,i})^{-1} | \} = 0.
-\end{align*}\]</span></em></p>
-<p><strong>Theorem.</strong>
-<em>Suppose that <span class="math inline">\(\{ \{ p_{j,i} \}_{i=1}^{j} \}_{j=1}^{\infty}\)</span> has uniform clock behavior with respect to <span class="math inline">\(\nu\)</span>.
-Let <span class="math inline">\(\rd_n : \mathbb{R} \to \{ p_{n,i} \}_{i=1}^{n}\)</span> denote the rounding function to the <span class="math inline">\(n\)</span>-th set and <span class="math inline">\(\err_n:\mathbb{R}\to\mathbb{R}\)</span> the corresponding error function.
-Then, for any <span class="math inline">\([a,b] \subseteq [-1,1]\)</span>, as <span class="math inline">\(n\to\infty\)</span>,</em></p>
-<ol type="i">
-<li><em>if <span class="math inline">\(\rd:\mathbb{R}\to\mathbb{F}\)</span> is ‘round to nearest’,</em>
-<span class="math display">\[\begin{align*}  
-         \abs{ \int_{a}^{b}  \abs{ \err_n(x) }^k \d{x} 
-         - \left[ 2^{-k} e_{\rd}(k) \int_{a}^{b} \nu(x)^{-k} \d{x}  \right] \cdot n^{-k} } =  o(n^{-k}).
- \end{align*}\]</span></li>
-<li><em>if <span class="math inline">\(\rd:\mathbb{R}\to\mathbb{F}\)</span> is ‘stochastic round’,</em>
-<span class="math display">\[\begin{align*}  
-          \abs{ \int_{a}^{b}  \EE_{\rd}\!\left[ \abs{ \err_n(x) }^k \right] \d{x} 
-          - \left[ e_{\rd}(k) \int_{a}^{b} \nu(x)^{-k} \d{x}  \right] \cdot n^{-k} } =  o(n^{-k}).
-     \end{align*}\]</span></li>
-</ol>
-<p>Here <span class="math inline">\(e_{\rd}\)</span> is a constant whose exact value is known but is not particularly important for the general intuition of the bound.</p>
+<p>In this paper, we study the moments of a random variable induced by rounding a continous random variable to some discrete set.
+We provide non-asymptotic bounds on the difference of the moments of these random varaibles.
+The main result is to show that for continous random variables, the moments differ to second order in the spacing of the points in the set.
+In comparison, a naieve application of standard floating point bounds would show the moments differ to first order.</p>
 <p class="footer">
 The rest of my publications can be found <a href="./../">here</a>.
 </p>

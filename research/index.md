@@ -10,9 +10,10 @@ My research aims to develop methods to support the scientists taking on the prob
 
 I'm interested in incorporating probabilistic techniques into classical algorithms to develop methods which are fast and reliable, both in theory and in practice.
 Right now, I work in the field of numerical linear algebra on Krylov subspace methods such as the [conjugate gradient](./cg) and Lanczos methods.
-I hope that my work will help to bridge the gap between theoretical computer science and applied computational science.
+I hope that my work will help to bridge the gap between numerical analysis, theoretical computer science, and applied computational sciences such as quantum physics.
 
-I am committed to making my research accessible and to facilitating the [reproducibility](../thoughts/reproducibility.html) of my work.
+I am committed to making my research accessible and to facilitating the reproducibility/replicability of my work. 
+Code to generate the figures from my papers can be found on [Github](https://github.com/chentyl).
 Please feel free to contact me with any questions or concerns about my research.
 
 I'm advised by [Anne Greenbaum](http://faculty.washington.edu/greenbau/) and [Tom Trogdon](http://faculty.washington.edu/trogdon/).
@@ -21,7 +22,7 @@ I'm advised by [Anne Greenbaum](http://faculty.washington.edu/greenbau/) and [To
 ## Publications
 
 More information can be found in my [CV](../cv.pdf).
-In general, I've tried to include descriptions of all my papers which are readable by a broader audience interested in learning about or keeping up with recent advancements in the field.
+In general, I've tried to include brief descriptions of all my papers which are readable by a broader audience interested in learning about or keeping up with recent advancements in the field.
 
 [pub:lowmem_rational_opt]
 [pub:lanczos_function_CIF]
@@ -36,7 +37,8 @@ Here are links to my [Google Scholar profile](https://scholar.google.com/citatio
 
 I'm always interested in finding things to collaborate on (and people to collaborate with).
 
-If you're an undergrad student interested in research or grad school, please feel free to reach out; I'd be happy to try to help you find something to work on! You may also be interested in the [Washington Directed Reading Program](https://sites.uw.edu/wdrp/) as well as the [Women in Applied Mathematics Mentorship Program](https://amath.washington.edu/women-applied-mathematics-mentorship-program).
+If you're an undergrad student interested in research or grad school, please feel free to reach out; I'd be happy to try to help you find something to work on! 
+You may also be interested in the [Washington Directed Reading Program](https://sites.uw.edu/wdrp/) as well as the [Women in Applied Mathematics Mentorship Program](https://amath.washington.edu/women-applied-mathematics-mentorship-program).
 
    
 ## Introductions to some topics I think are interesting
@@ -54,7 +56,6 @@ If you're an undergrad student interested in research or grad school, please fee
 - [The Remez Algorithm](./cg/remez.html)
 
 - [Misc. thoughts on Computing](./computing)
-    - [Broadcasting in numpy](./inprog.html)
     - [Distributed computing in python: mpi4py](./computing/mpi4py.html)
   
 

@@ -50,18 +50,9 @@
     primaryClass={cs.NA},
 }
 </pre></p>
-<p>Code available to help reproduce the plots in this paper is available on <a href="https://github.com/tchen01/new_cg_variants/tree/master/predict_and_recompute">Github</a>.</p>
-<h2>Why should I care?</h2>
-<p>Solving linear systems is a fundamental task in numerical linear algebra because of the wide range of applications to applied fields such as the sciences, medicine, and economics.
-Recently, there has been a rapid increase in the amount of data which scientists are able to collect and store.
-As a result, the linear systems which scientists now seek to solve have also been increasing in size.
-Iterative methods are often the only tractable way to deal with such large systems, and Krylov subspace methods are among the most successful and widely used iterative methods.
-However, the standard techniques developed years ago are no longer sufficient for many of today’s applications.
-As such, new iterative methods, designed explicitly to deal with high-dimensional data, are required to handle the problems scientists now seek to solve.</p>
-<h2>Introduction</h2>
-<p>The conjugate gradient algorithm (CG) is very popular for solving a class of linear systems <span class="math inline">\(\mathbf{A}\mathbf{x}=\mathbf{b}\)</span> which are fairly common throughout all of science.
-CG is popular for many reasons. Some important reasons are the low storage costs (linear), and the fact you don’t need to be able to actually represent <span class="math inline">\(\mathbf{A}\)</span>, only to be able to evaluate the product <span class="math inline">\(\mathbf{v}\mapsto \mathbf{A}\mathbf{v]\)</span>.</p>
-<p>While the low storage costs and low number of operations per iteration make CG an attractive choice for solving very large sparse (lots of zeros in <span class="math inline">\(A\)</span>) systems, the standard implementation of the conjugate gradient algorithm requires that nearly every computation be done sequentially.
+<p>The conjugate gradient algorithm (CG) is very popular for solving positive definite linear systems <span class="math inline">\(\mathbf{A}\mathbf{x}=\mathbf{b}\)</span>.
+CG is popular for many reasons including low storage costs and the fact you don’t need to be able to actually represent <span class="math inline">\(\mathbf{A}\)</span>, only to be able to evaluate the product <span class="math inline">\(\mathbf{v}\mapsto \mathbf{A}\mathbf{v]\)</span>.
+While these properties make CG an attractive choice for solving very large sparse (lots of zeros in <span class="math inline">\(\mathbf{A}\)</span>) systems, the standard implementation of the conjugate gradient algorithm requires that nearly every computation be done sequentially.
 In particular, it requires two inner products and one (often sparse) matrix vector product per iteration, none of which can occur simultaneously.
 Each inner product requires global communication (meaning all the processors you use have to talk to one another), and the matrix vector product (if sparse) requires local communication.
 Communication (moving data between places on a computer) takes time, and on supercomputers, is the biggest thing slowing down the conjugate gradient algorithm.
@@ -69,98 +60,13 @@ In the past others have come up with version of the CG algorithm which take less
 I’ve written a bit about some of those variants <a href="../cg/communication_hiding_variants.html">here</a>.</p>
 <p>However, it’s well known that CG behaves <em>very</em> differently in finite precision than it does in exact arithmetic.
 Understanding why this happens is a hard problem, and only a few results have been proved about it.
-I’ve written an introduction to the effects of finite precision on CG <a href="../cg/finite_precision_cg.html">here</a>, but to summarize, the main effects are (i) the loss of ultimately attainable accuracy and (ii) the increase in number of iterations to reach a given level of accuracy (delay of convergence).</p>
-<p>Unfortunately, many of the past communication hiding variants do not always work well numerically.
+I’ve written an introduction to the effects of finite precision on CG <a href="../cg/finite_precision_cg.html">here</a>, but to summarize, the main effects are (i) the loss of ultimately attainable accuracy and (ii) the increase in number of iterations to reach a given level of accuracy (delay of convergence).
+Unfortunately, many of the past communication hiding variants do not always work well numerically.
 We would therefore like to develop variants which reduce communication (and therefore the time per iteration), while simultaneously ensuring that their numerical stability is not too severely impacted (so that the number of iterations required is not increased too much).</p>
-<h2>Contributions of this paper</h2>
 <p>The primary contributions of this paper are several new mathematically equivalent CG variants, which perform better than their previously studied counterparts.
 A general framework for constructing these methods is presented.
-More importantly, the idea to use predictions of quantities to allow a computation to begin, and then recomputing these quantities at a later point (an idea originally due to Meurant) is applied to the “pipelined” versions of these variants.</p>
-<p>The paper itself is meant to be fairly readable without a huge amount of background, so I haven’t written a detailed summary here.
-As a result, while I include a few of the important figures and tables below, I leave detailed explanations to the paper itself.</p>
-<table>
-<caption><strong>Table 1.</strong> Summary of costs for various conjugate gradient variants.
-Values in parenthesis are the additional costs for the preconditioned variants.
-<strong>mem</strong>: number of vectors stored.
-<strong>vec</strong>: number of vector updates (<code>AXPY</code>s) per iteration.
-<strong>scal</strong>: number of inner products per iteration.
-<strong>time</strong>: dominant costs (ignoring vector updates and inner products).
-C<sub>gr</sub> is the time spent on communication for a global reduction.
-T<sub>mv</sub> and C<sub>mv</sub> are the times spend on comuting a matrix vector product, and communication associated with a matrix vector product and depend on the method of matrix multiplication (for instance a dense matrix has C<sub>mv</sub> = C<sub>gr</sub>).
-T<sub>2mv</sub> is the cost of computing two matrix vector products simultaneously, which may be somewhat less than 2T<sub>mv</sub> if implemented in an efficient way.
-Note that in this abstraction we assume that the time of communication is independent of the size of messages sent.</caption>
-<thead>
-<tr class="header">
-<th style="text-align: left;">variant</th>
-<th style="text-align: left;">mem.</th>
-<th style="text-align: left;">vec.</th>
-<th style="text-align: left;">scal.</th>
-<th style="text-align: left;">time</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">HS-CG</td>
-<td style="text-align: left;">4 (+1)</td>
-<td style="text-align: left;">3 (+0)</td>
-<td style="text-align: left;">2</td>
-<td style="text-align: left;">2 C<sub>gr</sub> + T<sub>mv</sub> + C<sub>mv</sub></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">CG-CG</td>
-<td style="text-align: left;">5 (+1)</td>
-<td style="text-align: left;">4 (+0)</td>
-<td style="text-align: left;">2</td>
-<td style="text-align: left;">C<sub>gr</sub> + T<sub>mv</sub> + C<sub>mv</sub></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">M-CG</td>
-<td style="text-align: left;">4 (+2)</td>
-<td style="text-align: left;">3 (+1)</td>
-<td style="text-align: left;">3</td>
-<td style="text-align: left;">C<sub>gr</sub> + T<sub>mv</sub> + C<sub>mv</sub></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><strong>PR-CG</strong></td>
-<td style="text-align: left;">4 (+2)</td>
-<td style="text-align: left;">3 (+1)</td>
-<td style="text-align: left;">4</td>
-<td style="text-align: left;">C<sub>gr</sub> + T<sub>mv</sub> + C<sub>mv</sub></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">GV-CG</td>
-<td style="text-align: left;">7 (+3)</td>
-<td style="text-align: left;">6 (+2)</td>
-<td style="text-align: left;">2</td>
-<td style="text-align: left;">max(C<sub>gr</sub>, T<sub>mv</sub> + C<sub>mv</sub>)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"><strong>Pipe-PR-MCG</strong></td>
-<td style="text-align: left;">6 (+4)</td>
-<td style="text-align: left;">5 (+3)</td>
-<td style="text-align: left;">3</td>
-<td style="text-align: left;">max(C<sub>gr</sub>, T<sub>2mv</sub> + C<sub>mv</sub>)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><strong>Pipe-PR-CG</strong></td>
-<td style="text-align: left;">6 (+4)</td>
-<td style="text-align: left;">5 (+3)</td>
-<td style="text-align: left;">4</td>
-<td style="text-align: left;">max(C<sub>gr</sub>, T<sub>2mv</sub> + C<sub>mv</sub>)</td>
-</tr>
-</tbody>
-</table>
-<p>Table 1 shows a summary of the costs of some different variants. Note that PR-CG, Pipe-PR-MCG, and Pipe-PR-CG are the variants introduced in this paper.
-Numerical experiments on some test problems are shown in Figure 1.</p>
-<figure>
-<img src="imgs/predict_and_recompute_cg/predict-and-recompute_convergence.svg" alt="" /><figcaption><strong>Figure 1.</strong> Convergence of conjugate gradient variants on some sample problems.</figcaption>
-</figure>
-<p>Finally, Figure 2 shows the results of a strong scaling experiment.
-In particular, it should be noted that the predict and recompute varaints introduced in this paper do indeed reduce the runtime per iteration vs. HS-CG.</p>
-<figure>
-<img src="imgs/predict_and_recompute_cg/strong_scale.svg" alt="" /><figcaption><strong>Figure 2.</strong> Strong scaling of variants on sample problem.</figcaption>
-</figure>
-<p>Despite the advances presented in this paper, there is still significant room for future work on high performance conjugate gradient variants, especially in the direction of further decreasing the communication costs.</p>
+More importantly, the idea to use predictions of quantities to allow a computation to begin, and then recomputing these quantities at a later point (an idea originally due to Meurant) is applied to the “pipelined” versions of these variants.
+Despite the advances presented in this paper, there is still significant room for future work on high performance conjugate gradient variants, especially in the direction of further decreasing the communication costs.</p>
 <p class="footer">
 The rest of my publications can be found <a href="./../">here</a>.
 </p>

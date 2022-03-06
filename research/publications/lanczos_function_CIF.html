@@ -43,15 +43,10 @@
     archivePrefix = {arXiv},
     primaryClass = {math.NA},
 }</pre></p>
-<h2>Why should I care?</h2>
-<p>Computing the product of a matrix function <span class="math inline">\(f(\mathbf{A})\)</span> with a vector <span class="math inline">\(\mathbf{b}\)</span>, where <span class="math inline">\(\mathbf{A}\)</span> is a symmetric matrix and <span class="math inline">\(f : \mathbb{R} \to \mathbb{R}\)</span> is a scalar function, is a fundamental task in many disciplines, including scientific computing and data science.
-Perhaps the most well known example is when <span class="math inline">\(f(x) = 1/x\)</span> in which case <span class="math inline">\(f(\mathbf{A}) \mathbf{b} = \mathbf{A}^{-1} \mathbf{b}\)</span> corresponds to solving a linear system of equations.
-Other commonly used functions include the exponential and logarithm, square root, and sign function, which have applications such as differential equations, Gaussian process sampling, principle component projection/regression, quantum chromodynamics, eigenvalue counting, etc.</p>
-<h2>Introduction</h2>
 <p>The Lanczos method for matrix function approximation (Lanczos-FA) can be used to approximate <span class="math inline">\(f(\mathbf{A})\mathbf{b}\)</span>, and in the case that <span class="math inline">\(f(x) = 1/x\)</span> and <span class="math inline">\(\mathbf{A}\)</span> is positive definite, this approximation is <a href="../cg/cg_lanczos.html">optimal</a> over Krylov subspace.
 This case is very well studied and a range of error bounds and estimates exist.
-However, for other functions, the standard bounds are often too pessimistic.</p>
-<h2>Contributions of this paper</h2>
+However, for other functions, the standard bounds are often too pessimistic as they do not take into account fine grained information about the spectrum of <span class="math inline">\(\mathbf{A}\)</span> such as outlaying or clustered eigenvalues.
+This makes it difficult to know when Lanczos-FA has reached a suitable accuracy for a given problem.</p>
 <p>In this paper we show how to reduce the error of approximating <span class="math inline">\(f(\mathbf{A})\mathbf{b}\)</span> with Lanczos-FA to the error of solving a certain linear system with the Lanczos-FA.
 This allows us to leverage the range of existing bounds for the convergence of Lanczos-FA on linear systems to easily obtain a priori and a posteriori bounds for other matrix functions.
 Our a posteriori bounds are highly accurate and can be used as practical stopping criteria.</p>

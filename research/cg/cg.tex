@@ -90,7 +90,7 @@ When \(A\) is symmetric and positive definite (if you don't remember what that m
 This popularity of the conjugate gradient algorithm (CG) is due to a couple factors. First, like most Krylov subspace methods, CG is \emph{matrix free}.
 This means that \(A\) never has to be explicitly represented as a matrix, as long as there is some way of computing the product \(v\mapsto Av\), for a given input vector \(v\).
 For very large problems, this means a big reduction in storage, and if \(A\) has some structure (eg. \(A\) comes from a DFT, difference/integral operator, is very sparse, etc.), it allows the algorithm to take advantage of fast matrix vector products.
-Second, CG only requires \(\mathcal{O}(n)\) storage to run, as compared to \(\mathcal{O}(n^2)\) that many other algorithms require (we use \(n\) to denote the size of \(A\), i.e. \(A\) has shape \(n\times n\)).
+Second, CG only requires \(\mathcal{O}(n)\) storage to run, as compared to \(\mathcal{O}(n^2)\) that many other algorithms require (we use \(n\) to denote the size of \(A\), i.e.~\(A\) has shape \(n\times n\)).
 When the size of \(A\) is very large, this becomes increasingly important.
 
 While the conjugate gradient algorithm has many nice theoretical properties, its behavior in finite precision can be \emph{extremely} different than the behavior predicted by assuming exact arithmetic.
@@ -187,7 +187,7 @@ This tells us that \(A^{-1}\) can be written as a polynomial in \(A\)! (I think 
 x^* = A^{-1}b = -(c_1/c_0) b - (c_2/c_0) Ab - \cdots - (1/c_0) A^{n-1}b
 \]
 
-That is, the solution \(x^*\) to the system \(Ax = b\) is a linear combination of \(b, Ab, A^2b, \ldots, A^{n-1}b\) (i.e. \(x^*\in\mathcal{K}_n(A,b)\)).
+That is, the solution \(x^*\) to the system \(Ax = b\) is a linear combination of \(b, Ab, A^2b, \ldots, A^{n-1}b\) (i.e.~\(x^*\in\mathcal{K}_n(A,b)\)).
 This observation is the motivation behind Krylov subspace methods.
 
 In fact, one way of viewing many Krylov subspace methods is as building low degree polynomial approximations to \(A^{-1}b\) using powers of \(A\) times \(b\) (in fact Krylov subspace methods can be used to approximate \(f(A)b\) where \(f\) is any \href{./current_research.html}{function}).
@@ -801,16 +801,7 @@ The algorithm is given the Lanczos vectors and coefficients from the finite prec
 
 An explanation of the algorithm is given in the appendix of {[}@greenbaum\_liu\_chen\_19{]}, and an jupyter notebook is available \href{https://github.com/tchen01/Conjugate_Gradient/blob/master/experiments/extend_t.ipynb}{here}, and two Python implementations of the algorithm are available in the same Github repository.
 
-esearch/cg/communication\_hiding\_variants.html---
-title: Communication Hiding Conjugate Gradient Algorithms
-author: `\href{https://chen.pw}{Tyler Chen}'
-keywords: {[}`applied',`math'{]}
-description: The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. Mathematically equivalent variants have been developed to reduce global communication.
-footer:
-
-More about the conjugate gradient method can be found here.
-
-\ldots{}
+\section{Communication Hiding Conjugate Gradient Algorithms}
 
 So far, all we have considered are error bounds in terms of the number of iterations.
 However, in practice, what we really care about is how long a computation takes.

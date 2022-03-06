@@ -32,8 +32,7 @@
 <div id="contentContainer">
 <h1>Analysis of stochastic Lanczos quadrature for spectrum approximation</h1>
 <p class="author"><a href="https://chen.pw">Tyler Chen</a></p>
-<p><span class="math inline">\(\newcommand{\vec}{\mathbf} \newcommand{\bOne}{\unicode{x1D7D9}} \newcommand{\PP}{{\mathbb{P}}} \newcommand{\EE}{{\mathbb{E}}} \newcommand{\ehat}{\hat{\vec{e}}} \newcommand{\gq}[2]{[#2]_{#1}^{\textup{gq}}} \newcommand{\W}{d_{\mathrm{W}}} \newcommand{\samp}[1]{\langle #1 \rangle} \newcommand{\R}{\mathbb{R}} \newcommand{\T}{{\textsf{T}}}\)</span>
-This is a companion piece to the publication:</p>
+<p>This is a companion piece to the publication:</p>
 <p><pre>@inproceedings{slq_analysis,
     title={Analysis of stochastic Lanczos quadrature for spectrum approximation},
     author={Tyler Chen and Thomas Trogdon and Shashanka Ubaru},
@@ -53,67 +52,19 @@ This is a companion piece to the publication:</p>
 }
 </pre></p>
 <p>Code available to help reproduce the plots in this paper is available on <a href="https://github.com/tchen01/..">Github</a>.</p>
-<h2>Why should I care?</h2>
-<p>Computing the full spectrum of an <span class="math inline">\(n\times n\)</span> symmetric matrix <span class="math inline">\(\vec{A}\)</span> is intractable in many situations, so the spectrum must be approximated.
-One way to do this is to approximate the cumulative empirical spectral measure (CESM) <span class="math inline">\(\Phi[\vec{A}] : \mathbb{R} \to [0,1]\)</span>, which is defined as the fraction of eigenvalues of <span class="math inline">\(\vec{A}\)</span> less than a given threshold, i.e., <span class="math inline">\(\Phi[\vec{A}](x) := \sum_{i=1}^{n} \frac{1}{n} \bOne[ \lambda_i[\vec{A}]\leq x]\)</span>.
-This is a probability distribution function which makes it a natural target for a “global” approximation.</p>
-<p>Moreover, spectral sums <span class="math inline">\(\operatorname{tr}(f[\vec{A}])\)</span> can be computed as the Riemann–Stieltjes integral of <span class="math inline">\(f\)</span> against <span class="math inline">\(\Phi[\vec{A}]\)</span>.
+<p>Computing the full spectrum of an <span class="math inline">\(n\times n\)</span> symmetric matrix <span class="math inline">\(\mathbf{A}\)</span> is intractable in many situations, so the spectrum must be approximated.
+One way to do this is to approximate the cumulative empirical spectral measure (CESM), which is defined as the fraction of eigenvalues of <span class="math inline">\(\mathbf{A}\)</span> less than a given threshold.
+This is a probability distribution function which makes it a natural target for a “global” approximation.
+Moreover, spectral sums <span class="math inline">\(\operatorname{tr}(f[\mathbf{A}])\)</span> can be computed as the Riemann–Stieltjes integral of <span class="math inline">\(f\)</span> against the CESM.
 Many important tasks can be written as a spectral sum, so the task of estimating CESM arises frequently in such applications as well.</p>
-<p>SLQ is by no means new and has somewhat recently been analyzed for computing spectral sums <a href="https://epubs.siam.org/doi/abs/10.1137/16M1104974">[UCS17]</a>.
+<p>In this paper, we analyze an algorithm called stochastic Lanczos quadrature (SLQ) for the task of spectrum approximation.
+SLQ is by no means new and has somewhat recently been analyzed for computing spectral sums <a href="https://epubs.siam.org/doi/abs/10.1137/16M1104974">[UCS17]</a>.
 However, despite being around for several decades, no real analysis of its convergence for spectrum approximation has appeared.
 As a result practitioners have been relying on heuristics to justify their use of the algorithm.</p>
-<h2>Introduction and algorithm overview</h2>
-<p>SLQ combines two basic ideas (i) Hutchinson style trace estimation and (ii) Gaussian quadrature.
-It is fairly straightforward and can be written in several lines (given access to a method to compute the output of the Lanczos algorithm).</p>
-<p>To begin, we define the weighted CESM,
-<span class="math display">\[\begin{align*}
-    %\label{eqn:intro_estimator}
-    \Psi[\vec{A},\vec{v}](x) := \vec{v}^\T \bOne[\vec{A} \leq x] \vec{v}.
-\end{align*}\]</span>
-If <span class="math inline">\(\vec{v} \sim \mathcal{U}(\mathcal{S}^{n-1})\)</span>, where <span class="math inline">\(\mathcal{U}(\mathcal{S}^{n-1})\)</span> is the uniform distribution on the unit sphere, then the weighted CESM has the desirable properties (i) that it is an unbiased estimator for <span class="math inline">\(\Phi[\vec{A}](x)\)</span>, and (ii) that it defines a cumulative probability distribution function; i.e. <span class="math inline">\(\EE[\Psi[\vec{A},\vec{v}](x)] = \Phi[\vec{A}](x)\)</span> and <span class="math inline">\(\Psi[\vec{A},\vec{v}] : \R \to [0,1]\)</span> is weakly increasing, right continuous, and
-<span class="math display">\[\begin{align*}
-    \lim_{x\to-\infty} \Psi[\vec{A},\vec{v}](x) = 0%\vec{v}^\T\bOne[\vec{A} \leq x]\vec{v} = 0
-    ,&amp;&amp;
-    \lim_{x\to\infty} \Psi[\vec{A},\vec{v}](x) = 1.%\vec{v}^\T\bOne[\vec{A} \leq x]\vec{v} = 1,
-\end{align*}\]</span></p>
-<p>Next, we consider the degree <span class="math inline">\(k\)</span> Gaussian quadrature rule <span class="math inline">\(\gq{k}{\Psi[\vec{A},\vec{v}]}\)</span> for <span class="math inline">\(\Psi[\vec{A},\vec{v}]\)</span>.
-In general, a Gaussian quadrature rule for a distribution function can be computed using the Stieltjes procedure, which for distributions of the form <span class="math inline">\(\Psi[\vec{A},\vec{v}]\)</span>, is equivalent to the Lanczos algorithm .
-Specifically, if <span class="math inline">\([\vec{T}]_{:k,:k}\)</span> is the symmetric tridiagonal matrix obtained by running Lanczos on <span class="math inline">\(\vec{A}\)</span> and <span class="math inline">\(\vec{v}\)</span> for <span class="math inline">\(k\)</span> steps, then
-<span class="math display">\[\begin{align*}
-    \gq{k}{\Psi[\vec{A},\vec{v}]} = \Psi([\vec{T}]_{:k,:k},\ehat)
-\end{align*}\]</span>
-where <span class="math inline">\(\ehat = [1,0,\ldots, 0]^{\T}\)</span>.</p>
-<p>By repeating this process over multiple samples and averaging, we arrive at SLQ:</p>
-<p><span class="math display">\[\begin{align*}
-\hline
-\hspace{1em}&amp;\textbf{Algorithm 1 } \text{Stochastic Lanczos Quadrature}&amp;
-\\\hline
-&amp;\textbf{input } \vec{A}, n_{\textup{v}}, k
-\\&amp;\textbf{for } i=1,2,\ldots, n_{\textup{v}} \textbf{ do}
-\\&amp;\hspace{2em} \text{Sample \( \vec{v}_i \sim \mathcal{U}(\mathcal{S}^{n-1}) \) (and define \( \Psi_i = \Psi(\vec{A},\vec{v}_i) \))}
-\\&amp;\hspace{2em} \text{Run Lanczos on \( \vec{A},\vec{v}_i \) for \( k \) steps to compute \( [\vec{T}_i]_{:k,:k} \)}
-\\&amp;\hspace{2em} \text{Define  \( \gq{k}{\Psi_i} = \Psi[[\vec{T}_i]_{:k,:k},\ehat] \)}
-\\&amp;\textbf{return } \text{\( \samp{ \gq{k}{\Psi_i} } := \frac{1}{n_{\textup{v}}} \sum_{i=1}^{n_{\textup{v}}} \gq{k}{\Psi_i} \)}
-\\\hline
-\end{align*}\]</span></p>
-<h2>Contributions of this paper</h2>
-<p>Our main theoretical result is a runtime guarantee for SLQ.
-In particular, we show that if <span class="math inline">\(n_{\textup{v}} &gt; 4 ( n+2 )^{-1} t^{-2} \ln(2n\eta^{-1})\)</span> and <span class="math inline">\(k &gt; 12 t^{-1} + \frac{1}{2}\)</span>, then
-<span class="math display">\[\begin{align*}
-    \PP\big[ \W( \Phi[\vec{A}], \samp{\gq{k}{\Psi_i} } ) &gt; t I[\vec{A}]  \big] &lt; \eta,
-\end{align*}\]</span>
-where <span class="math inline">\(I[\vec{A}] := | \lambda_{\textup{max}}[\vec{A}] - \lambda_{\textup{min}}[\vec{A}] |\)</span> and <span class="math inline">\(\W(\cdot,\cdot)\)</span> denotes the Wasserstein distance between two distribution functions.</p>
-<p>This implies that as <span class="math inline">\(n\to\infty\)</span>, for <span class="math inline">\(t \gg n^{-1/2}\)</span>, SLQ has a runtime of <span class="math inline">\(O( T_{\textup{mv}} t^{-1} \log( t^{-2} \eta^{-1}) )\)</span>.
-This bound is nearly tight in the sense that for any <span class="math inline">\(t \in (0,1)\)</span>, there exists a matrix of size <span class="math inline">\(\lceil (4t)^{-1} \rceil\)</span> such that at least <span class="math inline">\((8t)^{-1}\)</span> matrix vector products are required to obtain an output with Wasserstein distance less than <span class="math inline">\(t I[\vec{A}]\)</span>.</p>
-<p>The second main result is an a posteriori upper bound for Wasserstein and Kolmogorov–Smirnov (KS) distances, which take into account spectrum dependent features such as clustered or isolated eigenvalues.
+<p>Our main theoretical result is an a priori runtime guarantee for SLQ.
+The second main result is an a posteriori upper bound for Wasserstein and Kolmogorov–Smirnov distances, which take into account spectrum dependent features such as clustered or isolated eigenvalues.
 These results are obtained using the observation that a Gaussian quadrature intersects the distribution it aims to approximate <span class="math inline">\(2k-1\)</span> times.
 Using this, one can easily draw upper and lower bounds for the underlying distribution given a Gaussian quadrature rule.</p>
-<p>Finally, in proving these results, we show that if <span class="math inline">\(n_{\textup{v}} &gt; (n+2)^{-1} t^{-2} \ln(2 \eta^{-1})\)</span> then, for any <span class="math inline">\(x\in\R\)</span>,
-<span class="math display">\[\begin{align}
-    \label{eqn:intro_sample_ave}
-    \PP \left[ \left| \Phi[\vec{A}](x) - \left( \frac{1}{n_{\textup{v}}}\sum_{i=1}^{n_{\textup{v}}} \vec{v}_i^\T \bOne[\vec{A} \leq x] \vec{v}_i \right) \right| &gt; t \right] &lt; \eta.
-\end{align}\]</span>
-This is applicable to the analysis of a range of algorithms beyond SLQ.</p>
 <p class="footer">
 The rest of my publications can be found <a href="./../">here</a>.
 </p>

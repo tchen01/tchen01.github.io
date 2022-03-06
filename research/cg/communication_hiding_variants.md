@@ -1,4 +1,4 @@
-esearch/cg/communication_hiding_variants.html---
+---
 title: Communication Hiding Conjugate Gradient Algorithms
 author: '[Tyler Chen](https://chen.pw)'
 keywords: ['applied','math']

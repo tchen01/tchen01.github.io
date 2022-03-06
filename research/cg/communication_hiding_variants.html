@@ -2,11 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
   <meta charset="utf-8" />
-  <title>communication_hiding_variants</title>
-  <meta name="description" content="">
+  <title>Communication Hiding Conjugate Gradient Algorithms</title>
+  <meta name="description" content="The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. Mathematically equivalent variants have been developed to reduce global communication.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="author" content="Tyler Chen" />
+  <meta name="keywords" content="applied, math" />
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
@@ -29,23 +31,15 @@
 </head>
 <body>
 <div id="contentContainer">
-esearch/cg/communication_hiding_variants.html—
-title: Communication Hiding Conjugate Gradient Algorithms
-author: ‘<a href="https://chen.pw">Tyler Chen</a>’
-keywords: [‘applied’,‘math’]
-description: The Conjugate Conjugate algorithm is a widely used method for solving Ax=b when A is positive definite. Mathematically equivalent variants have been developed to reduce global communication.
-footer:
-<p class="footer">
-More about the conjugate gradient method can be found <a href="./">here</a>.
-</p>
-<p>…</p>
+<h1>Communication Hiding Conjugate Gradient Algorithms</h1>
+<p class="author"><a href="https://chen.pw">Tyler Chen</a></p>
 <p>So far, all we have considered are error bounds in terms of the number of iterations.
 However, in practice, what we really care about is how long a computation takes.
 A natural way to try and speed up an algorithm is through parallelization, and many variants of the conjugate gradient algorithm have been introduced to try to reduce the runtime per iteration.
 However, while these variants are all equivalent in exact arithmetic, they perform operations in different orders meaning they are not equivalent in finite precision arithmetic.
 Based on our discussion about conjugate gradient in <a href="./finite_precision_cg.html">finite precision</a>, it should be too big of a surprise that the variants all behave differently.</p>
 <figure>
-<img src="./imgs/convergence.svg" alt="Convergence of different variants in finite precision. Note that the computation would finish in at most 112 steps in exact arithmetic." /><figcaption>Convergence of different variants in finite precision. Note that the computation would finish in at most 112 steps in exact arithmetic.</figcaption>
+<img src="./imgs/convergence.svg" alt="" /><figcaption>Convergence of different variants in finite precision. Note that the computation would finish in at most 112 steps in exact arithmetic.</figcaption>
 </figure>
 <p>The DOE supercomputer “Summit” is able to compute 122 petaflops per second.
 That’s something like <span class="math inline">\(10^{16}\)</span> floating point operations every second!
@@ -194,8 +188,9 @@ These variants have the same parallelism as the pipelined conjugate gradient sho
 <!--start_pdf_comment-->
 <p>Next: <a href="./current_research.html">Current research on CG and related Krylov subspace methods</a>
 <!--end_pdf_comment--></p>
-
+<p class="footer">
+More about the conjugate gradient method can be found <a href="./">here</a>.
+</p>
 </div>
 </body>
 </html>
-
