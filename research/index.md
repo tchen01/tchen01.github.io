@@ -24,6 +24,8 @@ I'm advised by [Anne Greenbaum](http://faculty.washington.edu/greenbau/) and [To
 More information can be found in my [CV](../cv.pdf).
 In general, I've tried to include brief descriptions of all my papers which are readable by a broader audience interested in learning about or keeping up with recent advancements in the field.
 
+[pub:reduced_density]
+[pub:matrix_free_quadrature]
 [pub:lowmem_rational_opt]
 [pub:lanczos_function_CIF]
 [pub:cg_variants_convergence_rates]
