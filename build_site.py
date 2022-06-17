@@ -42,13 +42,12 @@ def bib_to_html(file_loc,bib_file,pub_idx):
     # build html
     html = '<div tabindex="0" class="paper">\n'\
            +f'<div class="pub-idx">[{pub_idx}]</div>'\
-           +f'<div class="pub-container"><div class="title">{bib_info["title"]}.</div>\n'\
-           +f'<div class="authors">{bib_info["author"].replace("Tyler Chen","<strong>Tyler Chen</strong>")}.</div>\n'\
-           +(f'<div class="journal">{bib_info["journal"]}.</div>\n' if "journal" in bib_info.keys() else '')\
-           +(f'<div class="journal">{bib_info["booktitle"]}.</div>\n' if "booktitle" in bib_info.keys() else '')\
+           +f'<div class="pub-container"><div class="title">{bib_info["title"]}</div><br>\n'\
+           +f'<div class="authors">{bib_info["author"]}</div><br>\n'\
+           +(f'<div class="journal">{bib_info["journal"]}</div><br>\n' if "journal" in bib_info.keys() else '')\
+           +(f'<div class="journal">{bib_info["booktitle"]}</div><br>\n' if "booktitle" in bib_info.keys() else '')\
            +(f'<div class="notes">{bib_info["note"]}.</div>\n' if "note" in bib_info.keys() else '')\
            +'<div class="links">\n'\
-           +(f'<div class="intro"><a href="./{file_loc}.html">[intro]</a></div>\n' if "intro" in bib_info.keys() else '')\
            +(f'<div class="pdf"><a href="{"./"+file_loc+".pdf" if bib_info["pdf"]=="" else bib_info["pdf"]}">[pdf]</a></div>\n' if "pdf" in bib_info.keys() else '')\
            +(f'<div class="doi"><a href="https://doi.org/{bib_info["doi"]}">[journal]</a></div>\n' if "doi" in bib_info.keys() else '')\
            +(f'<div class="eprint"><a href="https://arxiv.org/abs/{bib_info["eprint"]}">[arXiv]</a></div>\n' if "eprint" in bib_info.keys() else '')\
@@ -57,6 +56,9 @@ def bib_to_html(file_loc,bib_file,pub_idx):
            +'</div>\n'
     
     return html
+
+#+f'<div class="authors">{bib_info["author"].replace("Tyler Chen","<strong>Tyler Chen")}.</div>\n'\
+#+(f'<div class="intro"><a href="./{file_loc}.html">[intro]</a></div>\n' if "intro" in bib_info.keys() else '')\
 
 def build_html(file_name):
     """
@@ -164,10 +166,10 @@ pages = ['index',
 #for page in pages:
 #    build_html(page)
 
-build_html('research/publications/lanczos_function_CIF')
-build_html('research/publications/lowmem_rational_opt')
-build_html('research/publications/slq_analysis')
-build_html('research/publications/rounded_random_variables')
+#build_html('research/publications/lanczos_function_CIF')
+#build_html('research/publications/lowmem_rational_opt')
+#build_html('research/publications/slq_analysis')
+#build_html('research/publications/rounded_random_variables')
 build_html('research/index')
 #build_html('thoughts/petitions/index')
 #build_html('thoughts/index')
@@ -175,16 +177,16 @@ build_html('research/index')
 build_html('index')
 
 
-pubs = ['cg_variants_convergence_rates',
-        'predict_and_recompute_cg',
-        'rounded_random_variables',
-        'lanczos_function_CIF',
-        'lowmem_rational_opt',
-        'slq_analysis']
+#pubs = ['cg_variants_convergence_rates',
+#        'predict_and_recompute_cg',
+#        'rounded_random_variables',
+#        'lanczos_function_CIF',
+#        'lowmem_rational_opt',
+#        'slq_analysis']
 
 
-for pub in pubs:
-    add_bibtex(pub)
+#for pub in pubs:
+#    add_bibtex(pub)
 
 add_publications()
 

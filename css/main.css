@@ -65,14 +65,14 @@ div {
 
 a {
     text-decoration: underline;
-    color: #073662;
+    color: #1e3668;
     font-weight: 400;
     cursor: pointer;
 }
 
 a:hover {
     color: #fff;
-    background-color: #073662;
+    background-color: #1e3668;
 }
 
 strong {
@@ -108,9 +108,6 @@ sup, sub {
 	margin: 0;
 }
 
-.paper {
-
-}
 
 .pub-idx {
     width: 10%;
@@ -138,6 +135,10 @@ sup, sub {
 }
 
 .title{
+    font-weight: bold;
+}
+
+.journal{
     font-style: italic;
 }
 

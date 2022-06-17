@@ -1,7 +1,7 @@
 ---
 title:  Research
 keywords: ['applied','math']
-description: I'm Tyler Chen, applied math PhD student at the University of Washington. Find out more about my research, teaching, and educational beliefs, and then get in contact with me.
+description: I'm Tyler Chen! Find out more about my research and teaching, and then get in contact with me.
 footer: <p class="footer">Return to my <a href="./../">homepage</a>.</p>
 ...
 
@@ -16,7 +16,22 @@ I am committed to making my research accessible and to facilitating the reproduc
 Code to generate the figures from my papers can be found on [Github](https://github.com/chentyl).
 Please feel free to contact me with any questions or concerns about my research.
 
-I'm advised by [Anne Greenbaum](http://faculty.washington.edu/greenbau/) and [Tom Trogdon](http://faculty.washington.edu/trogdon/).
+In the fall I will be starting as a Courant Instructor, sponsored by [Chris Musco](chrismusco.com/).
+
+
+
+
+## Collaboration
+
+I'm always interested in finding things to collaborate on (and people to collaborate with).
+
+If you're an undergrad student interested in research or grad school, please feel free to reach out; I'd be happy to try to help you find something to work on! 
+
+## Thesis
+
+**Lanczos based methods for matrix functions** (coming soon!)
+
+I was advised by [Anne Greenbaum](https://faculty.washington.edu/greenbau/) and [Tom Trogdon](https://faculty.washington.edu/trogdon/).
 
 
 ## Publications
@@ -24,6 +39,7 @@ I'm advised by [Anne Greenbaum](http://faculty.washington.edu/greenbau/) and [To
 More information can be found in my [CV](../cv.pdf).
 In general, I've tried to include brief descriptions of all my papers which are readable by a broader audience interested in learning about or keeping up with recent advancements in the field.
 
+[pub:minibatch_HBM]
 [pub:reduced_density]
 [pub:matrix_free_quadrature]
 [pub:lowmem_rational_opt]
@@ -35,14 +51,7 @@ In general, I've tried to include brief descriptions of all my papers which are 
 
 Here are links to my [Google Scholar profile](https://scholar.google.com/citations?hl=en&user=FD4TjnYAAAAJ) and [ORCID](https://orcid.org/0000-0002-1187-1026): 0000-0002-1187-1026.
 
-## Collaboration
 
-I'm always interested in finding things to collaborate on (and people to collaborate with).
-
-If you're an undergrad student interested in research or grad school, please feel free to reach out; I'd be happy to try to help you find something to work on! 
-You may also be interested in the [Washington Directed Reading Program](https://sites.uw.edu/wdrp/) as well as the [Women in Applied Mathematics Mentorship Program](https://amath.washington.edu/women-applied-mathematics-mentorship-program).
-
-   
 ## Introductions to some topics I think are interesting
 
 - The Conjugate Gradient Algorithm [(pdf with everything below)](./cg.pdf)
