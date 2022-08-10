@@ -6,7 +6,7 @@ description: I'm Tyler Chen, applied math PhD student at the University of Washi
 
 This is a collection of some thoughts from my experience in academia.
 A lot of what's written here has probably already been said before in one way or another.
-You may also be interested in what [petitions and positions](./petitions/) I support.
+
 
 ## [Department culture and mental health](./mental_health.html)
 
