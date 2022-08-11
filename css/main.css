@@ -108,49 +108,10 @@ sup, sub {
 	margin: 0;
 }
 
-
-.pub-idx {
-    width: 10%;
-    width: calc(1.3em);
+.menu {
+    text-align: center;
     display: inline-block;
-    vertical-align: top;
-}
-
-.pub-container {
-    width: 90%;
-    width: calc(100% - 1.3em);
-    display: inline-block;
-}
-
-.paper > div {
-    padding: 0;
-}
-
-.title,.authors,.journal,.eprint,.pdf,.doi,.links,.intro,.notes {
-    display: inline;
-}
-
-.links {
-    white-space: nowrap;
-}
-
-.title{
-    font-weight: bold;
-}
-
-.journal{
-    font-style: italic;
-}
-
-.authors {
-}
-
-.bibtex {
-    display: none;
-}
-
-.paper:focus .bibtex {
-    display: inherit;
+    width: 100%;
 }
 
 .footer {

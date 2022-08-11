@@ -9,7 +9,7 @@ Previously, I graduated from the University of Washington with a PhD in applied 
     
 I believe in empowering others to contribute to science. 
 This means developing techniques and algorithms which help researchers to tackle the big problems of today, as well as working to build up the next generation of scientists.
-Here is my [curriculum vitae (cv)](./cv.pdf), and here is more information about my [research](./research).
+Here is my [curriculum vitae (cv)](https://research.chen.pw/cv.pdf). 
 
 You can email me at [tyler.chen@nyu.edu](mailto:tyler.chen@nyu.edu).
 Pronouns: they or he.
