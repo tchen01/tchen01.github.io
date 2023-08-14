@@ -25,33 +25,15 @@ body,html {
 }
 
 #bg1{
-    background: url('../bg1.png');
+    background: url('../bg.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    animation: bg1 100s infinite linear;
     filter: blur(10px);
 }
 
-#bg2{
-    background: url('../bg2.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    animation: bg2 40s infinite linear;
-    filter: blur(10px);
-}
-
-#bg3{
-    background: url('../bg3.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    animation: bg3 20s infinite linear;
-    filter: blur(10px);
-}
      
-#bg4{
+#bg2{
     background-image:url('../noise.svg');
     filter:opacity(40%) grayscale(80%) brightness(30%);
     background-size: cover;
