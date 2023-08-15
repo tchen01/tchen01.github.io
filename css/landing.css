@@ -11,7 +11,6 @@ body,html {
     font-size: 110%;
     background-color: #1e3668;
     overflow: hidden;
-    animation: bg .2s linear;
 }
 
 
@@ -34,7 +33,7 @@ body,html {
      
 #bg2{
     background-image:url('../noise.svg');
-    filter:opacity(40%) contrast(100%);
+    filter:opacity(80%) grayscale(100%) contrast(100%);
     background-size: 100%;
     mix-blend-mode: color-burn;
 }
@@ -86,78 +85,7 @@ body,html {
 }
 
 .menu a:hover {
-    color: #1e3668;
+    color: #1d1d1d;
     background-color: white;
-}
-
-
-
-@keyframes bg {
-  0% {
-    filter: opacity(00%);
-  }
-  50% {
-    filter: opacity(00%);
-  }
-  100% {
-    filter: opacity(100%);
-  }
-}
-
-@keyframes bg1 {
-  0% {
-    transform: rotate(0deg) translate(-15px, 3px);
-    filter: opacity(55%);
-  }
-  33% {
-    transform: rotate(5deg) translate(0px, 4px);
-    filter: opacity(75%);
-  }
-  66% {
-    transform: rotate(2deg) translate(-10px, 8px);
-    filter: opacity(65%);
-  }
-  100% {
-    transform: rotate(0deg) translate(-15px, 3px);
-    filter: opacity(55%);
-  }
-}
-
-@keyframes bg2 {
-  0% {
-    transform: rotate(0deg) translate(5px, 3px) scale(90%);
-    filter: opacity(95%);
-  }
-  33% {
-    transform: rotate(0deg) translate(3px, 18px) scale(82%) skew(1deg, 1deg);
-    filter: opacity(100%);
-  }
-  66% {
-    transform: rotate(0deg) translate(2px, 10px) scale(85%) skew(3deg, 2deg);
-    filter: opacity(100%);
-  }
-  100% {
-    transform: rotate(0deg) translate(5px, 3px) scale(90%);
-    filter: opacity(95%);
-  }
-}
-
-@keyframes bg3 {
-  0% {
-    transform: rotate(0deg) translate(5px, 2px);
-    filter: opacity(55%);
-  }
-  33% {
-    transform: rotate(0deg) translate(3.5px, 5px);
-    filter: opacity(100%);
-  }
-  33% {
-    transform: rotate(0deg) translate(4.5px, 5px);
-    filter: opacity(100%);
-  }
-  100% {
-    transform: rotate(0deg) translate(5px, 2px);
-    filter: opacity(55%);
-  }
 }
 
