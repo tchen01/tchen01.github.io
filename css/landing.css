@@ -8,8 +8,17 @@ body,html {
     font-family: 'Arial', sans-serif;
     font-weight: 400;
     font-size: 100%;
-    overflow: hidden;
 }
+
+section {
+    text-align: left;
+    padding: 10px 10px;
+}
+
+h1 {
+    font-size: 100%;
+}
+
 
 .menu {
     text-align: left;
@@ -31,7 +40,14 @@ body,html {
 
     font-style: italic;
 }
- 
+
+
+#contentContainer {
+    margin: 0 auto;
+    width: 90%;
+    padding: 5%;
+}
+
 #name {
     height: 50%;
     position: absolute;
@@ -39,3 +55,24 @@ body,html {
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+
+#nameSmall {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    height: 5em;
+    position: right;
+}
+
+@media (min-width:800px) {
+    section {
+    width: 800px;
+    }
+    
+    #nameSmall {
+    right: auto;
+    left: 800px;
+    }
+}
+
