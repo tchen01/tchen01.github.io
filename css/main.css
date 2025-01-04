@@ -5,16 +5,17 @@ body,html {
     height: 100%;
     margin: 0;
     padding: 0;
-    font-family: 'Vollkorn','Times','Times New Roman','serif';
-    font-feature-settings: 'lnum'; 
+    font-family: 'Vollkorn','Times','Times New Roman','serif'; 
+    font-feature-settings: 'lnum';
     font-weight: 400;
     font-size: 110%;
-   
 }
 
+
 h1, h2, h3 {
-    font-family: 'Lato','Trebuchet MS','Noto Serif SC','Sans-Serif';
+    font-family: 'Lato','Trebuchet MS','Sans-Serif';
 }
+
 
 #contentContainer {
     margin: 0 auto;
@@ -98,6 +99,12 @@ sup, sub {
 	font-size: 100%;
 }
 
+.menu {
+    text-align: center;
+    display: inline-block;
+    width: 100%;
+}
+
 .footnote-ref sup::before {
     content: '[';
 }
@@ -110,15 +117,70 @@ sup, sub {
 	margin: 0;
 }
 
-.menu {
-    text-align: center;
+
+.pub-idx {
+    width: 10%;
+    width: calc(2em);
     display: inline-block;
-    width: 100%;
+    vertical-align: top;
+}
+
+.pub-container {
+    width: 90%;
+    width: calc(100% - 2em);
+    display: inline-block;
+}
+
+.paper > div {
+    padding: 0;
+}
+
+.title,.authors,.journal,.year,.eprint,.pdf,.doi,.url,.links,.intro,.notes {
+    display: inline;
+    padding: 0;
+    margin: 0;
+}
+
+.links {
+    white-space: nowrap;
+}
+
+.title{
+    font-weight: bold;
+    line-height: .8em;
+    display: inline-block;
+}
+
+.title:first-line{
+    line-height: 1.4em;
+}
+
+.journal{
+    font-style: italic;
+}
+
+.authors {
+}
+
+.bibtex {
+    display: none;
+}
+
+.paper:focus .bibtex {
+    display: inherit;
 }
 
 .footer {
     padding-top: 4em;
     font-size: 80%;
+}
+
+#refs {
+    margin-top: 1em;
+}
+
+#refs p {
+    margin: 0pt;
 }
 
 table {
