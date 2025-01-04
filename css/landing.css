@@ -5,87 +5,37 @@ body,html {
     height: 100%;
     margin: 0;
     padding: 0;
-    font-family: 'Vollkorn','Times','Times New Roman','serif';
-    font-feature-settings: 'lnum'; 
+    font-family: 'Arial', sans-serif;
     font-weight: 400;
-    font-size: 110%;
-    background-color: #1d1d1d;
+    font-size: 100%;
     overflow: hidden;
 }
 
-
-#bg-container div{
-    content: "";
-    position: absolute;
-    top: -5%;
-    left: -5%;
-    width: 110%;
-    height: 110%;
-}
-
-#bg1{
-    background: url('../bg.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-     
-#bg2{
-    background-image:url('../noise.svg');
-    filter:opacity(80%) grayscale(100%) contrast(100%);
-    background-size: 100%;
-    mix-blend-mode: color-burn;
-}
-
-
-#contentContainer {
-    margin: 0 auto;
-    width: 90%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-#name{
-    font-family: 'Lato','Trebuchet MS','Noto Serif SC','Sans-Serif';
-    color: white;
-    width: 100%;
-    text-align: center !important;
-    font-weight: 700;
-    font-size: 200%;
-    line-height: 1em;
-}
-
-#second-name img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 30%;
-    height: 2em;
-    padding: 1em;
-}
-
 .menu {
-    text-align: center;
-    width: 70%;
-    padding: 0 15%;
+    text-align: left;
+    width: 0%;
+    padding: 10px 10px;
 }
 
 .menu a {
     display: inline-block;
     text-decoration: none;
-    color: white;
+    color: #1d1d1d;
     font-weight: 400;
     cursor: pointer;
-    padding: 2px 10px 1px 10px;
-    margin: 5px;
-    border: 1px solid white;
+    line-height: 1em;
+
 }
 
 .menu a:hover {
-    color: #1d1d1d;
-    background-color: white;
-}
 
+    font-style: italic;
+}
+ 
+#name {
+    height: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
