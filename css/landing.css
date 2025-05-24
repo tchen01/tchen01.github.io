@@ -19,11 +19,6 @@ h1 {
     font-size: 100%;
 }
 
-img {
-    display: block;
-    width: 100%;
-    height: auto;
-}
 
 
 .menu {
@@ -64,11 +59,15 @@ img {
 
 
 #nameSmall {
+    width: auto;
     position: absolute;
     top: 10px;
-    right: 10px;
     height: 5em;
-    position: right;
+}
+
+img {
+    width: 100%;
+    height: auto;
 }
 
 @media (min-width:800px) {
