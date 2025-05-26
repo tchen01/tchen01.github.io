@@ -60,8 +60,8 @@ h1 {
 
 #nameSmall {
     width: auto;
-    position: absolute;
-    top: 10px;
+    float: right;
+    padding: 10px;
     height: 5em;
 }
 
@@ -76,8 +76,9 @@ img {
     }
     
     #nameSmall {
+    position: absolute;
     right: auto;
-    left: 800px;
+    left: calc(800px - 2em);
     }
 }
 
