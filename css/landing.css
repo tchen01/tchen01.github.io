@@ -5,26 +5,27 @@ body,html {
     height: 100%;
     margin: 0;
     padding: 0;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Georgia', serif;
     font-weight: 400;
-    font-size: 100%;
+    font-size: 90%;
+    color: #1d1d1d;
 }
+
 
 section {
     text-align: left;
-    padding: 10px 10px;
 }
 
 h1 {
+    font-family: 'Arial', sans-serif;
     font-size: 100%;
+    padding-top: 1em;
 }
-
-
 
 .menu {
     text-align: left;
     width: 0%;
-    padding: 10px 10px;
+    padding-bottom: 5px;
 }
 
 .menu a {
@@ -34,19 +35,25 @@ h1 {
     font-weight: 400;
     cursor: pointer;
     line-height: 1em;
-
 }
 
 .menu a:hover {
-
     font-style: italic;
+}
+
+a:hover {
+    text-decoration-thickness: 1.2px; 
+}
+
+a:visited {
+    color: #1d1d1d;
 }
 
 
 #contentContainer {
     margin: 0 auto;
     width: 90%;
-    padding: 5%;
+    padding: 10px 2%;
 }
 
 #name {
@@ -61,7 +68,6 @@ h1 {
 #nameSmall {
     width: auto;
     float: right;
-    padding: 10px;
     height: 5em;
 }
 
@@ -70,15 +76,16 @@ img {
     height: auto;
 }
 
-@media (min-width:800px) {
-    section {
-    width: 800px;
+@media (min-width:600px) {
+
+    #contentContainer {
+        width: 600px;
+        padding-top: 20px;
     }
     
-    #nameSmall {
-    position: absolute;
-    right: auto;
-    left: calc(800px - 2em);
+    section {
+    width: 600px;
     }
+    
 }
 
